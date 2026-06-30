@@ -1,0 +1,40 @@
+\subsection{Molecular Systems and Active Spaces}
+% Describe the molecular benchmark set and geometry sources.
+% Define active-space notation, e.g. NeNo, and explain the selected active spaces.
+% State basis set, frozen-orbital treatment, charge/spin assumptions, and classical electronic-structure backend.
+% Mention reference exact energies and spin-sector labels used for comparison.
+
+
+\subsection{VQE Reference States and Ansatz Families}
+% Describe how VQE reference states are prepared before QSE.
+% List ansaetze compared: UCCSD, UCCSDSinglet, UCCGSD, and k-UpCCGSD.
+% State optimizer, parameter initialization/reuse, mapping, simulator/backend, and convergence criteria.
+% Record quantities used to compare ansaetze, including VQE energy error, circuit depth, parameter count, and spin expectation.
+
+
+\subsection{QSE Operator Pools and Projected Matrices}
+% Define the QSE expansion operator pools for singlet and triplet calculations.
+% Explain construction of projected Hamiltonian and overlap matrices H and S.
+% Describe operator-class labels such as Number, OV, OO, VV, and Intraorbital.
+% State how formal operator count, restricted operator count, and retained rank are computed.
+
+
+\subsection{Generalized Eigenvalue Solvers and Stability Filters}
+% Describe solution of the generalized eigenvalue problem Hc = ESc.
+% Explain overlap-spectrum filtering, absolute/relative thresholds, condition-number caps, and stable-dimension rules.
+% Define oracle thresholds/dimensions as reference-dependent diagnostics, not deployable protocols.
+% State how negative or near-zero overlap eigenvalues are handled.
+
+
+\subsection{Finite-Shot Matrix Estimation}
+% Describe shot-based estimation of H and S using Pauli averaging and commuting-set grouping.
+% State shot counts, number of samples/repeats, simulator/backend, and random seeds if fixed.
+% Explain how finite-shot noise can perturb overlap eigenvalues and destabilize weak directions.
+% Distinguish statevector results from shot-noisy matrix estimates.
+
+
+\subsection{Accuracy, Matching, and Scaling Metrics}
+% Define MAE, RMSE, maximum error, chemical-accuracy hit rate, and failure rate.
+% Explain how QSE roots are matched to reference states, including limitations of energy-only matching.
+% Define stable rank, observed gap rank, retained rank, condition number, and measurement-cost proxy.
+% Describe scaling quantities: operator count, matrix-element count, Pauli-term count, and commuting-group count.

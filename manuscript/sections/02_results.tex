@@ -1,0 +1,56 @@
+\subsection{Effective Dimensions of the QSE Subspace}
+% Main claim: the formal QSE operator pool is larger than the physically supported projected subspace.
+% Discuss overlap eigenvalue spectra, stable dimensions, and operator support.
+% Explain instability as arising from weakly supported projected vectors.
+% Include the paired ansatz / 2e3o example if useful.
+% Also discuss the trade-off: weakly supported directions are unstable, but removing them can reduce chemical accuracy.
+% Suggested figures:
+% - formal operator count vs stable dimension
+% - overlap eigenvalue spectrum
+% - eigenvector/operator-class composition
+% - accuracy vs retained operator classes
+
+
+
+
+\subsection{Subspace Completeness Beyond Ansatz Choice}
+% Main claim: QSE performance depends on whether the projected subspace captures the relevant excitation space, not only on ansatz energy.
+% Compare ansaetze as different reference states that support different projected QSE directions.
+% Report VQE energy error, QSE MAE, stable dimension/rank, circuit depth, parameter count, and <S^2>.
+% Diagnose completeness using retained rank, overlap eigenvector support, operator-class composition, and recovery of target states.
+% Discuss cases where stable or restricted spaces are numerically well behaved but incomplete for excited-state recovery.
+% Suggested figures/tables:
+% - representative active-space ansatz/subspace summary table
+% - QSE accuracy vs retained projected dimension
+% - operator-class support of stable and unstable directions
+% - full active-space comparisons in SI
+
+
+\subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
+% Main claim: finite-shot noise perturbs H and S in a way that mainly destabilizes weak-overlap directions.
+% First discuss eigenvalue lifting and negative overlap eigenvalues.
+% Then discuss correlated errors between H and S, including why independent-error models are not fully representative.
+% Define the oracle threshold: the overlap eigenvalue cutoff that minimizes QSE error for a given shot count.
+% Use the oracle threshold to estimate shot requirements for chemical accuracy.
+% Suggested figures:
+% - statevector vs shot-noisy overlap eigenvalue spectra
+% - shot count vs oracle threshold
+% - shot count vs QSE MAE / chemical accuracy hit rate
+% - correlated vs uncorrelated noise comparison in SI
+
+
+\subsection{Scaling of QSE and Future Adaptive Strategies}
+% Main claim: once stability can be controlled, the main bottleneck becomes matrix construction and measurement scaling.
+% Explain scaling with number of QSE operators, matrix elements, Pauli terms, and commuting groups.
+% Show that projected matrices are structured rather than random.
+% Use heatmaps as motivation, not as overclaimed proof.
+% Discuss future strategies:
+% - exploiting sparsity/structure of H and S
+% - predicting important matrix elements
+% - adaptive matrix construction
+% - adaptive shot allocation by commuting-group importance
+% Suggested figures:
+% - operator count / matrix element count vs active space
+% - commuting group count vs active space
+% - representative heatmaps
+% - all heatmaps in SI

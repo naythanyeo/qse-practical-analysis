@@ -1,0 +1,67 @@
+# macOS / editor noise
+.DS_Store
+**/.DS_Store
+.vscode/
+
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# Jupyter / IPython runtime files
+.ipython/
+.jupyter/
+
+# Matplotlib cache configured by notebooks/scripts
+.matplotlib/
+
+# LaTeX build artifacts
+manuscript/*.aux
+manuscript/*.bbl
+manuscript/*.bcf
+manuscript/*.blg
+manuscript/*.fdb_latexmk
+manuscript/*.fls
+manuscript/*.log
+manuscript/*.out
+manuscript/*.run.xml
+manuscript/*.synctex.gz
+manuscript/*.toc
+
+# Keep the manuscript PDF trackable by default.
+# Uncomment this if you prefer source-only manuscript commits.
+# manuscript/*.pdf
+
+# Generated notebook/script outputs
+figures/generated/
+manuscript/figures/generated/
+manuscript/tables/generated/
+
+# Large or machine-specific data products
+data/matrices
+
+# Common large data/output formats
+*.h5
+*.hdf5
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.parquet
+*.feather
+*.sqlite
+*.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
