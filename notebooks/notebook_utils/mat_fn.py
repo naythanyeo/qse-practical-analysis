@@ -53,24 +53,27 @@ def get_Vr_dim(S, dim):
     V_r = V[:, -min(dim, len(V)):]
     return V_r
 
-# Spin calculations 
-def calc_spin(S, Z, W, threshold):
+# Solve the eigenvalue problem and get spin values for roots
+def solve_energy_spin_dim(H, S, Z, dim):
     sigma, U = la.eigh(S)
     scale = np.diag(1/np.sqrt(sigma))
-    V = np.matmul(U, scale)
-    mask = sigma > threshold
-    V_r = V[:, mask]
+    V = U @ scale
+    V_r = V[:, -min(dim, len(V)):]
     V_r_adj = V_r.conj().T
-    
+    H_transformed = V_r_adj @ H @ V_r 
+    energies, orth_vectors = la.eigh(H_transformed)
+    # orth_vectors are the vectors in orthogonal basis 
     spins = []
-    for i in range(W.shape[1]):
-        w = W[:, i]
+    for i in range(orth_vectors.shape[1]):
+        w = orth_vectors[:, i]
         spin_expectation = w.conj().T @ V_r_adj @ Z @ V_r @ w
         denom = w.conj().T @ w
         spin_value = (spin_expectation / denom).real
         spins.append(spin_value)
-    
-    return spins
+    # qse_wavefunctions are in the original qse basis
+    qse_wavefunctions = V_r @ orth_vectors
+    return energies, qse_wavefunctions, spins
+
 
 def condition_number_dim(S, dimension):
     eigenvalues = np.sort(la.eigvalsh(np.asarray(S, dtype=complex)).real)[::-1]

@@ -46,6 +46,7 @@ manuscript/tables/generated/
 
 # Large or machine-specific data products
 data/raw_matrices
+data/processed_states
 
 # Common large data/output formats
 *.h5
