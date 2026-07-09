@@ -23,10 +23,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data"
 MOLECULE_DIR = DATA_DIR / "28_mols"
 PARAMETERS_DIR = DATA_DIR / "parameters"
-OUTPUT_PATH = DATA_DIR / "processed_states" / "qse_state_matrices.jsonl"
+OUTPUT_PATH = DATA_DIR / "raw_matrices" / "qse_state_matrices.jsonl"
 
 ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", 
-                 "6e5o", "6e6o", "6e7o", "8e8o"]
+                 "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"]
 
 ANSATZ_FUNCTIONS = {
     "1UpCCGSDSinglet": lambda molecule, **kwargs: Ansatz_kUpCCGSDSinglet(molecule, k=1, **kwargs),
@@ -249,7 +249,7 @@ def main():
                              {"molecule": molecule_name,
                               "active_space": active_space,
                               "ansatz": ansatz_name,
-                              "expansion": "triplet",
+                              "expansion": "triplet_all",
                               "qse_state_matrix": triplet_state_matrix})
 
                 print(f"Saved {molecule_name} {active_space} {ansatz_name}")
