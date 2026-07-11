@@ -34,10 +34,8 @@ manuscript/*.out
 manuscript/*.run.xml
 manuscript/*.synctex.gz
 manuscript/*.toc
-
-# Keep the manuscript PDF trackable by default.
-# Uncomment this if you prefer source-only manuscript commits.
-# manuscript/*.pdf
+manuscript/tables/
+manuscript/figures/
 
 # Generated notebook/script outputs
 figures/generated/

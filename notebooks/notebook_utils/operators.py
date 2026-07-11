@@ -4,7 +4,10 @@ import math
 
 import numpy as np
 from pyscf import fci
+from qibochem.selected_ci.qse import generate_singlet_singles, generate_triplet_singles
 from scipy.optimize import linear_sum_assignment
+
+from notebook_utils.general import parse_active_space
 
 """Number of states from Active Space"""
 def get_max_states(active_space):
@@ -59,3 +62,42 @@ def get_best_pairing(v1, v2):
             pair = (v1_val, None) # If there is no good match then the best pair will be (v1, none)   
         best_pairs.append(pair)    
     return best_pairs
+
+
+OPERATOR_CLASSES = ("Number", "OO", "OV", "VO", "VV")
+
+def classify_qse_operator(operator, num_electrons):
+    """
+    Classify a one-body QSE operator by its spatial-orbital transition.
+    Input fermionic operator
+    Output string (representing its class)
+    """
+    num_occupied = num_electrons // 2
+    term = next(iter(operator.terms))
+    destination = term[0][0] // 2
+    source = term[1][0] // 2
+
+    if destination == source:
+        return "Number"
+
+    source_space = "O" if source < num_occupied else "V"
+    destination_space = "O" if destination < num_occupied else "V"
+    return source_space + destination_space
+
+
+def get_qse_operator_label(active_space):
+    """
+    Input an active space 
+    Output the singlet and triplet excitation class labels 
+    """
+    num_electrons, num_orbitals = parse_active_space(active_space)
+    excitation_params = {"n_elec": num_electrons, 
+                         "n_orbs": 2 * num_orbitals, 
+                         "spin_projection": "all"}
+    singlet_operators = generate_singlet_singles(excitation_params)
+    triplet_operators = generate_triplet_singles(excitation_params)
+    singlet_labels = [classify_qse_operator(operator, num_electrons) 
+                      for operator in singlet_operators]
+    triplet_labels = [classify_qse_operator(operator, num_electrons) 
+                      for operator in triplet_operators]
+    return singlet_labels, triplet_labels
