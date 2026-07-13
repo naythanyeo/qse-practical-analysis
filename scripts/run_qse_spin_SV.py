@@ -7,8 +7,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data"
 MOLECULE_DIR = DATA_DIR / "28_mols"
 PARAMETERS_DIR = DATA_DIR / "parameters"
-OUTPUT_DIR = DATA_DIR / "raw_matrices" / "canonical" / "SV_spin"
-CACHE_DIR = DATA_DIR / "cache" / "canonical" / "qse_spin" / "S2"
+OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_spin"
+CACHE_DIR = DATA_DIR / "cache" / "qse_spin" / "S2"
 
 if "MPLCONFIGDIR" not in os.environ:
     matplotlib_dir = DATA_DIR / ".matplotlib"
@@ -22,7 +22,7 @@ from qibochem.ansatz.ucc import (
     Ansatz_kUpCCGSDSinglet,
 )
 from qibochem.measurement.protocol import StateVectorProtocol
-from qibochem.selected_ci.qse import QSE_Computable, generate_triplet_singles
+from qibochem.selected_ci.qse import QSE_Computable, generate_singlet_singles, generate_triplet_singles
 
 from script_utils import (
     get_vqe_circuit,
@@ -55,7 +55,10 @@ ANSATZ_FUNCTIONS = {
 }
 
 
-QSE_EXPANSIONS = {"triplet_all": generate_triplet_singles}
+QSE_EXPANSIONS = {
+    "singlet": generate_singlet_singles,
+    "triplet_all": generate_triplet_singles,
+}
 
 
 def completed_sv_keys(sv_file):
@@ -97,7 +100,7 @@ def run_molecule_expansion(
             molecule=mol,
             excitation_generator=excitation_generator,
             observable=mol.s2_operator(),
-            spin_projection="all",
+            spin_projection="all" if expansion == "triplet_all" else 0,
             ferm_qubit_map=FERM_QUBIT_MAP,
             map_threshold=MAP_THRESHOLD,
             h_cache_path=str(molecule_cache_dir / "S2.pkl"),

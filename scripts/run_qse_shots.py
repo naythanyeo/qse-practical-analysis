@@ -10,8 +10,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data"
 MOLECULE_DIR = DATA_DIR / "28_mols"
 PARAMETERS_DIR = DATA_DIR / "parameters"
-OUTPUT_DIR = DATA_DIR / "raw_matrices" / "canonical" / "shots_hamiltonian"
-CACHE_DIR = DATA_DIR / "cache" / "canonical" / "qse_hamiltonian"
+OUTPUT_DIR = DATA_DIR / "raw_matrices" / "shots_hamiltonian"
+CACHE_DIR = DATA_DIR / "cache" / "qse_hamiltonian"
 
 if "MPLCONFIGDIR" not in os.environ:
     matplotlib_dir = DATA_DIR / ".matplotlib"
@@ -22,7 +22,7 @@ import qibo
 
 from qibochem.ansatz.ucc import Ansatz_UCCSD, Ansatz_UCCSDSinglet
 from qibochem.measurement.protocol import MultiShotProtocol
-from qibochem.selected_ci.qse import QSE_Computable, generate_triplet_singles
+from qibochem.selected_ci.qse import QSE_Computable, generate_singlet_singles, generate_triplet_singles
 
 from script_utils import (
     append_jsonl,
@@ -55,7 +55,10 @@ ANSATZ_FUNCTIONS = {
 }
 
 
-QSE_EXPANSIONS = {"triplet_all": generate_triplet_singles}
+QSE_EXPANSIONS = {
+    "singlet": generate_singlet_singles,
+    "triplet_all": generate_triplet_singles,
+}
 
 
 def expected_sample_keys():
@@ -160,7 +163,7 @@ def main():
                     molecule=mol,
                     excitation_generator=excitation_generator,
                     observable=None,
-                    spin_projection="all",
+                    spin_projection="all" if expansion == "triplet_all" else 0,
                     ferm_qubit_map=FERM_QUBIT_MAP,
                     map_threshold=MAP_THRESHOLD,
                     h_cache_path=str(molecule_cache_dir / "H.pkl"),
