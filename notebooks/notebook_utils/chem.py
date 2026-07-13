@@ -25,3 +25,5 @@ for file in MOLECULE_DIR.glob("*.xyz"):
         pass  # DS store
 
 molecule_names = smile_28.keys()
+
+CHEMICAL_ACCURACY = 0.00159362
