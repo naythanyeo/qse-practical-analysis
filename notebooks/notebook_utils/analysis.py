@@ -59,42 +59,22 @@ def get_stable_states(active_space):
 
 
 
-def get_best_pairing(exact_energies, qse_energies, unmatched_penalty):
+def get_best_pairing(exact_energies, qse_energies):
     """
-    Helper function to define consistently the best match between exact and qse
-    energies. This is required because the energies sometimes skip states, so this
-    allows for a more fair comparison compared to just matching by indices. 
-
-    This matching allows for terms to remain unmatched (ie we note that some states
-    from QSE are skipped), so that remaining terms are not penalised unfairly 
-
-    The unmatched penalty will be defined as chemical accuracy. Physically this 
-    means that an unmatched state will be penalised the same if the error is 
-    out of the chemically accurate range. 
-
-    First build a column and row vector, then take the difference (builds a 2D
-    matrix). Add on the unmatched penalty cost as a matrix equal dimensions to it
-    that will "extend" the terms. in the example below, 3 penalty terms because
-    at most there can be 3 unmatched roots --> ie this means that its so bad that
-    none of the exact roots are matched 
-        Q0 Q1 Pen Pen Pen
-    E0  
-    E1
-    E2
+    Match every supplied QSE root to a unique exact root by minimizing the total
+    squared energy error. Exact roots that are skipped are paired with None.
     """
     exact_energies = np.asarray(exact_energies)
     qse_energies = np.asarray(qse_energies)
 
-    # Exact column vector, qse row vector 
-    energy_costs = np.abs(exact_energies[:, None] - qse_energies[None, :])
-    unmatched_costs = np.full((len(exact_energies), len(exact_energies)), unmatched_penalty)
-    cost_matrix = np.column_stack([energy_costs, unmatched_costs])
+    if len(qse_energies) > len(exact_energies):
+        raise ValueError("QSE roots cannot outnumber exact roots.")
 
-    # Use scipy to optimise this matrix indices picking 
-    _, assignments = linear_sum_assignment(cost_matrix)
-    # If the indices is more than len(qse), means that penalty was the best match
-    # IE that root is unmatched, so return None
-    matched_energies = [qse_energies[index] 
-                        if index < len(qse_energies) else None 
-                        for index in assignments]
+    cost = (qse_energies[:, None] - exact_energies[None, :]) ** 2
+    qse_indices, exact_indices = linear_sum_assignment(cost)
+
+    matched_energies = [None] * len(exact_energies)
+    for qse_index, exact_index in zip(qse_indices, exact_indices):
+        matched_energies[exact_index] = qse_energies[qse_index]
+
     return list(zip(exact_energies, matched_energies))
