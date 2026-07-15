@@ -9,6 +9,10 @@ import base64
 
 
 ANSATZ_ORDER = ["UCCSD", "UCCSDSinglet", "UCCGSD", "1UpCCGSDSinglet"]
+EIGENVECTOR_COMPOSITION_GROUPS = ("Number occupied", "OV", "Rest")
+EIGENVECTOR_COMPOSITION_COLORS = dict(
+    zip(EIGENVECTOR_COMPOSITION_GROUPS, sns.color_palette("colorblind", 3))
+)
 
 
 def plot_spin_eigenvalue_spread(singlet_data, triplet_data, title=None, ax_labels=True):
@@ -66,6 +70,33 @@ def plot_spin_eigenvalue_spread(singlet_data, triplet_data, title=None, ax_label
 
     fig.tight_layout(rect=(0, 0.16, 1, 0.94))
 
+    return fig, axes
+
+
+def plot_eigenvector_composition_bars(composition, title=None):
+    """Plot paired singlet and triplet compositions as 100%-stacked bars."""
+    fig, axes = plt.subplots(1, 2, figsize=(13, 5.2), sharey=True)
+
+    for ax, spin in zip(axes, ("singlet", "triplet")):
+        spin_composition = composition[spin]
+        ranks = np.arange(1, len(next(iter(spin_composition.values()))) + 1)
+        bottom = np.zeros(len(ranks))
+        for group in EIGENVECTOR_COMPOSITION_GROUPS:
+            ax.bar(ranks, spin_composition[group], bottom=bottom, width=0.9, color=EIGENVECTOR_COMPOSITION_COLORS[group], label=group)
+            bottom += spin_composition[group]
+
+        ax.set_xlabel("Eigenvector rank (decreasing overlap eigenvalue)")
+        ax.set_xlim(0.5, ranks[-1] + 0.5)
+        ax.set_ylim(0, 100)
+        ax.set_title(spin.title())
+        ax.grid(axis="y", alpha=0.25)
+        ax.set_axisbelow(True)
+
+    axes[0].set_ylabel("Mean eigenvector weight (%)")
+    fig.legend(loc="lower center", bbox_to_anchor=(0.5, 0.01), ncol=3, frameon=False)
+    if title is not None:
+        fig.suptitle(title, y=0.97, fontsize=15)
+    fig.tight_layout(rect=(0, 0.12, 1, 0.93))
     return fig, axes
 
 
