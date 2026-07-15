@@ -100,6 +100,7 @@ def get_casci_roots(
     _, num_orbitals = active_space_tuple
     nelecas = (n_alpha, n_beta)
     # Request extra candidates because spin filtering may discard some roots.
+    # Maximally search within the sector dimension 
     n_fci_roots = min(3 * n_roots, sector_dimension(num_orbitals, n_alpha, n_beta))
     # Run CASCI
     mc = mcscf.CASCI(mf, num_orbitals, nelecas)
@@ -144,7 +145,7 @@ def run_casci(xyz_path, active_space, max_roots):
         active_space_tuple,
         n_alpha=n_pairs,
         n_beta=n_pairs,
-        n_roots=max_roots,
+        n_roots=max_roots + 1, # Add this so 10 excited + 1 ground state 
         spin_target=0,
         m=0,
         spin_threshold=1e-5,
