@@ -81,6 +81,7 @@ def load_npz(path):
 def save_npz(path, **arrays):
     """
     Save NPZ file to a path
+    Save the relevant metadata
     """
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
