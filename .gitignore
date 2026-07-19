@@ -51,7 +51,6 @@ data/processed_dataframes
 *.h5
 *.hdf5
 *.npy
-*.npz
 *.pkl
 *.pickle
 *.parquet
