@@ -27,6 +27,8 @@ HF_DATA_DIR = DATA_DIR / "parameters" / "hf_data"
 VQE_PARAMS_DIR = DATA_DIR / "parameters" / "vqe_params"
 SV_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_hamiltonian"
 SV_CACHE_DIR = DATA_DIR / "cache" / "qse_hamiltonian"
+SPIN_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_spin"
+SPIN_CACHE_DIR = DATA_DIR / "cache" / "qse_spin"
 
 # VARIABLES & SETTINGS
 ANSATZ_FUNCTIONS = {
