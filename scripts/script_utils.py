@@ -1,111 +1,190 @@
-import json
 import re
+from functools import partial
+from pathlib import Path
 
 import numpy as np
 
+from qibochem.ansatz.ucc import (
+    Ansatz_UCCGSD,
+    Ansatz_UCCSD,
+    Ansatz_UCCSDSinglet,
+    Ansatz_kUpCCGSDSinglet,
+)
 from qibochem.ansatz.ucc_util import params2amplitudes
 from qibochem.driver.molecule import Molecule
+from qibochem.measurement.protocol import StateVectorProtocol
+from qibochem.selected_ci.qse import generate_singlet_singles, generate_triplet_singles
+
+"""
+0. INITIALISATION
+"""
+
+# PROJECT ROOTS
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = PROJECT_ROOT / "data"
+MOLECULE_DIR = DATA_DIR / "28_mols"
+HF_DATA_DIR = DATA_DIR / "parameters" / "hf_data"
+VQE_PARAMS_DIR = DATA_DIR / "parameters" / "vqe_params"
+SV_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_hamiltonian"
+SV_CACHE_DIR = DATA_DIR / "cache" / "qse_hamiltonian"
+
+# VARIABLES & SETTINGS
+ANSATZ_FUNCTIONS = {
+    "1UpCCGSDSinglet": partial(Ansatz_kUpCCGSDSinglet, k=1),
+    "2UpCCGSDSinglet": partial(Ansatz_kUpCCGSDSinglet, k=2),
+    "3UpCCGSDSinglet": partial(Ansatz_kUpCCGSDSinglet, k=3),
+    "UCCSDSinglet": Ansatz_UCCSDSinglet,
+    "UCCSD": Ansatz_UCCSD,
+    "UCCGSD": Ansatz_UCCGSD,
+}
+
+MOLECULE_NAMES = [
+    "Acetamide", "Acetone", "Adenine", "Benzene", "Benzoquinone",
+    "Butadiene", "Cyclopentadiene", "Cyclopropene", "Cytosine", "Ethene",
+    "Formaldehyde", "Formamide", "Furan", "Hexatriene", "Imidazole",
+    "Naphthalene", "Norbornadiene", "Octatetraene", "Propanamide", "Pyrazine",
+    "Pyridazine", "Pyridine", "Pyrimidine", "Pyrrole", "Tetrazine",
+    "Thymine", "Triazine", "Uracil"
+]
+
+FERM_QUBIT_MAP = "jw"
+MAP_THRESHOLD = 1e-12
+
+QSE_EXPANSIONS = {
+    "singlet": (generate_singlet_singles, 0),
+    "triplet": (generate_triplet_singles, "all"),
+}
 
 
-def read_jsonl(path):
-    if not path.exists():
-        return []
-    with path.open() as fp:
-        return [json.loads(line) for line in fp if line.strip()]
-
-
-def append_jsonl(path, record):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a") as fp:
-        fp.write(json.dumps(record) + "\n")
-
+"""
+1. FILE UTILITY
+"""
 
 def parse_active_space(active_space):
+    """
+    Help extract active space information
+    """
     match = re.fullmatch(r"(\d+)e(\d+)o", active_space.lower())
     if match is None:
         raise ValueError("active_space must use the format '<electrons>e<orbitals>o'.")
     return int(match.group(1)), int(match.group(2))
 
 
-def parameter_file_for_active_space(parameters_dir, active_space):
-    _, num_active_o = parse_active_space(active_space)
-    path = parameters_dir / f"VQE_Params_{num_active_o}o.jsonl"
-    if not path.exists():
-        raise FileNotFoundError(f"Canonical VQE parameter file not found: {path}")
-    return path
+def load_npz(path):
+    """
+    Load in NPZ data from file
+    """
+    with np.load(path, allow_pickle=False) as data:
+        return {key: data[key] for key in data.files}
 
 
-def load_molecule(xyz_path, num_active_e, num_active_o):
-    mol = Molecule(xyz_file=str(xyz_path), basis="sto-3g")
-    mol.run_pyscf()
+def save_npz(path, **arrays):
+    """
+    Save NPZ file to a path
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = path.with_suffix(".tmp.npz")
+    np.savez_compressed(temporary_path, **arrays)
+    temporary_path.replace(path)
 
-    active_mo_start = mol.nelec // 2 - num_active_e // 2
-    active_mos = list(range(active_mo_start, active_mo_start + num_active_o))
-    frozen_mos = [mo for mo in range(mol.nelec // 2) if mo not in active_mos]
-    mol.hf_embedding(active=active_mos, frozen=frozen_mos)
-    return mol
+
+"""
+2. HARTREE FOCK HELPERS
+"""
+
+def _run_pyscf(xyz_path, num_active_e, num_active_o):
+    """
+    Run PYSCF helper function
+    """
+    molecule = Molecule(xyz_file=str(xyz_path), basis="sto-3g")
+    molecule.run_pyscf()
+
+    active_start = molecule.nelec // 2 - num_active_e // 2
+    active_orbitals = list(range(active_start, active_start + num_active_o))
+    frozen_orbitals = [orbital for orbital in range(molecule.nelec // 2) if orbital not in active_orbitals]
+    molecule.hf_embedding(active=active_orbitals, frozen=frozen_orbitals)
+    return molecule
 
 
-def get_vqe_circuit(
-    mol,
-    molecule_name,
-    active_space,
-    ansatz_name,
-    ansatz_function,
-    vqe_params_file,
-    ferm_qubit_map="jw",
-    guess_amplitudes=None,
-):
-    ansatz = ansatz_function(
-        mol,
-        ferm_qubit_map=ferm_qubit_map,
-        guess_amplitudes=guess_amplitudes,
+def load_molecule(molecule_name, active_space):
+    """
+    Function used by scripts to get canonical MOs
+    """
+    num_active_e, num_active_o = parse_active_space(active_space)
+    xyz_path = MOLECULE_DIR / f"{molecule_name}.xyz"
+    hf_data_path = HF_DATA_DIR / active_space / f"{molecule_name}.npz"
+
+    # If inside, then run own pyscf and save it
+    if not hf_data_path.exists():
+        molecule = _run_pyscf(xyz_path, num_active_e, num_active_o)
+        save_npz(
+            hf_data_path,
+            mo_coeff=molecule.ca,
+            mo_energy=molecule.eps,
+            active_oei=molecule.embed_oei,
+            active_tei=molecule.embed_tei,
+            inactive_energy=molecule.inactive_energy,
+            hf_energy=molecule.e_hf,
+            nuclear_energy=molecule.e_nuc,
+            num_electrons=molecule.nelec,
+            num_alpha=molecule.nalpha,
+            num_beta=molecule.nbeta,
+            active_orbitals=molecule.active,
+            frozen_orbitals=molecule.frozen,
+        )
+        return molecule
+
+    hf_data = load_npz(hf_data_path)
+    molecule = Molecule(xyz_file=str(xyz_path), basis="sto-3g")
+    molecule.nelec = int(hf_data["num_electrons"])
+    molecule.nalpha = int(hf_data["num_alpha"])
+    molecule.nbeta = int(hf_data["num_beta"])
+    molecule.e_hf = float(hf_data["hf_energy"])
+    molecule.e_nuc = float(hf_data["nuclear_energy"])
+    molecule.eps = hf_data["mo_energy"]
+    molecule.ca = hf_data["mo_coeff"]
+    molecule.norb = molecule.ca.shape[1]
+    molecule.nso = 2 * molecule.norb
+    molecule.active = hf_data["active_orbitals"].astype(int).tolist()
+    molecule.frozen = hf_data["frozen_orbitals"].astype(int).tolist()
+    molecule.embed_oei = hf_data["active_oei"]
+    molecule.embed_tei = hf_data["active_tei"]
+    molecule.inactive_energy = float(hf_data["inactive_energy"])
+    molecule.n_active_e = num_active_e
+    molecule.n_active_orbs = 2 * num_active_o
+    return molecule
+
+
+def get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name):
+    ansatz_function = ANSATZ_FUNCTIONS[ansatz_name]
+    vqe_params_path = VQE_PARAMS_DIR / active_space / molecule_name / f"{ansatz_name}.npz"
+
+    if vqe_params_path.exists():
+        vqe_data = load_npz(vqe_params_path)
+        final_params = dict(zip(vqe_data["param_names"].tolist(), vqe_data["vqe_params"].astype(float)))
+        return ansatz_function(molecule, final_params=final_params).final_circuit
+
+    guess_amplitudes = None
+    ansatz_names = list(ANSATZ_FUNCTIONS)
+    ansatz_index = ansatz_names.index(ansatz_name)
+
+    if ansatz_index > 0:
+        previous_name = ansatz_names[ansatz_index - 1]
+        previous_path = VQE_PARAMS_DIR / active_space / molecule_name / f"{previous_name}.npz"
+
+        if previous_path.exists():
+            previous_data = load_npz(previous_path)
+            previous_params = dict(zip(previous_data["param_names"].tolist(), previous_data["vqe_params"].astype(float)))
+            previous_ansatz = ANSATZ_FUNCTIONS[previous_name](molecule, use_mp2_guess=False)
+            guess_amplitudes = params2amplitudes(previous_params, previous_ansatz.param_excitations)
+
+    ansatz = ansatz_function(molecule, guess_amplitudes=guess_amplitudes)
+    vqe_energy, vqe_params, final_circuit = ansatz.run_vqe(StateVectorProtocol(), method="L-BFGS-B", fast=True)
+    save_npz(
+        vqe_params_path,
+        param_names=np.asarray(list(vqe_params)),
+        vqe_params=np.asarray(list(vqe_params.values()), dtype=float),
+        vqe_energy=float(vqe_energy),
     )
-    param_names = list(ansatz.param_names)
-    matching_records = [
-        record for record in read_jsonl(vqe_params_file)
-        if (
-            record["molecule"] == molecule_name
-            and record["active_space"] == active_space
-            and record["ansatz"] == ansatz_name
-        )
-    ]
-
-    if len(matching_records) != 1:
-        raise ValueError(
-            f"Expected one canonical VQE record for "
-            f"{molecule_name} {active_space} {ansatz_name} in {vqe_params_file}, "
-            f"found {len(matching_records)}."
-        )
-
-    record = matching_records[0]
-    if record.get("param_names") != param_names:
-        raise ValueError(
-            f"Canonical parameter names do not match the current ansatz for "
-            f"{molecule_name} {active_space} {ansatz_name}."
-        )
-    if set(record["vqe_params"]) != set(param_names):
-        raise ValueError(
-            f"Canonical VQE parameter keys do not match param_names for "
-            f"{molecule_name} {active_space} {ansatz_name}."
-        )
-
-    ansatz._set_params(record["vqe_params"])
-    next_guess_amplitudes = params2amplitudes(record["vqe_params"], ansatz.param_excitations)
-    return ansatz.circuit.copy(deep=True), next_guess_amplitudes
-
-
-def save_sv_qse_record(path, molecule, active_space, ansatz, expansion, H, S):
-    append_jsonl(
-        path,
-        {
-            "molecule": molecule,
-            "active_space": active_space,
-            "ansatz": ansatz,
-            "expansion": expansion,
-            "h_matrix_real": np.real(H).tolist(),
-            "h_matrix_imag": np.imag(H).tolist(),
-            "s_matrix_real": np.real(S).tolist(),
-            "s_matrix_imag": np.imag(S).tolist(),
-        },
-    )
+    return final_circuit
