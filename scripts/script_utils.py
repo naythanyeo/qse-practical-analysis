@@ -32,6 +32,8 @@ SV_CACHE_DIR = DATA_DIR / "cache" / "qse_hamiltonian"
 SPIN_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_spin"
 SPIN_CACHE_DIR = DATA_DIR / "cache" / "qse_spin"
 PYSCF_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "pyscf_casci"
+SHOTS_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "shots_hamiltonian"
+SHOTS_CACHE_DIR = DATA_DIR / "cache" / "qse_hamiltonian"
 
 # VARIABLES & SETTINGS
 ANSATZ_FUNCTIONS = {
