@@ -13,16 +13,18 @@ from script_utils import (
     SV_CACHE_DIR,
     SV_OUTPUT_DIR,
     get_vqe_circuit,
-    load_molecule,
+    load_qibo_mol,
     save_npz,
 )
 
 
 ACTIVE_SPACES = [
-    "2e2o", "2e3o", "4e3o", "4e4o", "4e5o",
-    "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
+    "2e2o", "2e3o", "4e3o", "4e4o", 
 ]
-
+"""
+"4e5o", "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
+"""
+MAX_WORKERS = 4
 
 def run_molecule_expansion(molecule_name, active_space, expansion, excitation_generator, spin_projection):
     # First get all the file paths within the molecule and active space
@@ -43,7 +45,7 @@ def run_molecule_expansion(molecule_name, active_space, expansion, excitation_ge
     # Running sequence 
     print(f"\n{active_space} {expansion} {molecule_name}")
 
-    molecule = load_molecule(molecule_name, active_space)
+    molecule = load_qibo_mol(molecule_name, active_space)
     cache_dir = SV_CACHE_DIR / active_space / expansion / molecule_name
     protocol = StateVectorProtocol()
 
@@ -84,10 +86,10 @@ def run_molecule_expansion(molecule_name, active_space, expansion, excitation_ge
     gc.collect()
 
 
-def main(max_workers=4):
+def main():
     for active_space in ACTIVE_SPACES:
         for expansion, (excitation_generator, spin_projection) in QSE_EXPANSIONS.items():
-            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
                 futures = [
                     executor.submit(
                         run_molecule_expansion, molecule_name, active_space,
