@@ -1,87 +1,27 @@
 #!/usr/bin/env python
 """Generate compact PySCF spin-resolved CASCI reference energies."""
 
-import json
 import math
-from pathlib import Path
 
 import numpy as np
-from pyscf import gto, mcscf, scf
-from pyscf import fci
+from pyscf import mcscf
 from pyscf.fci import spin_op
 
+from script_utils import (
+    MOLECULE_NAMES,
+    PYSCF_OUTPUT_DIR,
+    load_pyscf_mol,
+    mat2pvec,
+    parse_active_space,
+    save_npz,
+)
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-MOLECULE_DIR = PROJECT_ROOT / "data" / "28_mols"
-OUTPUT_PATH = PROJECT_ROOT / "data" / "raw_matrices" / "pyscf_casci_energies.jsonl"
 N_ROOTS = 10
-OVERWRITE = False
-MOLECULES = None
 
-ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", 
-                 "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"]
-
-def parse_active_space(label):
-    electrons, orbitals = label.removesuffix("o").split("e")
-    return int(electrons), int(orbitals)
-
-
-def mat2pvec(ci_matrix, active_space, m):
-    """
-    Convert a PySCF CI matrix coefficients into a partial vector of coefficients 
-    Total terms is the number of valid determinants (within an active space) 
-    Ie, the number of electrons must match the active space. However, determinants
-    that are not within the spin sector are part of the vector as a 0 entry.
-
-    Sign flips accounted for because the determinant basis used uses interleaved 
-    alpha and beta ordering, while PySCF keeps alpha and beta strings separate 
-    Pyscf: a0 a1 a2 ... b0 b1 b2 ...
-    Interleaved: a0 b0 a1 b1 a2 b2 ...
-    """
-    num_active_e, num_active_o = active_space
-    num_bits = 2 * num_active_o
-
-    n_alpha = num_active_e // 2 + m
-    n_beta = num_active_e // 2 - m
-
-    pvec = []
-    for index in range(2**num_bits):
-        bitstring = format(index, f"0{num_bits}b")
-        if bitstring.count("1") != num_active_e:
-            continue
-
-        alpha_bits = bitstring[0::2]
-        beta_bits = bitstring[1::2]
-        # Check for spin sector 
-        if alpha_bits.count("1") != n_alpha or beta_bits.count("1") != n_beta:
-            pvec.append(0)
-            continue
-
-        alpha_index = fci.cistring.str2addr(num_active_o, n_alpha, alpha_bits[::-1])
-        beta_index = fci.cistring.str2addr(num_active_o, n_beta, beta_bits[::-1])
-
-        flips = 0
-        # Check for sign flips due to ordering of interleaved notation 
-        # Counts the number of times each beta orbital must be moved past alpha orbital 
-        for beta_orbital, beta_occ in enumerate(beta_bits):
-            if beta_occ == "1":
-                for alpha_orbital, alpha_occ in enumerate(alpha_bits):
-                    if alpha_occ == "1" and alpha_orbital > beta_orbital:
-                        flips += 1
-
-        sign = (-1) ** flips
-        pvec.append(sign * float(ci_matrix[alpha_index, beta_index]))
-
-    return pvec
-
-
-def run_rhf(xyz_path):
-    mol = gto.M(atom=str(xyz_path), basis="sto-3g", unit="Angstrom", verbose=0)
-    mf = scf.RHF(mol)
-    mf.conv_tol = 1e-10
-    mf.verbose = 0
-    mf.kernel()
-    return mf
+ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o"]
+"""
+, "4e5o",  "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"
+"""
 
 def sector_dimension(num_orbitals, n_alpha, n_beta):
     # Number of roots in each spin sector
@@ -124,6 +64,7 @@ def get_casci_roots(
             valid_roots.append(
                 {
                     "energy": float(ecore + energy),
+                    # Convert CI matrix into partial vector in 2nd quantised det basis
                     "pvec": mat2pvec(ci_matrix, active_space_tuple, m),
                 }
             )
@@ -133,11 +74,11 @@ def get_casci_roots(
     return sorted(valid_roots, key=lambda root_data: root_data["energy"])
 
 
-def run_casci(xyz_path, active_space, max_roots):
+def run_casci(molecule_name, active_space, max_roots):
     num_electrons, num_orbitals = parse_active_space(active_space)
     active_space_tuple = (num_electrons, num_orbitals)
     n_pairs = num_electrons // 2
-    mf = run_rhf(xyz_path)
+    mf = load_pyscf_mol(molecule_name, active_space)
 
     # Singlets first 
     singlet_roots = get_casci_roots(
@@ -185,11 +126,9 @@ def run_casci(xyz_path, active_space, max_roots):
         spin_threshold=1e-5,
     )
 
-    singlet_energies = [root["energy"] for root in singlet_roots]
-    singlet_vectors = {
-        str(i): root["pvec"]
-        for i, root in enumerate(singlet_roots)
-    }
+    # Save the energies and pvec 
+    singlet_energies = np.asarray([root["energy"] for root in singlet_roots], dtype=float)
+    singlet_vectors = np.asarray([root["pvec"] for root in singlet_roots], dtype=float)
 
     triplet_roots_by_sector = {
         "0": triplet_ms0_roots,
@@ -199,73 +138,58 @@ def run_casci(xyz_path, active_space, max_roots):
     triplet_root_count = min(len(roots) 
                              for roots in triplet_roots_by_sector.values())
 
-    triplet_energies = [
-        {
-            sector: triplet_roots_by_sector[sector][i]["energy"]
-            for sector in ["0", "p1", "m1"]
-        }
+    triplet_energies = np.asarray([
+        [triplet_roots_by_sector[sector][i]["energy"] for sector in ["0", "p1", "m1"]]
         for i in range(triplet_root_count)
-    ]
+    ], dtype=float)
 
-    triplet_vectors = {
-        f"{i}_{sector}": triplet_roots_by_sector[sector][i]["pvec"]
+    triplet_vectors = np.asarray([
+        [triplet_roots_by_sector[sector][i]["pvec"] for sector in ["0", "p1", "m1"]]
         for i in range(triplet_root_count)
-        for sector in ["0", "p1", "m1"]
-    }
+    ], dtype=float)
    
     return {
         "singlet": {
             "casci_energies": singlet_energies,
-            "casci_pvec": singlet_vectors
+            "casci_pvec": singlet_vectors,
+            "sectors": np.asarray(["0"]),
         },
-        "triplet_all": {
+        "triplet": {
             "casci_energies": triplet_energies,
-            "casci_pvec": triplet_vectors
-        }
+            "casci_pvec": triplet_vectors,
+            "sectors": np.asarray(["0", "p1", "m1"]),
+        },
     }
 
 
-def write_record(handle, molecule, active_space, spin_type, casci_data):
-    json.dump(
-        {
-            "molecule": molecule,
-            "active_space": active_space,
-            "spin_type": spin_type,
-            "casci_energies": casci_data["casci_energies"],
-            "casci_pvec": casci_data["casci_pvec"],
-        },
-        handle,
-    )
-    handle.write("\n")
-
-
 def main():
-    molecule_paths = sorted(MOLECULE_DIR.glob("*.xyz"))
-    if MOLECULES:
-        requested = set(MOLECULES)
-        molecule_paths = [path for path in molecule_paths if path.stem in requested]
+    for molecule_name in MOLECULE_NAMES:
+        for active_space in ACTIVE_SPACES:
+            # Check all possible paths 
+            output_paths = {
+                spin_type: PYSCF_OUTPUT_DIR / active_space / spin_type / f"{molecule_name}.npz"
+                for spin_type in ["singlet", "triplet"]
+            }
+            # Check done paths
+            pending_spin_types = [spin_type for spin_type, path in output_paths.items() if not path.exists()]
 
-    if OUTPUT_PATH.exists() and not OVERWRITE:
-        raise FileExistsError(f"{OUTPUT_PATH} exists. Set OVERWRITE = True to replace it.")
+            # Dont run the done paths
+            if not pending_spin_types:
+                print(f"{molecule_name} {active_space}: complete, skipping")
+                continue
 
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+            print(f"Processing {molecule_name} {active_space}")
+            casci_data = run_casci(molecule_name, active_space, max_roots=N_ROOTS)
 
-    with OUTPUT_PATH.open("w") as handle:
-        for xyz_path in molecule_paths:
-            molecule = xyz_path.stem
-
-            for active_space in ACTIVE_SPACES:
-                print(f"Processing {molecule} {active_space}")
-                casci_data = run_casci(
-                    xyz_path,
-                    active_space,
-                    max_roots=N_ROOTS,
+            # Save the cached paths
+            for spin_type in pending_spin_types:
+                save_npz(
+                    output_paths[spin_type],
+                    molecule=molecule_name,
+                    active_space=active_space,
+                    spin_type=spin_type,
+                    **casci_data[spin_type],
                 )
-
-                for spin_type, spin_data in casci_data.items():
-                    write_record(handle, molecule, active_space, spin_type, spin_data)
-
-    print(f"Saved {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":

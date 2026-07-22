@@ -1,92 +1,22 @@
-#!/usr/bin/env python
 """Generate optimized VQE states in the fixed-electron determinant basis."""
-
-from __future__ import annotations
-
-import json
-import re
-from pathlib import Path
 
 import numpy as np
 
-from qibochem.ansatz.ucc import (
-    Ansatz_UCCGSD,
-    Ansatz_UCCSD,
-    Ansatz_UCCSDSinglet,
-    Ansatz_kUpCCGSDSinglet,
+from script_utils import (
+    ANSATZ_FUNCTIONS,
+    MOLECULE_NAMES,
+    QSE_EXPANSIONS,
+    QSE_STATE_OUTPUT_DIR,
+    get_vqe_circuit,
+    load_qibo_mol,
+    parse_active_space,
+    save_npz,
 )
-from qibochem.driver.molecule import Molecule
-from qibochem.measurement.utils import get_final_state as circuit_final_state
-from qibochem.selected_ci.qse import generate_singlet_singles, generate_triplet_singles
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DATA_DIR = PROJECT_ROOT / "data"
-MOLECULE_DIR = DATA_DIR / "28_mols"
-PARAMETERS_DIR = DATA_DIR / "parameters"
-OUTPUT_PATH = DATA_DIR / "raw_matrices" / "qse_state_matrices.jsonl"
-
-ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", 
-                 "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"]
-
-ANSATZ_FUNCTIONS = {
-    "1UpCCGSDSinglet": lambda molecule, **kwargs: Ansatz_kUpCCGSDSinglet(molecule, k=1, **kwargs),
-    "UCCSDSinglet": Ansatz_UCCSDSinglet,
-    "UCCSD": Ansatz_UCCSD,
-    "UCCGSD": Ansatz_UCCGSD,
-}
-
-
-def parse_active_space(active_space):
-    match = re.fullmatch(r"(\d+)e(\d+)o", active_space.lower())
-    if match is None:
-        raise ValueError("active_space must use the format '<electrons>e<orbitals>o'.")
-    return int(match.group(1)), int(match.group(2))
-
-
-def read_jsonl(path):
-    if not path.exists():
-        return []
-    with path.open() as handle:
-        return [json.loads(line) for line in handle if line.strip()]
-
-
-def append_jsonl(path, record):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("a") as handle:
-        handle.write(json.dumps(record) + "\n")
-
-
-def build_qibochem_molecule(xyz_path, active_space):
-    """Load an XYZ file, run PySCF, and apply HOMO-centered active embedding."""
-    num_active_e, num_active_o = parse_active_space(active_space)
-
-    molecule = Molecule(
-        xyz_file=str(xyz_path),
-        basis="sto-3g",
-    )
-    molecule.run_pyscf()
-
-    active_mo_start = molecule.nelec // 2 - num_active_e // 2
-    active_mos = list(range(active_mo_start, active_mo_start + num_active_o))
-    frozen_mos = [mo for mo in range(molecule.nelec // 2) if mo not in active_mos]
-    molecule.hf_embedding(active=active_mos, frozen=frozen_mos)
-
-    return molecule
-
-
-def load_vqe_parameters(molecule_name, active_space, ansatz_name):
-    """
-    Return the cached VQE record if it exists in any of the 
-    parameter JSONL file.
-    """
-    for path in sorted(PARAMETERS_DIR.glob("VQE_Params*.jsonl")):
-        for record in read_jsonl(path):
-            if (record["molecule"] == molecule_name
-                and record["active_space"] == active_space
-                and record["ansatz"] == ansatz_name):
-                return record["vqe_params"]
-    return None
-
+ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o"]
+"""
+, "4e5o",  "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"
+"""
 
 def get_fixed_electron_basis(active_space):
     """
@@ -187,72 +117,74 @@ def operator2partial_permu_mat(fermionic_operator, determinant_bitstrings):
 
     return matrix
 
-def get_qse_operators(active_space):
-    """Return QiboChem QSE FermionOperators for singlet or triplet_all."""
-    num_active_e, num_active_o = parse_active_space(active_space)
-    excitation_params = {"n_elec": num_active_e,
-                         "n_orbs": 2 * num_active_o,
-                         "spin_projection": "all"}
-    singlet_operators = generate_singlet_singles(excitation_params)
-    triplet_operators = generate_triplet_singles(excitation_params)
-    return singlet_operators, triplet_operators
+def generate_qse_state_matrices(molecule_name, active_space, ansatz_name, determinant_indices, projection_matrices):
+    output_paths = {
+        expansion: QSE_STATE_OUTPUT_DIR / active_space / expansion / f"{molecule_name}_{ansatz_name}.npz"
+        for expansion in QSE_EXPANSIONS
+    }
+    # Check for done entries
+    pending_expansions = [
+        expansion for expansion, output_path in output_paths.items()
+        if not output_path.exists()
+    ]
 
+    if not pending_expansions:
+        print(f"{molecule_name} {active_space} {ansatz_name}: complete, skipping")
+        return
 
-def get_final_state(molecule, ansatz_name, vqe_params):
-    """
-    Rebuild an optimized ansatz from cached VQE parameters and return its
-    full 2**n statevector.
-    """
-    ansatz = ANSATZ_FUNCTIONS[ansatz_name](
-        molecule,
-        final_params=vqe_params,
-    )
-    return circuit_final_state(ansatz.final_circuit)
+    # Load in cached canonical molecule and circuit objects
+    molecule = load_qibo_mol(molecule_name, active_space)
+    final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name)
+    # Execute circuit once to get final state
+    final_circuit()
+    final_state = final_circuit.final_state.state()
+    # Only save the correct matching active space terms from the full vec
+    ground_state_pvec = np.real(final_state[determinant_indices])
+
+    for expansion in pending_expansions:
+        projected_states = [matrix @ ground_state_pvec for matrix in projection_matrices[expansion]]
+        qse_state_matrix = np.column_stack(projected_states)
+
+        save_npz(
+            output_paths[expansion],
+            molecule=molecule_name,
+            active_space=active_space,
+            ansatz=ansatz_name,
+            expansion=expansion,
+            qse_state_matrix=qse_state_matrix,
+        )
+
+    print(f"Saved {molecule_name} {active_space} {ansatz_name}")
+
 
 def main():
     for active_space in ACTIVE_SPACES:
-        # First get the qse operators 
-        singlet_operators, triplet_operators = get_qse_operators(active_space)
-        determinant_indices , determinant_bitstrings = get_fixed_electron_basis(active_space)
-        # Build the qse_matrices 
-        singlet_matrices = [operator2partial_permu_mat(operator, determinant_bitstrings)
-                            for operator in singlet_operators]
-        triplet_matrices = [operator2partial_permu_mat(operator, determinant_bitstrings)
-                            for operator in triplet_operators]
-        
-        for molecule_path in MOLECULE_DIR.glob("*.xyz"):
-            molecule = build_qibochem_molecule(molecule_path, active_space)
-            molecule_name = molecule_path.stem
-            for ansatz_name in ANSATZ_FUNCTIONS.keys():
-                vqe_params = load_vqe_parameters(molecule_name, active_space, ansatz_name)
-                if vqe_params is None:
-                    print(f"Skipping {molecule_name} {active_space} {ansatz_name}: no VQE params")
-                    continue
+        # Save the relevant determinants and bitstrings matching the active space
+        determinant_indices, determinant_bitstrings = get_fixed_electron_basis(active_space)
+        num_active_e, num_active_o = parse_active_space(active_space)
+        projection_matrices = {}
 
-                final_state = get_final_state(molecule, ansatz_name, vqe_params)
-                ground_state_pvec = np.real(final_state[determinant_indices])
-                singlet_projections = [partial_perm_mat @ ground_state_pvec 
-                                       for partial_perm_mat in singlet_matrices]
-                triplet_projections = [partial_perm_mat @ ground_state_pvec 
-                                       for partial_perm_mat in triplet_matrices]
+        # Calculate unique projection matrices once
+        # Projects the qse vec into 2nd quantised det basis 
+        for expansion, (generator, spin_projection) in QSE_EXPANSIONS.items():
+            excitation_params = {
+                "n_elec": num_active_e,
+                "n_orbs": 2 * num_active_o,
+                "spin_projection": spin_projection,
+            }
+            operators = generator(excitation_params)
+            projection_matrices[expansion] = [
+                operator2partial_permu_mat(operator, determinant_bitstrings)
+                for operator in operators
+            ]
 
-                singlet_state_matrix = np.column_stack(singlet_projections).tolist()
-                triplet_state_matrix = np.column_stack(triplet_projections).tolist()
-
-                append_jsonl(OUTPUT_PATH,
-                             {"molecule": molecule_name,
-                              "active_space": active_space,
-                              "ansatz": ansatz_name,
-                              "expansion": "singlet",
-                              "qse_state_matrix": singlet_state_matrix})
-                append_jsonl(OUTPUT_PATH,
-                             {"molecule": molecule_name,
-                              "active_space": active_space,
-                              "ansatz": ansatz_name,
-                              "expansion": "triplet_all",
-                              "qse_state_matrix": triplet_state_matrix})
-
-                print(f"Saved {molecule_name} {active_space} {ansatz_name}")
+        # Use the projection matrices 
+        for molecule_name in MOLECULE_NAMES:
+            for ansatz_name in ANSATZ_FUNCTIONS:
+                generate_qse_state_matrices(
+                    molecule_name, active_space, ansatz_name,
+                    determinant_indices, projection_matrices
+                )
 
 if __name__ == "__main__":
     main()

@@ -15,6 +15,8 @@ from qibochem.driver.molecule import Molecule
 from qibochem.measurement.protocol import StateVectorProtocol
 from qibochem.selected_ci.qse import generate_singlet_singles, generate_triplet_singles
 
+from pyscf import fci, gto, scf
+
 """
 0. INITIALISATION
 """
@@ -29,6 +31,10 @@ SV_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_hamiltonian"
 SV_CACHE_DIR = DATA_DIR / "cache" / "qse_hamiltonian"
 SPIN_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_spin"
 SPIN_CACHE_DIR = DATA_DIR / "cache" / "qse_spin"
+PYSCF_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "pyscf_casci"
+SHOTS_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "shots_hamiltonian"
+SHOTS_CACHE_DIR = DATA_DIR / "cache" / "qse_hamiltonian"
+QSE_STATE_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "qse_state_matrices"
 
 # VARIABLES & SETTINGS
 ANSATZ_FUNCTIONS = {
@@ -99,6 +105,7 @@ def save_npz(path, **arrays):
 def _run_pyscf(xyz_path, num_active_e, num_active_o):
     """
     Run PYSCF helper function
+    Returns a qibo molecule object
     """
     molecule = Molecule(xyz_file=str(xyz_path), basis="sto-3g")
     molecule.run_pyscf()
@@ -110,7 +117,7 @@ def _run_pyscf(xyz_path, num_active_e, num_active_o):
     return molecule
 
 
-def load_molecule(molecule_name, active_space):
+def load_qibo_mol(molecule_name, active_space):
     """
     Function used by scripts to get canonical MOs
     """
@@ -138,6 +145,7 @@ def load_molecule(molecule_name, active_space):
         )
         return molecule
 
+    # If not load in a canonical qibo molecule object from the cached parameters
     hf_data = load_npz(hf_data_path)
     molecule = Molecule(xyz_file=str(xyz_path), basis="sto-3g")
     molecule.nelec = int(hf_data["num_electrons"])
@@ -158,6 +166,33 @@ def load_molecule(molecule_name, active_space):
     molecule.n_active_orbs = 2 * num_active_o
     return molecule
 
+
+def load_pyscf_mol(molecule_name, active_space):
+    """
+    Load a PySCF RHF reference from the cached data
+    Loads qibo mol object first so the caches are consistent 
+    """
+    molecule = load_qibo_mol(molecule_name, active_space)
+    pyscf_molecule = gto.M(
+        atom=molecule.geometry, basis=molecule.basis, unit="Angstrom",
+        charge=molecule.charge, spin=molecule.multiplicity - 1, # Qibo uses 2S+1
+        symmetry="C1", verbose=0,
+    )
+
+    # Build the PYSCF RHF object, without running mf.kernel() so the orbitals
+    # are manually defined based on cached parameters
+    mf = scf.RHF(pyscf_molecule)
+    mf.mo_coeff = np.asarray(molecule.ca)
+    mf.mo_energy = np.asarray(molecule.eps)
+    mf.mo_occ = np.zeros_like(mf.mo_energy)
+    mf.mo_occ[:molecule.nalpha] = 2
+    mf.e_tot = molecule.e_hf
+    mf.converged = True
+    return mf
+
+"""
+3. VQE HELPER
+"""
 
 def get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name):
     ansatz_function = ANSATZ_FUNCTIONS[ansatz_name]
@@ -191,3 +226,55 @@ def get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name):
         vqe_energy=float(vqe_energy),
     )
     return final_circuit
+
+"""
+4. PYSCF MATRIX HELPER
+"""
+
+def mat2pvec(ci_matrix, active_space, m):
+    """
+    Convert a PySCF CI matrix coefficients into a partial vector of coefficients 
+    Total terms is the number of valid determinants (within an active space) 
+    Ie, the number of electrons must match the active space. However, determinants
+    that are not within the spin sector are part of the vector as a 0 entry.
+
+    Sign flips accounted for because the determinant basis used uses interleaved 
+    alpha and beta ordering, while PySCF keeps alpha and beta strings separate 
+    Pyscf: a0 a1 a2 ... b0 b1 b2 ...
+    Interleaved: a0 b0 a1 b1 a2 b2 ...
+    """
+    num_active_e, num_active_o = active_space
+    num_bits = 2 * num_active_o
+
+    n_alpha = num_active_e // 2 + m
+    n_beta = num_active_e // 2 - m
+
+    pvec = []
+    for index in range(2**num_bits):
+        bitstring = format(index, f"0{num_bits}b")
+        if bitstring.count("1") != num_active_e:
+            continue
+
+        alpha_bits = bitstring[0::2]
+        beta_bits = bitstring[1::2]
+        # Check for spin sector 
+        if alpha_bits.count("1") != n_alpha or beta_bits.count("1") != n_beta:
+            pvec.append(0)
+            continue
+
+        alpha_index = fci.cistring.str2addr(num_active_o, n_alpha, alpha_bits[::-1])
+        beta_index = fci.cistring.str2addr(num_active_o, n_beta, beta_bits[::-1])
+
+        flips = 0
+        # Check for sign flips due to ordering of interleaved notation 
+        # Counts the number of times each beta orbital must be moved past alpha orbital 
+        for beta_orbital, beta_occ in enumerate(beta_bits):
+            if beta_occ == "1":
+                for alpha_orbital, alpha_occ in enumerate(alpha_bits):
+                    if alpha_occ == "1" and alpha_orbital > beta_orbital:
+                        flips += 1
+
+        sign = (-1) ** flips
+        pvec.append(sign * float(ci_matrix[alpha_index, beta_index]))
+
+    return pvec
