@@ -1,24 +1,44 @@
-\documentclass{article}
+\documentclass[letterpaper]{article}
 
-\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{geometry}
+\geometry{margin = 1in}
+\usepackage{setspace}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{bm}
 
+\usepackage[style = chem-acs]{biblatex}
+\addbibresource{references.bib}
+
 \usepackage{graphicx}
+\usepackage{float}
+\newfloat{scheme}{htbp}{los}
+\floatname{scheme}{Scheme}
+\newfloat{chart}{htbp}{loc}
+\floatname{chart}{Chart}
+\newfloat{graph}{htbp}{loh}
+
 \usepackage{booktabs}
 \usepackage{siunitx}
+\usepackage{chemformula}
+\usepackage[version = 4]{mhchem}
 
 \usepackage{hyperref}
 \usepackage{cleveref}
 
-\title{Practical Quantum Subspace Expansion: Stability, Noise, and Scaling}
-\author{Naythan Yeo, And Shi Jun}
-\date{\today}
+\setcounter{secnumdepth}{-1}
 
+\usepackage{authblk}
+
+\title{Practical Quantum Subspace Expansion: Stability, Noise, and Scaling}
+\author[1]{Naythan Yeo}
+\author[1]{Ang Shi Jun}
+\affil[1]{Institute of Advanced Intelligence and Computing}
+\date{*Email: naythan.yeo@gmail.com}
+
+\input{macros}
 \begin{document}
 
 \maketitle
@@ -26,6 +46,17 @@
 \begin{abstract}
 % TODO: Write abstract.
 \end{abstract}
+
+\section*{Keywords}
+
+quantum subspace expansion; variational quantum eigensolver; excited states;
+active spaces; measurement noise
+
+\section*{Abbreviations}
+
+QSE, quantum subspace expansion; VQE, variational quantum eigensolver; UCC,
+unitary coupled cluster; CASCI, complete active space configuration
+interaction.
 
 \section{Introduction}
 \input{sections/01_introduction}
@@ -45,8 +76,10 @@
 \section*{Data Availability}
 % TODO: Add data/code availability statement.
 
-% Uncomment once citations and bibliography entries have been added.
-% \bibliographystyle{unsrt}
-% \bibliography{references}
+\section*{Supporting Information}
+
+% TODO: Add supporting information file list.
+
+\printbibliography
 
 \end{document}
