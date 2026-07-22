@@ -1,15 +1,29 @@
-\subsection{Molecular Systems and Active Spaces}
-% Describe the molecular benchmark set and geometry sources.
-% Define active-space notation, e.g. NeNo, and explain the selected active spaces.
-% State basis set, frozen-orbital treatment, charge/spin assumptions, and classical electronic-structure backend.
-% Mention reference exact energies and spin-sector labels used for comparison.
+\subsection{Molecular Geometries and Active Space Preparation}
+The dataset used comprised 28 closed-shell organic molecules from Thiel's excited-state benchmark set \cite{thiels2008benchmark}. The published cartesian nuclear coordinates were referenced directly and used without further optimisation. 
+For each molecule, Restricted Hartree-Fock calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set. This set of canonical molecular orbitals were optimised once and used consistently throughout all subsequent CASCI, VQE and QSE calculations in the study. 
+
+Active spaces (denoted $n_e e\, n_o o$) comprised of the $n_e / 2$ occupied molecular spatial-orbitals closest to the HOMO and the $n_o - n_e / 2$ virtual molecular spatial-orbitals cloest to the LUMO. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
+
+\subsection{Exact Reference}
+Within each active space, the exact reference energies and wavefunctions were obtained from complete active-space configuration interaction (CASCI) calculations performed using PySCF. 
+Calculations were separated by spin-projection sector $M_S$ by setting the number of active $\alpha$ and $\beta$ spin electrons to be 
+
+$n_\alpha = \frac{n_e}{2} + M_S, n_\beta = \frac{n_e}{2} - M_S$
+
+Singlet states were obtained from the $M_S=0$ sector, while triplet states were calculated in the $M_S=0, +1, -1$ sectors. For each active-space spin projection sector, the determinant-space dimension, and therefore the maximum number of available roots, was $\binom{n_o}{n_\alpha} \binom{n_o}{n_\beta}$. 
+
+Where available, the lowest 11 singlet states (ground state + 10 excited states), and the lowest 10 triplet states (within each spin projection sector) were calculated. To ensure that the target number of states were obtained, three times the required number of CASCI roots were initialy requested from the FCI solver, subject to the maximum dimension of the corresponding determinant space. 
+The resulting roots were then filtered according to their $\Ssq$ expectation values, retaining only roots that satisfy $\left| \Ssq - S(S+1) \right| < 10^{-5}$ with $S=0$ for singlets and $S=1$ for triplets. 
+
+Throughout this study, wavefunctions were represented in a common active spin-orbital determinant basis by a state vector of length $\binom{2 n_{\mathrm{o}}}{n_{\mathrm{e}}}$. 
+This vector includes all determinants with $n_e$ electrons distributed amoung the $2n_o$ active spin-orbitals (irespective of their spin projections).
+Determinants were ordered lexicographically using an interleaved spin-orbital convention $(1\alpha, 1\beta, 2\alpha, 2\beta...)$.
+
+PySCF represented each wavefunction as a two dimensional CI coefficient matrix with dimensions $\binom{n_{\mathrm{o}}}{n_{\mathrm{\alpha}}}$ by $\binom{n_{\mathrm{o}}}{n_{\mathrm{\beta}}}$, coressponding to the $\alpha$ and $\beta$ electron occupation strings. These coefficients were embedded into the corresponding entries of the common state-vector representation.  During this conversion, the fermionic phase arising from the permutation between PySCF's separated $\alpha$ and $\beta$ electron ordering and the interleaved spin-orbital convention was included explicitly.
 
 
 \subsection{VQE Reference States and Ansatz Families}
-% Describe how VQE reference states are prepared before QSE.
-% List ansaetze compared: UCCSD, UCCSDSinglet, UCCGSD, and k-UpCCGSD.
-% State optimizer, parameter initialization/reuse, mapping, simulator/backend, and convergence criteria.
-% Record quantities used to compare ansaetze, including VQE energy error, circuit depth, parameter count, and spin expectation.
+All quantum chemistry calculations 
 
 
 \subsection{QSE Operator Pools and Projected Matrices}
@@ -17,6 +31,41 @@
 % Explain construction of projected Hamiltonian and overlap matrices H and S.
 % Describe operator-class labels such as Number, OV, OO, VV, and Intraorbital.
 % State how formal operator count, restricted operator count, and retained rank are computed.
+
+% Legacy triplet expansion: M_S = 0 sector only.
+% All-sector triplet expansion: M_S = -1, 0, +1 sectors.
+
+\begin{equation}
+    \hat{O}^{T,0}_{pq}
+    =
+    \frac{
+        a_{p\alpha}^{\dagger} a_{q\alpha}
+        -
+        a_{p\beta}^{\dagger} a_{q\beta}
+    }{\sqrt{2}} .
+\end{equation}
+
+\begin{align}
+    \hat{O}^{T,+1}_{pq}
+    &=
+    a_{p\alpha}^{\dagger} a_{q\beta}, \\
+    \hat{O}^{T,-1}_{pq}
+    &=
+    a_{p\beta}^{\dagger} a_{q\alpha}.
+\end{align}
+
+% Projected observable matrices can be constructed in the same QSE basis.
+% For spin diagnostics, use the total spin operator S^2.
+
+\begin{equation}
+    Z_{ij}
+    =
+    \left\langle \Psi_0 \right|
+    \hat{O}_i^\dagger
+    \hat{S}^2
+    \hat{O}_j
+    \left| \Psi_0 \right\rangle .
+\end{equation}
 
 
 \subsection{Generalized Eigenvalue Solvers and Stability Filters}
@@ -38,3 +87,30 @@
 % Explain how QSE roots are matched to reference states, including limitations of energy-only matching.
 % Define stable rank, observed gap rank, retained rank, condition number, and measurement-cost proxy.
 % Describe scaling quantities: operator count, matrix-element count, Pauli-term count, and commuting-group count.
+
+% Spin expectation values are evaluated from the projected S^2 matrix and
+% the QSE generalized-eigenproblem coefficients.
+
+\begin{equation}
+    \left\langle \hat{S}^2 \right\rangle_{\mathbf{c}}
+    =
+    \frac{
+        \mathbf{c}^\dagger
+        \mathbf{Z}
+        \mathbf{c}
+    }{
+        \mathbf{c}^\dagger
+        \mathbf{S}
+        \mathbf{c}
+    } .
+\end{equation}
+
+% Singlet-like roots satisfy <S^2> approximately 0.
+% Triplet-like roots satisfy <S^2> approximately 2.
+
+\begin{align}
+    \left\langle \hat{S}^2 \right\rangle_{\mathrm{singlet}}
+    &\approx 0, \\
+    \left\langle \hat{S}^2 \right\rangle_{\mathrm{triplet}}
+    &\approx 2 .
+\end{align}
