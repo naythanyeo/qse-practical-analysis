@@ -22,95 +22,64 @@ Determinants were ordered lexicographically using an interleaved spin-orbital co
 PySCF represented each wavefunction as a two dimensional CI coefficient matrix with dimensions $\binom{n_{\mathrm{o}}}{n_{\mathrm{\alpha}}}$ by $\binom{n_{\mathrm{o}}}{n_{\mathrm{\beta}}}$, coressponding to the $\alpha$ and $\beta$ electron occupation strings. These coefficients were embedded into the corresponding entries of the common state-vector representation.  During this conversion, the fermionic phase arising from the permutation between PySCF's separated $\alpha$ and $\beta$ electron ordering and the interleaved spin-orbital convention was included explicitly.
 
 
-\subsection{VQE Reference States and Ansatz Families}
-All quantum chemistry calculations 
+\subsection{Quantum Computing Framework}
+All quantum-circuit calculations in this study were performed using classical simulations implemented with the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. These frameworks were used to construct, represent and evaluate the quantum circuits employed.
+A research fork of Qibochem was developed to support the full computaional workflow used in the study. The fork introduced configurable ansatz classes, optimised circuit evaluation routines, support for measuring spin observables, and functionality for constructing and sampling the projected matrices required for Quantum Subspace Expansion calculations. 
+
+All calculations used ideal noiseless circuit simulations. Only finite-sampling noise arising from limited measurement shots were considered in the relevant sections. 
+
+\subsubsection{Ground State Reference}
+In this study, the Variational Quantum Eigensolver (VQE) algorithm was employed to find the ground reference state $\psi_VQE$. 
+
+Allowed excitations, spin conserving, generalised, singles doubles etc (filters)
+
+Ansatz classes, kup etc 
+
+Exponential representation --> trotter steps 
+
+Optimisation --> L-BFGS optimiser, save paramters, initialisation of parameters etc
+
+\subsubsection{Hamiltonian and Spin Operators}
+Define second quantised notation for hamiltonian 
+
+Spin projected operator. 
+Spin evaluation for each root (matrix operations )
+
+\subsubsection{QSE Operator Pools and Projected Matrices}
+Singles excitations formula 
+
+Triplets operators 
+(why not just ms0 --> SI??)
+
+Each term in the matrix expectation 
+
+Building matrix, hermitian 
+
+Hamiltonian vs spin  and overlap 
+
+\subsubsection{Finite-Shot Simulation}
+Grouping of commuting terms --> greedy grouping 
+
+Multinomial sampling method with numpy (allow of O(1) scaling)
 
 
-\subsection{QSE Operator Pools and Projected Matrices}
-% Define the QSE expansion operator pools for singlet and triplet calculations.
-% Explain construction of projected Hamiltonian and overlap matrices H and S.
-% Describe operator-class labels such as Number, OV, OO, VV, and Intraorbital.
-% State how formal operator count, restricted operator count, and retained rank are computed.
+\subsection{Numerical Analysis and Evaluation Metrics}
+\subsubsection{Generalised Eigenvalue Problem}
+Solving the problem 
 
-% Legacy triplet expansion: M_S = 0 sector only.
-% All-sector triplet expansion: M_S = -1, 0, +1 sectors.
+Define thresholding and dimension solve 
 
-\begin{equation}
-    \hat{O}^{T,0}_{pq}
-    =
-    \frac{
-        a_{p\alpha}^{\dagger} a_{q\alpha}
-        -
-        a_{p\beta}^{\dagger} a_{q\beta}
-    }{\sqrt{2}} .
-\end{equation}
+stable dimensions (2e3o etc) -> Why need to filter even for SV 
 
-\begin{align}
-    \hat{O}^{T,+1}_{pq}
-    &=
-    a_{p\alpha}^{\dagger} a_{q\beta}, \\
-    \hat{O}^{T,-1}_{pq}
-    &=
-    a_{p\beta}^{\dagger} a_{q\alpha}.
-\end{align}
+Change of basis to pvec form for projection calculations 
 
-% Projected observable matrices can be constructed in the same QSE basis.
-% For spin diagnostics, use the total spin operator S^2.
+\subsubsection{Projection}
+Formula to calculate projection 
 
-\begin{equation}
-    Z_{ij}
-    =
-    \left\langle \Psi_0 \right|
-    \hat{O}_i^\dagger
-    \hat{S}^2
-    \hat{O}_j
-    \left| \Psi_0 \right\rangle .
-\end{equation}
+\subsubsection{Triplet Degenerecies}
+Grouping degenerate states 
+Mean of projection 
+Splitting 
 
-
-\subsection{Generalized Eigenvalue Solvers and Stability Filters}
-% Describe solution of the generalized eigenvalue problem Hc = ESc.
-% Explain overlap-spectrum filtering, absolute/relative thresholds, condition-number caps, and stable-dimension rules.
-% Define oracle thresholds/dimensions as reference-dependent diagnostics, not deployable protocols.
-% State how negative or near-zero overlap eigenvalues are handled.
-
-
-\subsection{Finite-Shot Matrix Estimation}
-% Describe shot-based estimation of H and S using Pauli averaging and commuting-set grouping.
-% State shot counts, number of samples/repeats, simulator/backend, and random seeds if fixed.
-% Explain how finite-shot noise can perturb overlap eigenvalues and destabilize weak directions.
-% Distinguish statevector results from shot-noisy matrix estimates.
-
-
-\subsection{Accuracy, Matching, and Scaling Metrics}
-% Define MAE, RMSE, maximum error, chemical-accuracy hit rate, and failure rate.
-% Explain how QSE roots are matched to reference states, including limitations of energy-only matching.
-% Define stable rank, observed gap rank, retained rank, condition number, and measurement-cost proxy.
-% Describe scaling quantities: operator count, matrix-element count, Pauli-term count, and commuting-group count.
-
-% Spin expectation values are evaluated from the projected S^2 matrix and
-% the QSE generalized-eigenproblem coefficients.
-
-\begin{equation}
-    \left\langle \hat{S}^2 \right\rangle_{\mathbf{c}}
-    =
-    \frac{
-        \mathbf{c}^\dagger
-        \mathbf{Z}
-        \mathbf{c}
-    }{
-        \mathbf{c}^\dagger
-        \mathbf{S}
-        \mathbf{c}
-    } .
-\end{equation}
-
-% Singlet-like roots satisfy <S^2> approximately 0.
-% Triplet-like roots satisfy <S^2> approximately 2.
-
-\begin{align}
-    \left\langle \hat{S}^2 \right\rangle_{\mathrm{singlet}}
-    &\approx 0, \\
-    \left\langle \hat{S}^2 \right\rangle_{\mathrm{triplet}}
-    &\approx 2 .
-\end{align}
+\subsubsection{Non Index State Matching}
+hungarian algorithm 
