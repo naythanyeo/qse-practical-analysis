@@ -64,3 +64,5 @@ data/processed_dataframes
 *.bak
 *.swp
 *.swo
+manuscript/main.bbl-SAVE-ERROR
+notebooks/99_scratch.ipynb
