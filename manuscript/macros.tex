@@ -1,3 +1,104 @@
 % Helper symbols
 
 \newcommand{\Ssq}{\left\langle \hat{S}^2 \right\rangle} % Spin expectation
+
+% Computational methods equations
+\newcommand{\ElectronicHamiltonianEquation}{%
+    \begin{equation}
+        \hat{H}
+        =
+        \sum_{pq} h_{pq} \, \hat{a}^{\dagger}_p \hat{a}_q
+        +
+        \frac{1}{2}
+        \sum_{pqrs} h_{pqrs} \,
+        \hat{a}^{\dagger}_p \hat{a}^{\dagger}_q
+        \hat{a}_s \hat{a}_r .
+        \label{eq:electronic-hamiltonian}
+    \end{equation}%
+}
+
+\newcommand{\SpinZEquation}{%
+    \begin{equation}
+        \hat{S}_z
+        =
+        \frac{1}{2}
+        \sum_p
+        \left(
+            \hat{n}_{p\alpha}
+            -
+            \hat{n}_{p\beta}
+        \right),
+        \qquad
+        \hat{n}_{p\sigma}
+        =
+        \hat{a}^{\dagger}_{p\sigma}
+        \hat{a}_{p\sigma}.
+        \label{eq:spin-z}
+    \end{equation}%
+}
+
+\newcommand{\SpinLadderOperatorsEquation}{%
+    \begin{align}
+        \hat{S}_+
+        &=
+        \sum_p
+        \hat{a}^{\dagger}_{p\alpha}
+        \hat{a}_{p\beta}, 
+        &
+        \hat{S}_-
+        &=
+        \sum_p
+        \hat{a}^{\dagger}_{p\beta}
+        \hat{a}_{p\alpha}.
+        \label{eq:spin-ladder}
+    \end{align}%
+}
+
+\newcommand{\SpinSquaredEquation}{%
+    \begin{equation}
+        \hat{S}^2
+        =
+        \hat{S}_z^2
+        +
+        \frac{1}{2}
+        \left(
+            \hat{S}_+\hat{S}_-
+            +
+            \hat{S}_-\hat{S}_+
+        \right).
+        \label{eq:spin-squared}
+    \end{equation}%
+}
+
+\newcommand{\UCCUnitaryEquation}{%
+    \begin{equation}
+        \hat{U}_{\mathrm{UCC}}(\boldsymbol{\theta})
+        =
+        \exp\!\left(
+            \hat{T}(\boldsymbol{\theta})
+            -
+            \hat{T}^{\dagger}(\boldsymbol{\theta})
+        \right)
+        =
+        \exp\!\left[
+            \sum_{\lambda}
+            \theta_{\lambda}
+            \left(
+                \hat{T}_{\lambda}
+                -
+                \hat{T}_{\lambda}^{\dagger}
+            \right)
+        \right].
+        \label{eq:ucc-unitary}
+    \end{equation}%
+}
+
+\newcommand{\UCCReferenceStateEquation}{%
+    \begin{equation}
+        \left|\Psi_{\mathrm{UCC}}(\boldsymbol{\theta})\right\rangle
+        =
+        \hat{U}_{\mathrm{UCC}}(\boldsymbol{\theta})
+        \left|\Phi_{\mathrm{HF}}\right\rangle .
+        \label{eq:ucc-reference-state}
+    \end{equation}%
+}
