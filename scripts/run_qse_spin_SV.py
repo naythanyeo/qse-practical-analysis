@@ -18,14 +18,11 @@ from script_utils import (
 )
 
 
-ACTIVE_SPACES = [
-    "2e2o", "2e3o", "4e3o", "4e4o"
-]
-
+ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", "6e5o", "6e6o"]
 """
-"4e5o", "6e5o", "6e6o"
+,  "6e7o", "8e7o", "8e8o"
 """
-MAX_WORKERS = 4
+MAX_WORKERS = 2
 
 
 def run_molecule_expansion(molecule_name, active_space, expansion, excitation_generator, spin_projection):
