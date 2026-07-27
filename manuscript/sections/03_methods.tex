@@ -84,31 +84,48 @@ Parameters associated with excitation generators shared with the preceding ansat
 Following optimisation, the resulting VQE parameters were stored as a fixed ground-state reference wavefunction. This fixed reference set was used consistently for all subsequent statevector and finite-shot QSE calculations.
 
 \subsubsection{QSE Operator Pools and Projected Matrices}
-As discussed in the introduction, singlet and triplet operator pools consisting of only one-body operators were used to separately to build the singlet and triplet subspaces. The singlet operator pool $\mathcal{O}^{S}$ is defined as such:
+As discussed in the introduction, separate one-body operator pools were used to construct the singlet and triplet-targetting QSE subspaces. The singlet operator pool, $\mathcal{O}^{S}$, was defined as
 
 \QSESingletOperatorPoolEquation
-wherbey, $i$ and $j$ to denote active spatial orbitals and the diagonal singlet operators with $i=j$ include number operators. 
+wherbey, $i$ and $j$ to denote active spatial orbitals.
 
-The triplet operator pool $\mathcal{O}^{T}$ is constructed using operators from all 3 spin projection sectors, and recombined into one pool as follows. 
+The triplet operator pool, $\mathcal{O}^{T}$, was constructed from all three spin-projection components, which were collected into a single operator pool.
 \QSETripletOperatorPoolEquation
 
-Each spatial-orbital-indexed operator in either pool was enumerated as a single element $\hat{O}_\mu$, such that $\mu$ and $\nu$ label arbitrary operator-pool elements rather than spatial orbitals. The bare QSE observables were defined as
+The singlet operator pool therefore contained $n_{\mathrm{o}}^2$
+operators, while the triplet pool contains
+$3n_{\mathrm{o}}^2$ operators. Individual pool elements were enumerated as
+$\{\hat{O}_\mu\}$, with $\mu$ and $\nu$ indexing arbitrary operators within the given pool.
+
+A projected observable matrix was first constructed for the overlap, hamiltonian and spin-squared matrices. Observable matrix elements were defined as follows: 
 \QSEProjectedObservablesEquation
+where the corresponding target observables were $\hat I, \hat H,$ and $\hat S^{2}$, respectively.
 
-In total, there are 
+The fermionic QSE expansion operators and each target observable were mapped separately to Pauli operators using the Jordan-Wigner transformation. The projected observables were then constructed by multiplication in the Pauli representation. Terms with coefficients of magnitude smaller than $10^{-12}$ were discarded after the final product construction. 
+The resulting Pauli-string expectation values were then evaluated with respect to the optimised VQE states, $\left|\Psi_{\mathrm{VQE}}\right\rangle$
+For all calculations performed, only the diagonal and upper-triangular matrix elements, $\mu <= \nu$ were constructed and evaluated. Lower-triangular matrix terms were then reconstructed using Hermitian symmetry.
 
 
-These projected operator pools were used to build the upper triangular elements of the H and S matrix. The full matrices were then reconstructed by complex conjugation. 
+\subsubsection{Finite-Shot Sampling}
+Finite-shot sampling was used to model the effects of statistical measurement noise on the projected Hamiltonian and overlap matrices. 
+For each calculation, all unique Pauli strings in the projected Hamiltonian and Overlap observable matrices were first collected into a global measurement pool. Then, a largest-first greedy qubit-wise-commuting (QWC) grouping algorithm was used to partition the global measurement pool. 
+Grouping was performed globally across elements from both matrices which reduced the total number of commuting groups that needed to be measured. Preliminary data also showed that this method of global grouping, as opposed to grouping terms for each matrix element, resulted in much better agreement with the statevector results. 
 
+For each commuting group, a separate measurement circuit was constructed by appending basis-rotation gates to the optimized VQE circuit, such that all Pauli strings in the group could be measured in the computational ($Z$) basis. Hadamard gates were applied to qubits measured in the ($X$) basis, while $S^{\dagger}$ followed by a Hadamard gate was applied to qubits measured in the ($Y$) basis. This produced a distinct rotated statevector for each commuting group.
+A sampled probability vector was sampled for every rotated statevector using Numpy's multinomial sampler. The expectation values of ever Pauli string in each group were then calculated based on the sampled probability vector. $H$ and $S$ matrix elements were then re-constructed from the expectations of every Pauli string in the global measurement pool. 
 
-\subsubsection{Finite-Shot Simulation}
-Grouping of commuting terms --> greedy grouping 
+Measurement outcomes were generated for each rotated statevector using NumPy's multinomial sampler. The expectation values of all Pauli strings within a commuting group were estimated from the resulting sampled frequencies. These expectation values were then used to reconstruct the Hamiltonian and overlap matrices.
 
-Multinomial sampling method with numpy (allow of O(1) scaling)
-
+At each specified shot count, the finite-shot calculation was repeated using ten statistically independent sampling iterations. The resulting Hamiltonian and overlap matrices were solved independently, and the reported energy errors were calculated from the mean of the ten independently obtained energies.
 
 \subsection{Numerical Analysis and Evaluation Metrics}
 \subsubsection{Generalised Eigenvalue Problem}
+
+To obtain the energy eigenvalues and wavefunctions from the QSE matrices, we must solve the following equation Hc=ESc
+
+
+For every eigenvalue 
+
 Solving the problem 
 
 Define thresholding and dimension solve 
@@ -116,6 +133,8 @@ Define thresholding and dimension solve
 stable dimensions (2e3o etc) -> Why need to filter even for SV 
 
 Change of basis to pvec form for projection calculations 
+
+\subsubsection{Spin-expectation Evaluation}
 
 \subsubsection{Projection}
 Formula to calculate projection 

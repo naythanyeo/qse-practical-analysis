@@ -7,10 +7,12 @@
     \begin{equation}
         \hat{H}
         =
+        E_{\mathrm{nuc}}
+        +
         \sum_{pq} h_{pq} \, \hat{a}^{\dagger}_p \hat{a}_q
         +
         \frac{1}{2}
-        \sum_{pqrs} h_{pqrs} \,
+        \sum_{pqrs} g_{pqrs} \,
         \hat{a}^{\dagger}_p \hat{a}^{\dagger}_q
         \hat{a}_s \hat{a}_r .
         \label{eq:electronic-hamiltonian}
@@ -38,20 +40,20 @@
 }
 
 \newcommand{\SpinLadderOperatorsEquation}{%
-    \begin{align}
+    \begin{equation}
         \hat{S}_+
-        &=
+        =
         \sum_p
         \hat{a}^{\dagger}_{p\alpha}
-        \hat{a}_{p\beta}, 
-        &
+        \hat{a}_{p\beta},
+        \quad
         \hat{S}_-
-        &=
+        =
         \sum_p
         \hat{a}^{\dagger}_{p\beta}
         \hat{a}_{p\alpha}.
         \label{eq:spin-ladder}
-    \end{align}%
+    \end{equation}%
 }
 
 \newcommand{\SpinSquaredEquation}{%
@@ -100,5 +102,80 @@
         \hat{U}_{\mathrm{UCC}}(\boldsymbol{\theta})
         \left|\Phi_{\mathrm{HF}}\right\rangle .
         \label{eq:ucc-reference-state}
+    \end{equation}%
+}
+
+\newcommand{\SuzukiTrotterFirstOrderEquation}{%
+    \begin{equation}
+        e^{\hat{T} - \hat{T}^{\dagger}}
+        \approx
+        \prod_{\lambda}
+        e^{\theta_{\lambda}
+        \left(\hat{T}_{\lambda} - \hat{T}_{\lambda}^{\dagger}\right)}.
+        \label{eq:first-order-suzuki-trotter}
+    \end{equation}%
+}
+
+\newcommand{\QSESingletOperatorPoolEquation}{%
+    \begin{align}
+        \hat{O}^{S}_{ij}
+        &=
+        \hat{a}^{\dagger}_{i\alpha}\hat{a}_{j\alpha}
+        +
+        \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\beta}, \\
+        \mathcal{O}^{S}
+        &=
+        \left\{
+            \hat{O}^{S}_{ij}
+            \mathrel{\big|}
+            i,j \in \{1, \ldots, n_{\mathrm{o}}\}
+        \right\}.
+        \label{eq:qse-singlet-operator-pool}
+    \end{align}%
+}
+
+\newcommand{\QSETripletOperatorPoolEquation}{%
+    \begin{align}
+        \hat{O}^{T,0}_{ij}
+        &=
+        \frac{1}{\sqrt{2}}
+        \left(
+            \hat{a}^{\dagger}_{i\alpha}\hat{a}_{j\alpha}
+            -
+            \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\beta}
+        \right), \\
+        \hat{O}^{T,+1}_{ij}
+        &=
+        \hat{a}^{\dagger}_{i\alpha}\hat{a}_{j\beta},
+        \qquad
+        \hat{O}^{T,-1}_{ij}
+        =
+        \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\alpha}, \\
+        \mathcal{O}^{T}
+        &=
+        \left\{
+            \hat{O}^{T,m}_{ij}
+            \mathrel{\big|}
+            i,j \in \{1, \ldots, n_{\mathrm{o}}\},
+            \ m \in \{-1, 0, +1\}
+        \right\}.
+        \label{eq:qse-triplet-operator-pool}
+    \end{align}%
+}
+
+\newcommand{\QSEProjectedObservablesEquation}{%
+    \begin{equation}
+        \bar{s}_{\mu\nu}
+        =
+        \hat{O}_\mu^\dagger \hat{O}_\nu,
+        \qquad
+        \bar{h}_{\mu\nu}
+        =
+        \hat{O}_\mu^\dagger \hat{H} \hat{O}_\nu,
+        \qquad
+        \bar{z}_{\mu\nu}
+        =
+        \hat{O}_\mu^\dagger \hat{S}^2 \hat{O}_\nu.
+        \label{eq:qse-projected-observables}
     \end{equation}%
 }
