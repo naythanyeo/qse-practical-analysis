@@ -66,3 +66,5 @@ data/processed_dataframes
 *.swo
 manuscript/main.bbl-SAVE-ERROR
 notebooks/99_scratch.ipynb
+manuscript/main.bcf-SAVE-ERROR
+manuscript/main.pdf

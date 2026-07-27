@@ -2,7 +2,7 @@
 The dataset used comprised 28 closed-shell organic molecules from Thiel's excited-state benchmark set \cite{thiels2008benchmark}. The published cartesian nuclear coordinates were referenced directly and used without further optimisation. 
 For each molecule, Restricted Hartree-Fock calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set. This set of canonical molecular orbitals were optimised once and used consistently throughout all subsequent CASCI, VQE and QSE calculations in the study. 
 
-Active spaces (denoted $n_e e\, n_o o$) comprised of the $n_e / 2$ occupied molecular spatial-orbitals closest to the HOMO and the $n_o - n_e / 2$ virtual molecular spatial-orbitals cloest to the LUMO. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
+Active spaces (denoted $n_e e\, n_{\mathrm{o}} o$) comprised of the $n_e / 2$ occupied molecular spatial-orbitals closest to the HOMO and the $n_{\mathrm{o}} - n_e / 2$ virtual molecular spatial-orbitals cloest to the LUMO. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
 
 \subsection{Exact Reference}
 Within each active space, the exact reference energies and wavefunctions were obtained from complete active-space configuration interaction (CASCI) calculations performed using PySCF. 
@@ -10,13 +10,13 @@ Calculations were separated by spin-projection sector $M_S$ by setting the numbe
 
 $n_\alpha = \frac{n_e}{2} + M_S, n_\beta = \frac{n_e}{2} - M_S$
 
-Singlet states were obtained from the $M_S=0$ sector, while triplet states were calculated in the $M_S=0, +1, -1$ sectors. For each active-space spin projection sector, the determinant-space dimension, and therefore the maximum number of available roots, was $\binom{n_o}{n_\alpha} \binom{n_o}{n_\beta}$. 
+Singlet states were obtained from the $M_S=0$ sector, while triplet states were calculated in the $M_S=0, +1, -1$ sectors. For each active-space spin projection sector, the determinant-space dimension, and therefore the maximum number of available roots, was $\binom{n_{\mathrm{o}}}{n_\alpha} \binom{n_{\mathrm{o}}}{n_\beta}$. 
 
 Where available, the lowest 11 singlet states (ground state + 10 excited states), and the lowest 10 triplet states (within each spin projection sector) were calculated. To ensure that the target number of states were obtained, three times the required number of CASCI roots were initialy requested from the FCI solver, subject to the maximum dimension of the corresponding determinant space. 
 The resulting roots were then filtered according to their $\Ssq$ expectation values, retaining only roots that satisfy $\left| \Ssq - S(S+1) \right| < 10^{-5}$ with $S=0$ for singlets and $S=1$ for triplets. 
 
 Throughout this study, wavefunctions were represented in a common active spin-orbital determinant basis by a state vector of length $\binom{2 n_{\mathrm{o}}}{n_{\mathrm{e}}}$. 
-This vector includes all determinants with $n_e$ electrons distributed amoung the $2n_o$ active spin-orbitals (irespective of their spin projections).
+This vector includes all determinants with $n_e$ electrons distributed amoung the $2n_{\mathrm{o}}$ active spin-orbitals (irespective of their spin projections).
 Determinants were ordered lexicographically using an interleaved spin-orbital convention $(1\alpha, 1\beta, 2\alpha, 2\beta...)$.
 
 PySCF represented each wavefunction as a two dimensional CI coefficient matrix with dimensions $\binom{n_{\mathrm{o}}}{n_{\mathrm{\alpha}}}$ by $\binom{n_{\mathrm{o}}}{n_{\mathrm{\beta}}}$, coressponding to the $\alpha$ and $\beta$ electron occupation strings. These coefficients were embedded into the corresponding entries of the common state-vector representation.  During this conversion, the fermionic phase arising from the permutation between PySCF's separated $\alpha$ and $\beta$ electron ordering and the interleaved spin-orbital convention was included explicitly.
@@ -24,15 +24,14 @@ PySCF represented each wavefunction as a two dimensional CI coefficient matrix w
 
 \subsection{Quantum Computing Framework}
 All quantum-circuit calculations in this study were performed using classical simulations implemented with the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. These frameworks were used to construct, represent and simulate the quantum circuits employed.
-
 A research fork of Qibochem was developed to support the computaional workflow used in the study. The fork introduced configurable ansatz classes, optimised circuit evaluation routines, support for measuring spin observables, and dedicated functionality for constructing and sampling the projected matrices required for Quantum Subspace Expansion calculations. 
 
 All calculations in this work used ideal noiseless circuit simulations without modelling any hardware. Only finite-sampling noise arising from a limited number of measurement shots was considered in the relevant sections.
 
 \subsubsection{Hamiltonian and Spin Operators}
-For each active space, the electronic Hamiltonian was constructed in second quantisation from the one and two-electron integrals evaluated in the fixed canonical Hartre-Fock MO basis.
+For each active space, the electronic Hamiltonian was constructed in second quantisation as follows:
 \ElectronicHamiltonianEquation
-where $E_nuc$ is the core nuclear repulsion energy and $p, q, r, s$ index the active spin orbitals.
+where $E_{\mathrm{nuc}}$ is the core nuclear repulsion energy and $p, q, r, s$ index the active spin orbitals. $h_{pq}$ and $g_{pqrs}$ are the one and two-electron integral coefficients evaluated in the fixed canonical Hartree-Fock MO basis.
 
 Spin operators were constructed in the same second quantisation basis as follows.
 
@@ -50,36 +49,57 @@ In this study, 6 classes of Ansatz were used, namely: UCCSD, UCCSDSinglet, UCCGS
 
 For each ansatz, candidate singles and doubles transitions were first enumerated in fermionic form. Only canonical transitions that excite from a lower to high spin orbital were retained because the reverse transitions would already be included through its conjugate adjoint $\hat{T}^{\dagger}$ before exponentiation. All retained generators were spin conserving: single excitations preserved spin labels, while double excitations preserved the total number of $\alpha$ and $\beta$ spin electrons. 
 
-The non-generalised UCCSD and UCCSDSinglet ansatz were restricted to occupied-to-virtual single and double excitations relative to the reference Hartree-Fock determinant \cite{Anand2022UCCReview}. In contrast, the generalised UCCGSD ansatz allowed generalised orbital transitions between occupied--occupied and virtual--virtual spin orbitals \cite{Lee2018GeneralisedAnsatzOriginal}.
-
-To reduce the size of the generalised-double operator pool, mix-direction double excitaitons, in which one electron was promoted while the other was relaxed, were excluded. This practical restriction reduced the number of independent paramters by []. The resulting excitation pool agreed with that generated by InQuanto, formerly known as EUMEN, the software packaged used in the following generalised ansatz review \cite{Diniz2021GeneralisedAnsatzAdaptations,inquanto2022inquanto,Quantinuum2022InQuanto}
+The non-generalised UCCSD and UCCSDSinglet ansatz were restricted to occupied-to-virtual single and double excitations relative to the reference Hartree-Fock determinant \cite{Anand2022UCCReview}. In contrast, the generalised UCCGSD ansatz allowed generalised orbital transitions between occupied--occupied and virtual--virtual spin orbitals \cite{Lee2018GeneralisedAnsatzOriginal, Diniz2021GeneralisedAnsatzAdaptations}.
+To reduce the size of the generalised-double operator pool, mix-direction double excitaitons, in which one electron was promoted while the other was relaxed, were excluded. Across the $4e4o$ to $8e8o$ active spaces, this practical restriction reduced the number of independent parameters by 42.2--45.2\% and the circuit depth by 46.4--47.6\%.
 
 The $k$-UpCCGSDSinglet ansatz combined generalised singles with generalised paired doubles. For each paired doubles, an $\alpha\beta$ electron pair was removed from one spatial orbital and created in another. 
-
 The UCCSDSinglet and $k$-UpCCGSDSinglet constructions imposed spin-adapted parameter sharing between spin-orbital excitations that had the same spatial-orbital labels. 
-
 For $k$-UpCCGSDSinglet, the complete generalised single and paired-double block was repeatd $k$ times, with an independent set of variational paramters assigned to each repetition. 
 
-Exponential representation --> trotter steps 
+Unless otherwise stated, all UCC operators were implemented using the first order Suzuki Trotter product approximation given in \cref{eq:first-order-suzuki-trotter}. 
 
-Optimisation --> L-BFGS optimiser, save paramters, initialisation of parameters etc
-These ansatz parameters were then optimised classically with a Qibo's L-BFGS-B optimiser to minimise the ground state energy. 
+\SuzukiTrotterFirstOrderEquation
 
+At every optimisation step, the circuit energy was evaluated as the noiseless statevector expectation value of the electronic Hamiltonian \cref{eq:electronic-hamiltonian}
+The variational parameters were optimised classically using the L-BFGS-B optimiser through Qibo, to minimise the ground state expectation value. For the $k$-UpCCGSDSinglet ansatz, the parameters associated with all $k$ repeated layers were optimised simultaneously.
+Before optimisation, ansatz parameters were initialised based on the following hierarchy: 
+\[
+\mathrm{MP2}
+\rightarrow
+1\text{-UpCCGSD}
+\rightarrow
+2\text{-UpCCGSD}
+\rightarrow
+3\text{-UpCCGSD}
+\rightarrow
+\mathrm{UCCSDSinglet}
+\rightarrow
+\mathrm{UCCSD}
+\rightarrow
+\mathrm{UCCGSD}.
+\]
 
+Parameters associated with excitation generators shared with the preceding ansatz were initialised with the previously optimised amplitudes, while newly introduced generators were initialised to zero. The initial occupied to virtual double-excitation parameters were estimated using second-order Moller-Plesset perturbation theory (MP2). For parameter transfer from a \(k\)-UpCCGSDSinglet ansatz to a subsequent ansatz, the optimized amplitudes associated with each generator were summed across the \(k\) layers and used as the initial amplitude for the corresponding generator
 
-
+Following optimisation, the resulting VQE parameters were stored as a fixed ground-state reference wavefunction. This fixed reference set was used consistently for all subsequent statevector and finite-shot QSE calculations.
 
 \subsubsection{QSE Operator Pools and Projected Matrices}
-Singles excitations formula 
+As discussed in the introduction, singlet and triplet operator pools consisting of only one-body operators were used to separately to build the singlet and triplet subspaces. The singlet operator pool $\mathcal{O}^{S}$ is defined as such:
 
-Triplets operators 
-(why not just ms0 --> SI??)
+\QSESingletOperatorPoolEquation
+wherbey, $i$ and $j$ to denote active spatial orbitals and the diagonal singlet operators with $i=j$ include number operators. 
 
-Each term in the matrix expectation 
+The triplet operator pool $\mathcal{O}^{T}$ is constructed using operators from all 3 spin projection sectors, and recombined into one pool as follows. 
+\QSETripletOperatorPoolEquation
 
-Building matrix, hermitian 
+Each spatial-orbital-indexed operator in either pool was enumerated as a single element $\hat{O}_\mu$, such that $\mu$ and $\nu$ label arbitrary operator-pool elements rather than spatial orbitals. The bare QSE observables were defined as
+\QSEProjectedObservablesEquation
 
-Hamiltonian vs spin  and overlap 
+In total, there are 
+
+
+These projected operator pools were used to build the upper triangular elements of the H and S matrix. The full matrices were then reconstructed by complex conjugation. 
+
 
 \subsubsection{Finite-Shot Simulation}
 Grouping of commuting terms --> greedy grouping 
