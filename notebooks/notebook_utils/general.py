@@ -11,10 +11,18 @@ def parse_active_space(active_space):
     return int(num_e), int(num_o.removesuffix("o"))
 
 
-def read_jsonl(path):
-    with path.open() as f:
-        for line in f:
-            yield json.loads(line)
+def read_npz(path):
+    """
+    Read NPZ file and return dictionary
+    """
+    with np.load(path, allow_pickle=False) as data:
+        record = {}
+
+        for key in data.files:
+            value = data[key]
+            record[key] = value.item() if value.ndim == 0 else value
+
+    return record
 
 
 def complex_matrix(real, imag):

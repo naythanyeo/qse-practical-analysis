@@ -1,0 +1,284 @@
+% Helper symbols
+
+\newcommand{\Ssq}{\left\langle \hat{S}^2 \right\rangle} % Spin expectation
+
+% Computational methods equations
+\newcommand{\ElectronicHamiltonianEquation}{%
+    \begin{equation}
+        \hat{H}
+        =
+        E_{\mathrm{nuc}}
+        +
+        \sum_{pq} h_{pq} \, \hat{a}^{\dagger}_p \hat{a}_q
+        +
+        \frac{1}{2}
+        \sum_{pqrs} g_{pqrs} \,
+        \hat{a}^{\dagger}_p \hat{a}^{\dagger}_q
+        \hat{a}_s \hat{a}_r .
+        \label{eq:electronic-hamiltonian}
+    \end{equation}%
+}
+
+\newcommand{\SpinZEquation}{%
+    \begin{equation}
+        \hat{S}_z
+        =
+        \frac{1}{2}
+        \sum_p
+        \left(
+            \hat{n}_{p\alpha}
+            -
+            \hat{n}_{p\beta}
+        \right),
+        \qquad
+        \hat{n}_{p\sigma}
+        =
+        \hat{a}^{\dagger}_{p\sigma}
+        \hat{a}_{p\sigma}.
+        \label{eq:spin-z}
+    \end{equation}%
+}
+
+\newcommand{\SpinLadderOperatorsEquation}{%
+    \begin{equation}
+        \hat{S}_+
+        =
+        \sum_p
+        \hat{a}^{\dagger}_{p\alpha}
+        \hat{a}_{p\beta},
+        \quad
+        \hat{S}_-
+        =
+        \sum_p
+        \hat{a}^{\dagger}_{p\beta}
+        \hat{a}_{p\alpha}.
+        \label{eq:spin-ladder}
+    \end{equation}%
+}
+
+\newcommand{\SpinSquaredEquation}{%
+    \begin{equation}
+        \hat{S}^2
+        =
+        \hat{S}_z^2
+        +
+        \frac{1}{2}
+        \left(
+            \hat{S}_+\hat{S}_-
+            +
+            \hat{S}_-\hat{S}_+
+        \right).
+        \label{eq:spin-squared}
+    \end{equation}%
+}
+
+\newcommand{\UCCUnitaryEquation}{%
+    \begin{equation}
+        \hat{U}_{\mathrm{UCC}}(\boldsymbol{\theta})
+        =
+        \exp\!\left(
+            \hat{T}(\boldsymbol{\theta})
+            -
+            \hat{T}^{\dagger}(\boldsymbol{\theta})
+        \right)
+        =
+        \exp\!\left[
+            \sum_{\lambda}
+            \theta_{\lambda}
+            \left(
+                \hat{T}_{\lambda}
+                -
+                \hat{T}_{\lambda}^{\dagger}
+            \right)
+        \right].
+        \label{eq:ucc-unitary}
+    \end{equation}%
+}
+
+\newcommand{\UCCReferenceStateEquation}{%
+    \begin{equation}
+        \left|\Psi_{\mathrm{UCC}}(\boldsymbol{\theta})\right\rangle
+        =
+        \hat{U}_{\mathrm{UCC}}(\boldsymbol{\theta})
+        \left|\Phi_{\mathrm{HF}}\right\rangle .
+        \label{eq:ucc-reference-state}
+    \end{equation}%
+}
+
+\newcommand{\SuzukiTrotterFirstOrderEquation}{%
+    \begin{equation}
+        e^{\hat{T} - \hat{T}^{\dagger}}
+        \approx
+        \prod_{\lambda}
+        e^{\theta_{\lambda}
+        \left(\hat{T}_{\lambda} - \hat{T}_{\lambda}^{\dagger}\right)}.
+        \label{eq:first-order-suzuki-trotter}
+    \end{equation}%
+}
+
+\newcommand{\QSESingletOperatorPoolEquation}{%
+    \begin{align}
+        \hat{O}^{S}_{ij}
+        &=
+        \hat{a}^{\dagger}_{i\alpha}\hat{a}_{j\alpha}
+        +
+        \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\beta}, \\
+        \mathcal{O}^{S}
+        &=
+        \left\{
+            \hat{O}^{S}_{ij}
+            \mathrel{\big|}
+            i,j \in \{1, \ldots, n_{\mathrm{o}}\}
+        \right\}.
+        \label{eq:qse-singlet-operator-pool}
+    \end{align}%
+}
+
+\newcommand{\QSETripletOperatorPoolEquation}{%
+    \begin{align}
+        \hat{O}^{T,0}_{ij}
+        &=
+        \frac{1}{\sqrt{2}}
+        \left(
+            \hat{a}^{\dagger}_{i\alpha}\hat{a}_{j\alpha}
+            -
+            \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\beta}
+        \right), \\
+        \hat{O}^{T,+1}_{ij}
+        &=
+        \hat{a}^{\dagger}_{i\alpha}\hat{a}_{j\beta},
+        \qquad
+        \hat{O}^{T,-1}_{ij}
+        =
+        \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\alpha}, \\
+        \mathcal{O}^{T}
+        &=
+        \left\{
+            \hat{O}^{T,m}_{ij}
+            \mathrel{\big|}
+            i,j \in \{1, \ldots, n_{\mathrm{o}}\},
+            \ m \in \{-1, 0, +1\}
+        \right\}.
+        \label{eq:qse-triplet-operator-pool}
+    \end{align}%
+}
+
+\newcommand{\QSEProjectedObservablesEquation}{%
+    \begin{equation}
+        \bar{s}_{\mu\nu}
+        =
+        \hat{O}_\mu^\dagger \hat{O}_\nu,
+        \qquad
+        \bar{h}_{\mu\nu}
+        =
+        \hat{O}_\mu^\dagger \hat{H} \hat{O}_\nu,
+        \qquad
+        \bar{z}_{\mu\nu}
+        =
+        \hat{O}_\mu^\dagger \hat{S}^2 \hat{O}_\nu.
+        \label{eq:qse-projected-observables}
+    \end{equation}%
+}
+
+\newcommand{\DiagonaliseSEquation}{%
+    \begin{equation}
+        \mathbf{S}
+        =
+        \mathbf{U}
+        \boldsymbol{\Lambda}
+        \mathbf{U}^{\dagger}.
+        \label{eq:diagonalise-s}
+    \end{equation}%
+}
+
+\newcommand{\WhitenSEquation}{%
+    \begin{equation}
+        \mathbf{V}
+        =
+        \mathbf{U}\boldsymbol{\Lambda}^{-1/2},
+        \qquad
+        \mathbf{V}^{\dagger}\mathbf{S}\mathbf{V} = \mathbf{I}.
+        \label{eq:whiten-s}
+    \end{equation}%
+}
+
+\newcommand{\TransformToOrdinaryEigenvalueEquation}{%
+    \begin{equation}
+        \mathbf{V}^{\dagger}\mathbf{H}\mathbf{V}\mathbf{y}
+        =
+        E\mathbf{V}^{\dagger}\mathbf{S}\mathbf{V}\mathbf{y}
+        =
+        E\mathbf{y}.
+        \label{eq:transform-to-ordinary-eigenvalue}
+    \end{equation}%
+}
+
+\newcommand{\ReducedEigenvalueEquation}{%
+    \begin{equation}
+        \tilde{\mathbf{V}}^{\dagger}
+        \mathbf{H}
+        \tilde{\mathbf{V}}
+        \mathbf{y}
+        =
+        E\mathbf{y}.
+        \label{eq:reduced-eigenvalue}
+    \end{equation}%
+}
+
+\newcommand{\MaxDimensionsEquation}{%
+    \begin{equation}
+        \begin{aligned}
+            d_{\mathrm{S}}^{\max}
+            &=
+            \min\!\left[
+                \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}}^{2}
+                -
+                \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}+1}
+                \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}-1},
+                \,
+                n_{\mathrm{o}}^{2}
+            \right], \\
+            d_{\mathrm{T}}^{\max}
+            &=
+            \min\!\left[
+                3\left(
+                    \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}+1}
+                    \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}-1}
+                    -
+                    \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}+2}
+                    \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}-2}
+                \right),
+                \,
+                3n_{\mathrm{o}}(n_{\mathrm{o}}-1)
+            \right],
+            \qquad
+            n_{\mathrm{p}}=\frac{n_{\mathrm{e}}}{2}.
+        \end{aligned}
+        \label{eq:max-dimensions}
+    \end{equation}%
+}
+
+\newcommand{\SpinExpectationQSEBasisEquation}{%
+    \begin{equation}
+        \left\langle \hat{S}^2 \right\rangle_k
+        =
+        \frac{\mathbf{c}_k^\dagger\mathbf{Z}\mathbf{c}_k}
+             {\mathbf{c}_k^\dagger\mathbf{S}\mathbf{c}_k}.
+        \label{eq:spin-expectation-qse-basis}
+    \end{equation}%
+}
+
+\newcommand{\SpinExpectationShortenedBasisEquation}{%
+    \begin{equation}
+        \left\langle \hat{S}^2 \right\rangle_k
+        =
+        \frac{
+            \mathbf{y}_k^\dagger
+            \tilde{\mathbf{V}}^\dagger\mathbf{Z}\tilde{\mathbf{V}}
+            \mathbf{y}_k
+        }{
+            \mathbf{y}_k^\dagger\mathbf{y}_k
+        }.
+        \label{eq:spin-expectation-shortened-basis}
+    \end{equation}%
+}
