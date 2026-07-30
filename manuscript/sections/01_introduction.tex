@@ -1,17 +1,43 @@
-\subsection{The Quantum Computing Edge in Quantum Chemistry}
-% Motivate electronic-structure problems as a natural target for quantum computers.
-% Explain why classical scaling becomes difficult for correlated molecules and excited states.
-% Position near-term algorithms as practical approximations rather than fault-tolerant solutions.
+% PARA 1: Why Quantum Computing 
+% 1) In silico electronic structure calculations are of great interest because they are central to predicting properties like energies, structures, forces, reactivitiy, spectra etc. This is useful experimentally, can use it to run simulations etc so that costly experiments can be reduced. 
+% 2) However, many electron methods become prohibitively expensive beause the size of wavefunction representatino grows combinatorially with system size. This means that classical methods can extend to larger molecules but only with heavy approximations. This exponential scaling limits the kinds of simulations that classical computers can do 
+% 3) First proposed by Feynman in 1982, quantum simulations offer a fundamentally different approach... Use QC that represents a superposition of 2^n configuraitons with n qubits. Can be favourable 
 
-\subsection{Quantum Subspace Expansion for Excited States}
-Quantum Subspace Expansion was a method recently 
 
-\subsection{Generalized Eigenvalue Conditioning}
-% Introduce the role of the overlap matrix spectrum in QSE stability.
-% Preview thresholds, condition numbers, retained rank, and stable dimension.
-% Emphasize the trade-off between numerical stability and subspace completeness.
+% PARA 2: Quantum Computing Challenges
+% 1) However, QC has its own set of challenges, mainly like decoherence. IE we cant have the circuit get too deep 
+% 2) One famous algorithm basically is VQE, the original intent by the authors is to mitigate this decoherence issue (cite some vqe reviews). Briefly talk about how VQE is a hybrid quantum classical algorithm, whereby measurremnts are doen on quantum computer but optimsied classically. 
+% 3) This si good, but ground states are often not enough. IE we need better ones forapplications like xxxxx (cite a few chemistry shit )
 
-\subsection{Current QSE Studies and Contributions of This Work}
-% Summarize prior QSE work on excited states, response properties, and NISQ implementations.
-% Identify the gap: practical stability and completeness are not always characterized together.
-% State this work's focus on QSE instability, representability of the projected space, finite-shot effects, and scaling.
+
+% PARA 3: Introduce Quantum Subspace methods
+% 1) Therefore if we want to generate excited states, one method usually is to use quantum subspace methods. Generally what it does, like project H onto trial space etc , can enable low lying states to be found after classical diagonalisation 
+% 2) These methods are popular, they trade off circuit depth with like more measurements and classical diagonalisation? need to read the review here 
+
+
+% PARA 4: Formalisation of QSE, equations etc how QSE gets excited states 
+% 1) Now then talk about QSE, it is one subspace method that builds projected matrices around a ground state
+% 2) List the equations for the H and S matrices terms 
+% 3) By diagonalising, can get the excited states from it 
+
+% PARA 5: Limitations of QSE, solving Hc=ESc, conditioning problem 
+% 1) talk about the key limitation, ie basis is not orthogonal ill conditioning can occur 
+% 2) Have to solve generlaised eigenvalue problem instead, which is prone to numerical instabilty due to inversion of S 
+
+% PARA 6: Then given that, why still bother with QSE? 
+% 1) compared to QSE, other subspace methods seem to avoid this like EOM, cause it forms an othrogonal basis --> no ill conditioning 
+% 2) BUT, QSE is still relevant because
+% 2a) you find exact states instead of differences, 
+% 2b) Flexibility in terms of referene state and operator pool 
+
+% PARA 7: Current literature gaps
+% 1) But a lot of current literature for QSE at least only study small systems and stretch tested them
+% 2) for this method, a lot is still unknown about the represntabity and spectral accuracy beyondd thos stress test systems, and how to practically apply this 
+% 3) also talk about how the ill conditioning problem is not well quantified. ie people just talk about overlap but dont really dive much deeper. TBC pointer? 
+
+% PARA 8: Study Design and Justification
+% 1) FIRST we want to look and study the representabity and accuracy of a set of molecules instead, basically state what is special aobut the 28 mols 
+% 2) also talk about how the representability should be tested and measured wrt to the cohoice of reference frame. state here the 6 ansatz investigated 
+% 3) wan tto do a deep dive of the instabilty problem 
+% 4) also talk about the operator pools used, ie we want xxx so we did that 
+
