@@ -1,57 +1,111 @@
-\subsection{Effective Dimensions of the QSE Subspace}
-% Main claim: the formal QSE operator pool is larger than the physically supported projected subspace.
-% Discuss overlap eigenvalue spectra, stable dimensions, and operator support.
-% Explain instability as arising from weakly supported projected vectors.
-% Include the paired ansatz / 2e3o example if useful.
-% Also discuss the trade-off: weakly supported directions are unstable, but removing them can reduce chemical accuracy.
-% Suggested figures:
-% - formal operator count vs stable dimension
-% - overlap eigenvalue spectrum
-% - eigenvector/operator-class composition
-% - accuracy vs retained operator classes
+\subsection{Accuracy and Representability of the QSE Subspace}
+% This section dives deeper onto the subspace representability of QSE. Mainly should answer the question, how well can QSE represent states 
+\subsubsection{Dependence of QSE Spectral Accuracy on reference Ansatz}
+% This subsection focuses on how the reference ansatz states affect the QSE accuracy 
+% Main table: Ansatz will be the rows, plot the median error for s0 s1 t1 t2 at a fixed active space of 6e6o. LHS of table include circuit depth / parameter count 
+% SI: Box and whisker to show the distrbution for UCCSD s0 s1 t1 t2 horizontally without the labels 
+% CONTENT
+% 1) Talk about how more expressive ansatz like UCCGSD is good for finding a better ground state s0. For restricted ones like paired ansatz its particularly bad for the ground state (too restrictive)
+% 2) For the low lying states triplet states, the ansatz choice still matter, but not as significnatly? For singlet states error is considerably higher
+% 3) Brief here is that ansatz choice definitely matters, but in terms of representabilty, UCCSD presents a good balance between flexibility and cost. paired ansatz too restrictive and generlaised ansatz too expensive without providing must benefit for low lying excited states 
+% 4) Talk about how the median here is reported because the errors had extreme tails caused by several outlier states. Very bad outlier problem for no reason at all.. Show box and whisker for UCCSD for eg s0 s1 t1 t2 
+% 5) Link to next section to try to explain the outliers 
 
-\input{tables/ground_state_comparison/6e6o}
+\subsubsection{Root assignment and Spin purity}
+% Here, we consider the effects of incorrect roots matching that could cause the outliers observed 
+% EXAMPLES: Choose one 6e6o wrongly ordered root, IE bad match with index root but good match with overlap root
+% EXAMPLE: Choose one spin contaminated root that was found from the wrong spin sector 
+% SI FIGURE: Bad spin roots occurence across ansatz for singlet vs triplets, the stacked bar graph 
+% SI table: Grouped trotter approximation? TBC tbh If not just show the VQE state spin values for UCCSD vs UCCSDSinglet 
+% STATS: Hungarian matching, check out the new median error 
+
+% CONTENT
+% 1) First effect considered is that the QSE itself might give wrongly ordered roots. --> Show this with examples. 
+% 2) Consider why the root reordering can occur? Like state that this is more of a linear algebra thing?? TBC find sources 
+% 3) Consider also spin contamination. Show that spin contamination can exist with an example. Explain that this can occur because the ground reference state is not pure, and that tiny impurities can get projected and amplified. Ie that wrong spin component is amplified.  Show how the spin contamination is significant for UCCGSD, appearing sometimes at low lying excited states. For paired ansatz, almost none at all. For UCCSD and UCCSDSinglet, interestingly, the more flexible UCCSD provided for less spin contamination. 
+% 4) Note that this was not just because UCCSD provided a better QSE root, but after optimisation from VQE, the UCCSD VQE state was also more pure. State that this could be due to the trotter approximation failure. 
+% 5) We try then to remove these effects, ie use hungarian matching based on wavefunction overlap and filter for spin purity. However, this only marginally improves the median. The Std Dev also remains high. This indicates that there is some underlying issue about the representability itself. Ie this motivates direct assesment if the exact states are contained within the QSE subsapce 
+
+\subsubsection{Geometric representability of exact states}
+% MAIN GRAPH: 6e6o, scatter plot of the log errors against the projection from 0.9 to 1, less than 0.9 will be <0.9. split 4 panels by s0 s1 t1 t2. Either Main or SI. In this case use batch hungarian matching with spin filter
+% CONTENT
+% To investigate that further, we then look at whether the QSE errors can be explained by an incomplete representation of exact states within the one body QSE subspace 
+% Define projection metric used, and what it shows etc 
+% State how chemical accuracy is only observed when projection is near 1. So if the subspace does not contain the root, as expected the energies will be bad. However, this does not gurantee that the energies will be good because even if the subspace has a very large projection, the energy difference depends heavily on the energy scale of the missing 1% direction. This means that the missing or bad energys can be explained by two reasons, one is straight up missing projection, the operator pool is completely insufficient. Second is that even if the subspace can represent majority of the state, the ritz energies might still be large because...? 
+
+\subsubsection{Active-space dependence of representability and accuracy}
+% Next, we then consider the effects of active space scaling on the accuracy of the QSE 
+% MAIN FIGURE: IQR plot for UCCSD for the variance active spaces, split panel, with dotted line drawn chemical accuracy, same log scale used for all 
+% REPEAT SI: present this exact same plot for all the other ansatz but in SI. 
+% CONTENT
+% 1) Talk about how for active spaces of 2e2o 2e3o 4e3o etc, the solution is almost exact. Cause the number of physically represented directions is less than tha total QSE operators. This means that the states can be reprsented almost exactly throughout even for the exact states 
+% 2) Phrase it more that for smaller active spaces the performance generally better than above, but this indicates that as active space grows, the performance and representability drops 
+% 3) explain roughly that the operator pool grows with O(N^2) but the FCI is exponential. This points to the fact again that a linear operator might not be sufficient 
+% 4) state brutally that in terms of scaling, for the current operator used it is likely insufficinet because already at 6e6o the median is above chemical accuracy for excited states, only for ground state it remains ok. For practical use of QSE to predict excited states, efforts should be focused on developing the operator pool further and explore the effects at larger active spaces. 
 
 
+\subsection{Stable Dimensions of QSE}
+\subsubsection{Eigenvalue Distribution}
+% MAIN PLOT: show the eigenvalue spread across all 28 molecules, all ansatz separated by colour scatter plot. Use this one panel singlet another panel triplets. active space 6e6o
+% SI / MAIN PLOT: show the eigenvector breakdown stacked bar plot across the states, whatever is there currenlty 
+% SI: same plot as first one but active space 2e3o
+% CONTENT:
+% Transition: Now beyond just the representability and accuracy, we dive deeper into the instability problem, which has been typically identified as the central problem of QSE due to non-orthogonality of its basis
+% 1) First quantify the problem. Many studies typically quantify the instability with condition number, which is the max / min eigenvalue of the S matrix. When this is very large, known to have numerical instabilities. Here we then look at the distribution of eigenvalues, and the figure above shows that clear structures in the eigenvalue breakdown. 
+% 2) Claim that the eigenvalues are directly linked to how strongly supported each eigenvector is. meaning, eigenvectors can be decomposed to into the basis of QSE operators that it was formed from. When each qse operator acts on the reference VQE state, some operators will be more well supported than others. Eg OV operators acting on the VQE state are more well supported since the HF state dominates. OO and VV operators will not be killed entirely because each ansatz has higher order terms, but they are generally less strongly supported. 
+% 3) Show that indeed this forms a stable rank within the operator pool. For singlets the number (occupied) and OV operators form a ultra stable rank. this has minimum eigenvalue of 1. Quote the stats in SI 
+% 4) For triplets, the number operator instead gets killed off because of the operator construction. IE if the antisymmetrised "number" operator will kill the HF state? need to show this or be more rigorous in the arguments here tbh. Also quote the stats in SI, show the eigenvector decomposition value. Show also that for paired ansatz especially, the number operator can only act on that one state, then for 1Up it gets killed until near null. Must find out more and justify the number operator here 
+% 5) Also show that when the physcial subsapce is less than the total number of dimensions, then the eigenvalues also reflect that, ie being near null. So the eigenvalues have some physical motivations behind it 
 
-\subsection{Subspace Completeness Beyond Ansatz Choice}
-% Main claim: QSE performance depends on whether the projected subspace captures the relevant excitation space, not only on ansatz energy.
-% Compare ansaetze as different reference states that support different projected QSE directions.
-% Report VQE energy error, QSE MAE, stable dimension/rank, circuit depth, parameter count, and <S^2>.
-% Diagnose completeness using retained rank, overlap eigenvector support, operator-class composition, and recovery of target states.
-% Discuss cases where stable or restricted spaces are numerically well behaved but incomplete for excited-state recovery.
-% Suggested figures/tables:
-% - representative active-space ansatz/subspace summary table
-% - QSE accuracy vs retained projected dimension
-% - operator-class support of stable and unstable directions
-% - full active-space comparisons in SI
-
+\subsubsection{Significance of Small Eigenvalues}
+% MAIN STAT: median error after restriction of qse to only the number and OV operators, and for the triplets to only OV ones. Show also the drop in projection!! 
+% CONTENT
+% 1) transition, the next then logical question will be, can the instability of QSE then be solved by only considering these stable eigenvalues? after they consistently have a eigenvalue of 1. what if we just use them 
+% 2) Show the stat of what happens when you restrict the subspace down to only number and OV. IE filter for those eigenvalues only, only retain the stable dimensions. Show that the errors increase significantly 
+% 3) Claim now that as a whole, the stable dimensions are formed by well supported QSE operators. They have stable eigenvalues, and in the presecnec of noise will not result in numerical instabilities since there is not amplification. However, these directions are not sufficient to represent the QSE subspace well. In fact, they form a strong base only. However, it is the tiny eigenvalues from the other operators that provide important correlations to the system. This then leads to the next section, how then can we choose which eigenvalues to retain 
 
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
-% Main claim: finite-shot noise perturbs H and S in a way that mainly destabilizes weak-overlap directions.
-% First discuss eigenvalue lifting and negative overlap eigenvalues.
-% Then discuss correlated errors between H and S, including why independent-error models are not fully representative.
-% Define the oracle threshold: the overlap eigenvalue cutoff that minimizes QSE error for a given shot count.
-% Use the oracle threshold to estimate shot requirements for chemical accuracy.
-% Suggested figures:
-% - statevector vs shot-noisy overlap eigenvalue spectra
-% - shot count vs oracle threshold
-% - shot count vs QSE MAE / chemical accuracy hit rate
-% - correlated vs uncorrelated noise comparison in SI
+% Before the other subsections, introduce that this section bridges the former. Given that we know that small eigenvalues are important, how then can we appropriately select eigenvalues when noise is introduced. 
+\subsubsection{Effects of Thresholding to mitigate Sampling Noise}
+% MAIN GRAPH: Here we show the plot of error for 6e6o against threshold on the x axis, with different shots being plotted. General shape of this is a U shaped graph, Ie the error decreases to a minimum as threshold icnreases, then increases after. For all shots error, define as median for s0 s1 t1 t2 for all molecules UCCSD compared to the statevector 
+% CONTENT
+% 1) In general, thresholding should be used to remove eigenvectors with tiny eigenvalues because they amplify noise rather than add on meaningful information. Every eigenvector can be thought off as adding on additional corrections to the QSE subspace. However, in the presecnece of noise, these corections instead become corrupted and physically meaningless when the eigenvalues are too tiny. The larger the errors, the less resistant it is from noise. 
+% 2) As we increase the threshold and throw out more eigenvalues, the error generally decreases because we are removing eigenvectors that contribute more amplified noise than meaningful information. However, we eventually hit a minimum because beyond a certain point we then start throwing out eigenvectors that are also physically meaningful. This causes the observed minimum and an optimal threshold that should be used 
+% 3) As we use more and more shots, this means that the error decreases. This adds on to our resolving power. Meaning with a better accuracy, we can now accurately resolve smaller eigenvalues, so the minimum or optimal threshold will decrease as shot count increases 
+\subsubsection{Active Space Dependence of Shot Noise}
+% MAIN GRAPH: Show the scatter plot of median error for each active space and shot count. Plot on x axis n^2 / sqrt(shots). Show this for both singlets and triplets, show the regression line also. This one use the best threshold 
+% MAIN GRAPH: maybe different panel. Show the heat map of best thresholds for each active space and shot count 
+% CONTENT
+% 1) Addtionally, we also note that median errors scales approximately with the square of active space size. 
+% 2) Discuss why this might be the case, ie larger matrix means that the individual matrix element errors are increased. Total frobenius norm of error increases. So with larger matrix, the errors scale 
+% 3) Discuss the heatmap, show that the thresholds used generally will increase with active space size also. So IE at a fixed shot count, if you use a larger matrix, you would need larger threshold alos. 
+\subsubsection{Shot Budget Scaling}
+% SI INFO: need to show the total number of commuting groups present in the matrix. Show the linear regression fit here of how this scales with the active space n_o
+% CONTENT
+% 1) State that given how the errors scale with shot count, for QSE shots to be chemically accurate, we would then require shots per commuting group count scalling of N^4. Give an example, ie at current 6e6o, we need roughly how many shots per commuting group. 
+% 2) State that empiracally that the number of commuting groups for each matrix scales with n^3.7 ish? Discuss here that global grouping was done, and that some terms belong 10^-12 for eg were dropped. 
+% 3) This puts an estimate number of shots for chemically accurate results to scale with n^8. Its slightly better estimate than the n^12 scaling by that paper, but likely its because of global grouping of commuting terms that made a difference. 
+% 4) caveat that this is a estimate based on errors wrt to the statevector. Also that the scaling is estimated using the current singles operator pool which assumes n^2 matrix size scaling. If lets say a doubles operator were used which scales with n^4, then the approximate scaling for total shot budget is more closer to n^8 * n^8 = n^16 terms. This scaling is very dependent on the operator pool 
 
+\subsection{Structure of the Projected QSE Matrices}
+% Link from the previous section, short intro line that says. Following the steep shot-cost scaling observed, we further examined whether the projected QSE matrices contained structure that could potentially be exploited by future measurement or reconstructions methods
+\subsubsection{Structural Correlations and Sparsity}
+% SI FIGURE: Scatter plot of the Hij and Sij terms. Show the regression and correlation also 
+% MAIN FIGURE: Show the top 3 most sparse and bottom 3 least sparse S matrices. Colour code this by setting a threshold to 0. 
+% CONTENT
+% 1) First, we note that there was a strong correlation between the H and S matrix elements terms. In general this is not guranteed analytically because when S terms are small, ie the two states do not overlap significantly, the Hamiltonian can stil connect them. However, empiracally there is a strong relation between H and S elements. 
+% 2) we also observe that the QSE matrices contain blockwise sparse regions. This is very apparent in certain molecules, eg xx that is the least sparse. Can see clear blocks of strongly overlapped operators eg between the diagonal and OV blocks. 
+% 3) also caveat that for denser QSE matrices, the structure also does exist between larger terms and smaller terms, though they are not straight up 0 
+% 4) Suggest that the matrices are not totally random, and that for both projected matrices, structures do exist
 
-\subsection{Scaling of QSE and Future Adaptive Strategies}
-% Main claim: once stability can be controlled, the main bottleneck becomes matrix construction and measurement scaling.
-% Explain scaling with number of QSE operators, matrix elements, Pauli terms, and commuting groups.
-% Show that projected matrices are structured rather than random.
-% Use heatmaps as motivation, not as overclaimed proof.
-% Discuss future strategies:
-% - exploiting sparsity/structure of H and S
-% - predicting important matrix elements
-% - adaptive matrix construction
-% - adaptive shot allocation by commuting-group importance
-% Suggested figures:
-% - operator count / matrix element count vs active space
-% - commuting group count vs active space
-% - representative heatmaps
-% - all heatmaps in SI
+\subsubsection{Effects of Noise on Structure}
+% MAIN FIGURE: show how noise affects this. One plot of the side by side heatmaps for statevector vs shots. Structurally is there any differences. Two rows for singlet and triplet. One for sparse and another for dense matrices? 
+% CONTENT
+% 1) When noise is added, the block list structure observed ends up being disrupted (hopefully)
+% 2) Add in discussions that in this paper we used global grouping of commuting terms. So there is probably some correlated errors. 
+
+\subsubsection{Outlook for Structure-Aware reconstruction}
+% Maybe for later on we can have structure aware reconstruction 
+% 1) Dont speculate anything, but just state that empiraclly there is a structure, and that correlated errors are a thing due to the grouping. Also that the H and S elements are related. All this is not to say that we can predict it directly, but it highlights that QSE as a method has strong structure observed 
+% 2) Suggest that because of this, possibly for 
+%CITE PAPERS: need to find studies that use for eg post processing techniques to remove noise
