@@ -1,4 +1,8 @@
-"""Graphing functions"""
+"""
+Graphing functions used throughout the notebooks
+Graphing functions will return a figure object
+Within notebook controls the plotting or saving of that figure
+"""
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -8,99 +12,11 @@ from io import BytesIO
 import base64
 
 
-ANSATZ_ORDER = ["UCCSD", "UCCSDSinglet", "UCCGSD", "1UpCCGSDSinglet"]
-EIGENVECTOR_COMPOSITION_GROUPS = ("Number occupied", "OV", "Rest")
-EIGENVECTOR_COMPOSITION_COLORS = dict(
-    zip(EIGENVECTOR_COMPOSITION_GROUPS, sns.color_palette("colorblind", 3))
-)
-
-
-def plot_spin_eigenvalue_spread(singlet_data, triplet_data, title=None, ax_labels=True):
-    available_ansatz = list(dict.fromkeys([*singlet_data.keys(), *triplet_data.keys()]))
-    ansatz_names = [ansatz for ansatz in ANSATZ_ORDER if ansatz in available_ansatz]
-    ansatz_names.extend(ansatz for ansatz in available_ansatz if ansatz not in ansatz_names)
-    colors = dict(zip(ansatz_names, sns.color_palette("tab10", n_colors=len(ansatz_names))))
-
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5), sharey=True)
-
-    for ax, data, spin_label in zip(axes, [singlet_data, triplet_data], ["Singlet", "Triplet"]):
-        for ansatz in ansatz_names:
-            points = data.get(ansatz, [])
-            if not points:
-                continue
-
-            x_values, eigenvalues = zip(*points)
-            ax.scatter(
-                x_values,
-                eigenvalues,
-                s=16,
-                alpha=0.7,
-                color=colors[ansatz],
-                label=ansatz,
-            )
-
-        ax.set_yscale("log")
-        ax.set_ylim(1e-16, 1e1)
-        ax.set_title(spin_label)
-        ax.grid(True, which="both", alpha=0.25)
-
-        if ax_labels:
-            ax.set_xlabel("Eigenvalue Index")
-
-    if ax_labels:
-        axes[0].set_ylabel("Overlap eigenvalue")
-
-    handles_by_label = {}
-    for ax in axes:
-        handles, labels = ax.get_legend_handles_labels()
-        handles_by_label.update(dict(zip(labels, handles)))
-
-    if handles_by_label:
-        fig.legend(
-            handles_by_label.values(),
-            handles_by_label.keys(),
-            loc="lower center",
-            bbox_to_anchor=(0.5, 0.02),
-            ncol=min(len(handles_by_label), 4),
-            frameon=False,
-        )
-
-    if title is not None:
-        fig.suptitle(title, y=0.96, fontsize=15)
-
-    fig.tight_layout(rect=(0, 0.16, 1, 0.94))
-
-    return fig, axes
-
-
-def plot_eigenvector_composition_bars(composition, title=None):
-    """Plot paired singlet and triplet compositions as 100%-stacked bars."""
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5.2), sharey=True)
-
-    for ax, spin in zip(axes, ("singlet", "triplet")):
-        spin_composition = composition[spin]
-        ranks = np.arange(1, len(next(iter(spin_composition.values()))) + 1)
-        bottom = np.zeros(len(ranks))
-        for group in EIGENVECTOR_COMPOSITION_GROUPS:
-            ax.bar(ranks, spin_composition[group], bottom=bottom, width=0.9, color=EIGENVECTOR_COMPOSITION_COLORS[group], label=group)
-            bottom += spin_composition[group]
-
-        ax.set_xlabel("Eigenvector rank (decreasing overlap eigenvalue)")
-        ax.set_xlim(0.5, ranks[-1] + 0.5)
-        ax.set_ylim(0, 100)
-        ax.set_title(spin.title())
-        ax.grid(axis="y", alpha=0.25)
-        ax.set_axisbelow(True)
-
-    axes[0].set_ylabel("Mean eigenvector weight (%)")
-    fig.legend(loc="lower center", bbox_to_anchor=(0.5, 0.01), ncol=3, frameon=False)
-    if title is not None:
-        fig.suptitle(title, y=0.97, fontsize=15)
-    fig.tight_layout(rect=(0, 0.12, 1, 0.93))
-    return fig, axes
-
-
 def show_scrollable_figs(figs, max_height=750, max_width="100%", dpi=150):
+    """
+    Helper function to display all plots as scrollabe elements in the
+    jupyter notebooks
+    """
     max_height = f"{max_height}px" if isinstance(max_height, (int, float)) else max_height
     max_width = f"{max_width}px" if isinstance(max_width, (int, float)) else max_width
 
@@ -123,3 +39,77 @@ def show_scrollable_figs(figs, max_height=750, max_width="100%", dpi=150):
         {''.join(images)}
     </div>
     """))
+
+# ========================================================
+# Notebook 1: Representability and Spectral Accuracy
+# ========================================================
+def plot_error_distribution(error_data):
+    """
+    Fig S1: Plot error distribution of the SV calculations
+    INPUT: error_data dictionary containing relevant info
+    PLOTS: 4 panel boxplot showing the error distributions
+    """
+    states = ["s0", "s1", "t1", "t2"]
+    ansatzes = list(error_data)
+    figure, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+    for state, axis in zip(states, axes.flat):
+        state_errors = [error_data[ansatz][state] for ansatz in ansatzes]
+        axis.boxplot(
+            state_errors, tick_labels=ansatzes,
+            boxprops={"color": "black"}, medianprops={"color": "black"},
+            whiskerprops={"color": "black"}, capprops={"color": "black"},
+            flierprops={"markeredgecolor": "black"},
+        )
+        axis.set_title(state)
+        axis.set_ylabel("Absolute energy error (mHa)")
+        axis.tick_params(axis="x", rotation=45)
+        for label in axis.get_xticklabels():
+            label.set_horizontalalignment("right")
+
+    figure.tight_layout()
+    return figure
+
+
+def plot_bad_spin_roots(bad_spin_roots, active_space, threshold=0.01):
+    """
+    Plot bad-spin root counts for one active space, separated by expansion.
+    """
+    ansatzes = list(bad_spin_roots)
+    colors = sns.color_palette("colorblind", len(ansatzes))
+    figure, axes = plt.subplots(1, 2, figsize=(16, 5.5), sharey=True)
+
+    for axis, expansion in zip(axes, ("singlet", "triplet")):
+        root_labels = list(bad_spin_roots[ansatzes[0]][expansion])
+        positions = np.arange(len(root_labels))
+        bottom = np.zeros(len(root_labels))
+
+        for ansatz, color in zip(ansatzes, colors):
+            counts = [len(bad_spin_roots[ansatz][expansion][root]) for root in root_labels]
+            axis.bar(positions, counts, bottom=bottom, width=0.85, color=color, label=ansatz)
+            bottom += counts
+
+        tick_step = max(1, len(root_labels) // 12)
+        tick_positions = positions[::tick_step]
+        axis.set_xticks(tick_positions, [root_labels[index] for index in tick_positions])
+        axis.set_title(expansion.title())
+        axis.set_xlabel("QSE root")
+        axis.grid(axis="y", alpha=0.2)
+
+    axes[0].set_ylabel("Total bad roots")
+    handles, labels = axes[0].get_legend_handles_labels()
+    figure.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 0.98),
+                  ncol=3, frameon=False)
+    figure.suptitle(
+        rf"{active_space}: spin-contaminated roots ($|\Delta S^2| > {threshold}$)", y=1.04
+    )
+    sns.despine()
+    figure.tight_layout(rect=(0, 0, 1, 0.86))
+    return figure
+
+
+
+
+# ========================================================
+# Notebook 2: Dimensions of QSE Subspace
+# ========================================================

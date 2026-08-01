@@ -4,6 +4,8 @@ import json
 
 import numpy as np
 
+from config import output_figures_dir, output_tables_dir
+
 
 def parse_active_space(active_space):
     """Parse an active-space label like '4e5o' into (4, 5)."""
@@ -23,6 +25,20 @@ def read_npz(path):
             record[key] = value.item() if value.ndim == 0 else value
 
     return record
+
+
+def save_table(df, subfolder, title):
+    output_path = output_tables_dir / subfolder / f"{title}.csv"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_path)
+    return output_path
+
+
+def save_figure(fig, subfolder, title, dpi=300):
+    output_path = output_figures_dir / subfolder / f"{title}.png"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_path, dpi=dpi, bbox_inches="tight")
+    return output_path
 
 
 def complex_matrix(real, imag):
