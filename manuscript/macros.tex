@@ -1,77 +1,15 @@
+% =================================
 % Helper symbols
+% =================================
+% Spin expectation value
+\newcommand{\Ssq}{\left\langle \hat{S}^2 \right\rangle} 
 
-\newcommand{\Ssq}{\left\langle \hat{S}^2 \right\rangle} % Spin expectation
-
-% Computational methods equations
-\newcommand{\ElectronicHamiltonianEquation}{%
-    \begin{equation}
-        \hat{H}
-        =
-        E_{\mathrm{nuc}}
-        +
-        \sum_{pq} h_{pq} \, \hat{a}^{\dagger}_p \hat{a}_q
-        +
-        \frac{1}{2}
-        \sum_{pqrs} g_{pqrs} \,
-        \hat{a}^{\dagger}_p \hat{a}^{\dagger}_q
-        \hat{a}_s \hat{a}_r .
-        \label{eq:electronic-hamiltonian}
-    \end{equation}%
-}
-
-\newcommand{\SpinZEquation}{%
-    \begin{equation}
-        \hat{S}_z
-        =
-        \frac{1}{2}
-        \sum_p
-        \left(
-            \hat{n}_{p\alpha}
-            -
-            \hat{n}_{p\beta}
-        \right),
-        \qquad
-        \hat{n}_{p\sigma}
-        =
-        \hat{a}^{\dagger}_{p\sigma}
-        \hat{a}_{p\sigma}.
-        \label{eq:spin-z}
-    \end{equation}%
-}
-
-\newcommand{\SpinLadderOperatorsEquation}{%
-    \begin{equation}
-        \hat{S}_+
-        =
-        \sum_p
-        \hat{a}^{\dagger}_{p\alpha}
-        \hat{a}_{p\beta},
-        \quad
-        \hat{S}_-
-        =
-        \sum_p
-        \hat{a}^{\dagger}_{p\beta}
-        \hat{a}_{p\alpha}.
-        \label{eq:spin-ladder}
-    \end{equation}%
-}
-
-\newcommand{\SpinSquaredEquation}{%
-    \begin{equation}
-        \hat{S}^2
-        =
-        \hat{S}_z^2
-        +
-        \frac{1}{2}
-        \left(
-            \hat{S}_+\hat{S}_-
-            +
-            \hat{S}_-\hat{S}_+
-        \right).
-        \label{eq:spin-squared}
-    \end{equation}%
-}
-
+% =================================
+% Introduction
+% =================================
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% UCC OPERATORS
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 \newcommand{\UCCUnitaryEquation}{%
     \begin{equation}
         \hat{U}_{\mathrm{UCC}}(\boldsymbol{\theta})
@@ -94,7 +32,7 @@
         \label{eq:ucc-unitary}
     \end{equation}%
 }
-
+% UCC Reference State Equation
 \newcommand{\UCCReferenceStateEquation}{%
     \begin{equation}
         \left|\Psi_{\mathrm{UCC}}(\boldsymbol{\theta})\right\rangle
@@ -104,7 +42,108 @@
         \label{eq:ucc-reference-state}
     \end{equation}%
 }
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% QSE Introduction
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Projected Hamiltonian and Overlap Matrices
+\newcommand{\QSEProjectedMatricesEquation}{%
+    \begin{equation}
+        \begin{aligned}
+            H_{\mu\nu}
+            &=
+            \left\langle\Psi_{\mathrm{ref}}\right|
+            \hat{O}_\mu^\dagger \hat{H} \hat{O}_\nu
+            \left|\Psi_{\mathrm{ref}}\right\rangle, \\
+            S_{\mu\nu}
+            &=
+            \left\langle\Psi_{\mathrm{ref}}\right|
+            \hat{O}_\mu^\dagger \hat{O}_\nu
+            \left|\Psi_{\mathrm{ref}}\right\rangle.
+        \end{aligned}
+        \label{eq:qse-projected-matrices}
+    \end{equation}%
+}
 
+% =================================
+% COMPUTATIONAL METHODS
+% =================================
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% H and Z OPERATORS
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Second Quantised Electronic Hamiltonian
+\newcommand{\ElectronicHamiltonianEquation}{%
+    \begin{equation}
+        \hat{H}
+        =
+        E_{\mathrm{nuc}}
+        +
+        \sum_{pq} h_{pq} \, \hat{a}^{\dagger}_p \hat{a}_q
+        +
+        \frac{1}{2}
+        \sum_{pqrs} g_{pqrs} \,
+        \hat{a}^{\dagger}_p \hat{a}^{\dagger}_q
+        \hat{a}_s \hat{a}_r .
+        \label{eq:electronic-hamiltonian}
+    \end{equation}%
+}
+% Spin Z Operator
+\newcommand{\SpinZEquation}{%
+    \begin{equation}
+        \hat{S}_z
+        =
+        \frac{1}{2}
+        \sum_p
+        \left(
+            \hat{n}_{p\alpha}
+            -
+            \hat{n}_{p\beta}
+        \right),
+        \qquad
+        \hat{n}_{p\sigma}
+        =
+        \hat{a}^{\dagger}_{p\sigma}
+        \hat{a}_{p\sigma}.
+        \label{eq:spin-z}
+    \end{equation}%
+}
+% Spin Ladder Operators
+\newcommand{\SpinLadderOperatorsEquation}{%
+    \begin{equation}
+        \hat{S}_+
+        =
+        \sum_p
+        \hat{a}^{\dagger}_{p\alpha}
+        \hat{a}_{p\beta},
+        \quad
+        \hat{S}_-
+        =
+        \sum_p
+        \hat{a}^{\dagger}_{p\beta}
+        \hat{a}_{p\alpha}.
+        \label{eq:spin-ladder}
+    \end{equation}%
+}
+% Total Spin Squared Operator
+\newcommand{\SpinSquaredEquation}{%
+    \begin{equation}
+        \hat{S}^2
+        =
+        \hat{S}_z^2
+        +
+        \frac{1}{2}
+        \left(
+            \hat{S}_+\hat{S}_-
+            +
+            \hat{S}_-\hat{S}_+
+        \right).
+        \label{eq:spin-squared}
+    \end{equation}%
+}
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% UCC
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Suzuki Trotter First-Order Approximation
 \newcommand{\SuzukiTrotterFirstOrderEquation}{%
     \begin{equation}
         e^{\hat{T} - \hat{T}^{\dagger}}
@@ -115,7 +154,10 @@
         \label{eq:first-order-suzuki-trotter}
     \end{equation}%
 }
-
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% QSE OPERATORS
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% QSE Singlet Operator Pool
 \newcommand{\QSESingletOperatorPoolEquation}{%
     \begin{align}
         \hat{O}^{S}_{ij}
@@ -133,7 +175,7 @@
         \label{eq:qse-singlet-operator-pool}
     \end{align}%
 }
-
+% QSE Triplet Operator Pool
 \newcommand{\QSETripletOperatorPoolEquation}{%
     \begin{align}
         \hat{O}^{T,0}_{ij}
@@ -162,7 +204,7 @@
         \label{eq:qse-triplet-operator-pool}
     \end{align}%
 }
-
+% QSE Projected Observables (Observables only not on states)
 \newcommand{\QSEProjectedObservablesEquation}{%
     \begin{equation}
         \bar{s}_{\mu\nu}
@@ -180,6 +222,10 @@
     \end{equation}%
 }
 
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% MATRIX OPERATIONS
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Diagonalisation of S
 \newcommand{\DiagonaliseSEquation}{%
     \begin{equation}
         \mathbf{S}
@@ -190,7 +236,7 @@
         \label{eq:diagonalise-s}
     \end{equation}%
 }
-
+% Whitening Equation
 \newcommand{\WhitenSEquation}{%
     \begin{equation}
         \mathbf{V}
@@ -201,7 +247,7 @@
         \label{eq:whiten-s}
     \end{equation}%
 }
-
+% Ordinary Eigenvalue Equation
 \newcommand{\TransformToOrdinaryEigenvalueEquation}{%
     \begin{equation}
         \mathbf{V}^{\dagger}\mathbf{H}\mathbf{V}\mathbf{y}
@@ -212,7 +258,7 @@
         \label{eq:transform-to-ordinary-eigenvalue}
     \end{equation}%
 }
-
+% Reduced Eigenvalue Equation
 \newcommand{\ReducedEigenvalueEquation}{%
     \begin{equation}
         \tilde{\mathbf{V}}^{\dagger}
@@ -224,7 +270,7 @@
         \label{eq:reduced-eigenvalue}
     \end{equation}%
 }
-
+% Max Dimensions (Stable SV)
 \newcommand{\MaxDimensionsEquation}{%
     \begin{equation}
         \begin{aligned}
@@ -258,6 +304,10 @@
     \end{equation}%
 }
 
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% SPIN Expectation
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Spin Expectation in QSE Basis
 \newcommand{\SpinExpectationQSEBasisEquation}{%
     \begin{equation}
         \left\langle \hat{S}^2 \right\rangle_k
@@ -267,7 +317,7 @@
         \label{eq:spin-expectation-qse-basis}
     \end{equation}%
 }
-
+% Spin Expectation in Reduced Basis
 \newcommand{\SpinExpectationShortenedBasisEquation}{%
     \begin{equation}
         \left\langle \hat{S}^2 \right\rangle_k

@@ -31,6 +31,7 @@ eprint = {https://wires.onlinelibrary.wiley.com/doi/pdf/10.1002/wcms.1340},
 abstract = {Python-based simulations of chemistry framework (PySCF) is a general-purpose electronic structure platform designed from the ground up to emphasize code simplicity, so as to facilitate new method development and enable flexible computational workflows. The package provides a wide range of tools to support simulations of finite-size systems, extended systems with periodic boundary conditions, low-dimensional periodic systems, and custom Hamiltonians, using mean-field and post-mean-field methods with standard Gaussian basis functions. To ensure ease of extensibility, PySCF uses the Python language to implement almost all of its features, while computationally critical paths are implemented with heavily optimized C routines. Using this combined Python/C implementation, the package is as efficient as the best existing C or Fortran-based quantum chemistry programs. In this paper, we document the capabilities and design philosophy of the current version of the PySCF package. WIREs Comput Mol Sci 2018, 8:e1340. doi: 10.1002/wcms.1340 This article is categorized under: Structure and Mechanism > Computational Materials Science Electronic Structure Theory > Ab Initio Electronic Structure Methods Software > Quantum Chemistry},
 year = {2018}
 }
+
 % QIBO 
 @article{qibo2021,
     doi       = {10.1088/2058-9565/ac39f5},
@@ -84,32 +85,154 @@ year = {2018}
     eprint = {https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.2889385/13877643/134110_1_online.pdf},
 }
 
-% ==========================================================
-% QSE
-% ==========================================================
-% Original QSE paper
-@article{mcclean2017qse,
-  title = {Hybrid quantum-classical hierarchy for mitigation of decoherence and determination of excited states},
-  author = {McClean, Jarrod R. and Kimchi-Schwartz, Mollie E. and Carter, Jonathan and de Jong, Wibe A.},
-  journal = {Phys. Rev. A},
-  volume = {95},
-  issue = {4},
-  pages = {042308},
-  numpages = {10},
-  year = {2017},
-  month = {Apr},
-  publisher = {American Physical Society},
-  doi = {10.1103/PhysRevA.95.042308},
-  url = {https://link.aps.org/doi/10.1103/PhysRevA.95.042308}
-}
 
 % ==========================================================
 % Quantum Computing Advances 
 % ==========================================================
+% Motivation for Electronic State Calculations 
+@article{blum2024ESRoadmap,
+doi = {10.1088/2516-1075/ad48ec},
+url = {https://doi.org/10.1088/2516-1075/ad48ec},
+year = {2024},
+month = {11},
+publisher = {IOP Publishing},
+volume = {6},
+number = {4},
+pages = {042501},
+author = {Blum, Volker and Asahi, Ryoji and Autschbach, Jochen and Bannwarth, Christoph and Bihlmayer, Gustav and Blügel, Stefan and Burns, Lori A and Crawford, T Daniel and Dawson, William and de Jong, Wibe Albert and Draxl, Claudia and Filippi, Claudia and Genovese, Luigi and Giannozzi, Paolo and Govind, Niranjan and Hammes-Schiffer, Sharon and Hammond, Jeff R and Hourahine, Benjamin and Jain, Anubhav and Kanai, Yosuke and Kent, Paul R C and Larsen, Ask Hjorth and Lehtola, Susi and Li, Xiaosong and Lindh, Roland and Maeda, Satoshi and Makri, Nancy and Moussa, Jonathan and Nakajima, Takahito and Nash, Jessica A and Oliveira, Micael J T and Patel, Pansy D and Pizzi, Giovanni and Pourtois, Geoffrey and Pritchard, Benjamin P and Rabani, Eran and Reiher, Markus and Reining, Lucia and Ren, Xinguo and Rossi, Mariana and Schlegel, H Bernhard and Seriani, Nicola and Slipchenko, Lyudmila V and Thom, Alexander and Valeev, Edward F and Van Troeye, Benoit and Visscher, Lucas and Vlček, Vojtěch and Werner, Hans-Joachim and Williams-Young, David B and Windus, Theresa L.},
+title = {Roadmap on methods and software for electronic structure based simulations in chemistry and materials},
+journal = {Electronic Structure},
+abstract = {This Roadmap article provides a succinct, comprehensive overview of the state of electronic structure (ES) methods and software for molecular and materials simulations. Seventeen distinct sections collect insights by 51 leading scientists in the field. Each contribution addresses the status of a particular area, as well as current challenges and anticipated future advances, with a particular eye towards software related aspects and providing key references for further reading. Foundational sections cover density functional theory and its implementation in real-world simulation frameworks, Green’s function based many-body perturbation theory, wave-function based and stochastic ES approaches, relativistic effects and semiempirical ES theory approaches. Subsequent sections cover nuclear quantum effects, real-time propagation of the ES, challenges for computational spectroscopy simulations, and exploration of complex potential energy surfaces. The final sections summarize practical aspects, including computational workflows for complex simulation tasks, the impact of current and future high-performance computing architectures, software engineering practices, education and training to maintain and broaden the community, as well as the status of and needs for ES based modeling from the vantage point of industry environments. Overall, the field of ES software and method development continues to unlock immense opportunities for future scientific discovery, based on the growing ability of computations to reveal complex phenomena, processes and properties that are determined by the make-up of matter at the atomic scale, with high precision.}
+}
+
+% Electronic Structure Applications
+@Article{Marzari2021ESApplications,
+author={Marzari, Nicola
+and Ferretti, Andrea
+and Wolverton, Chris},
+title={Electronic-structure methods for materials design},
+journal={Nature Materials},
+year={2021},
+month={06},
+day={01},
+volume={20},
+number={6},
+pages={736-749},
+abstract={The accuracy and efficiency of electronic-structure methods to understand, predict and design the properties of materials has driven a new paradigm in research. Simulations can greatly accelerate the identification, characterization and optimization of materials, with this acceleration driven by continuous progress in theory, algorithms and hardware, and by adaptation of concepts and tools from computer science. Nevertheless, the capability to identify and characterize materials relies on the predictive accuracy of the underlying physical descriptions, and on the ability to capture the complexity of realistic systems. We provide here an overview of electronic-structure methods, of their application to the prediction of materials properties, and of the different strategies employed towards the broader goals of materials design and discovery.},
+issn={1476-4660},
+doi={10.1038/s41563-021-01013-3},
+url={https://doi.org/10.1038/s41563-021-01013-3}
+}
+
+% DFT Review
+@article{Burke2012DFTReview,
+    author = {Burke, Kieron},
+    title = {Perspective on density functional theory},
+    journal = {The Journal of Chemical Physics},
+    volume = {136},
+    number = {15},
+    pages = {150901},
+    year = {2012},
+    month = {04},
+    abstract = {Density functional theory
+          (DFT) is an incredible success story. The low computational cost, combined with useful (but not yet chemical) accuracy, has made DFT a standard technique in most branches of chemistry and materials science. Electronic structure problems in a dazzling variety of fields are currently being tackled. However, DFT has many limitations in its present form: too many approximations, failures for strongly correlated systems, too slow for liquids, etc. This perspective reviews some recent progress and ongoing challenges.},
+    issn = {0021-9606},
+    doi = {10.1063/1.4704546},
+    url = {https://doi.org/10.1063/1.4704546},
+    eprint = {https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.4704546/19858608/150901_1_1.4704546.pdf},
+}
+
+
+% Correlated ES
+@article{Evangelista2024CorrelatedES,
+    author = {Evangelista, Francesco A.},
+    title = {Concluding remarks},
+    journal = {Faraday Discussions},
+    volume = {254},
+    pages = {708-717},
+    year = {2024},
+    month = {11},
+    abstract = { The Faraday Discussion on Correlated electronic structure took place from the 17th to the 19th of July 2024 in London, UK. The Discussion encompassed various facets of electron correlation, ranging from its formal definition and quantification to emerging frontiers in electronic structure theory, with applications in the solid state, integration with machine learning, and quantum computing. },
+    issn = {1359-6640},
+    doi = {10.1039/d4fd00152d},
+    url = {https://doi.org/10.1039/d4fd00152d},
+    eprint = {https://pubs.rsc.org/fd/article-pdf/doi/10.1039/d4fd00152d/1830504/d4fd00152d.pdf},
+}
+
+% Quantum Computers for Quantum Chemistry Review
+@article{McArdle2020QuantumComputingChemistryReview,
+  title = {Quantum computational chemistry},
+  author = {McArdle, Sam and Endo, Suguru and Aspuru-Guzik, Al\'an and Benjamin, Simon C. and Yuan, Xiao},
+  journal = {Rev. Mod. Phys.},
+  volume = {92},
+  issue = {1},
+  pages = {015003},
+  numpages = {51},
+  year = {2020},
+  month = {03},
+  publisher = {American Physical Society},
+  doi = {10.1103/RevModPhys.92.015003},
+  url = {https://link.aps.org/doi/10.1103/RevModPhys.92.015003}
+}
+@book{Schleich2025QuantumComputingForQuantumChemistry,
+    author = {Schleich, Philipp and Calderón, Luis Mantilla and Sun, Chong and Bagherimehrab, Mohsen and Aldossary, Abdulrahman and Kottmann, Jakob S. and Aspuru-Guzik, Alán},
+    title = {Quantum Computing for Quantum Chemistry},
+    publisher = {American Chemical Society},
+    abstract = {Quantum computing is expected to advance research in quantum chemistry by enabling more accurate simulations of molecules and chemical reactions. By solving complex problems faster than classical computers, quantum computers could have the potential to improve predictions of molecular properties, simulate reactions, and enhance techniques like spectroscopy. These advancements promise to significantly aid drug discovery, material design, and understanding of molecular behavior.Quantum Computing for Quantum Chemistry focuses solely on quantum chemistry as an application, as it is the subfield with the most concrete potential for quantum computing. If this work is your first exposure to quantum chemistry and quantum computing, focus on chapters one and two. Both quantum chemistry and quantum computing by themselves are rather technically involved disciplines. The reader should have had an introductory course on quantum mechanics and linear algebra and some exposure to computational chemistry and quantum chemistry.The primary audience for this work is graduate students familiar with quantum computing but not quantum chemistry or those familiar with quantum chemistry but not quantum computing. The authors provide pointers to useful textbooks throughout the work for those who need background on the material.},
+    isbn = {9780841295964},
+    doi = {10.1021/acsinfocus.7e9012},
+    url = {https://doi.org/10.1021/acsinfocus.7e9012},
+}
+@article{Cao2019QCforQCReview,
+    author = {Cao, Yudong and Romero, Jonathan and Olson, Jonathan P. and Degroote, Matthias and Johnson, Peter D. and Kieferová, Mária and Kivlichan, Ian D. and Menke, Tim and Peropadre, Borja and Sawaya, Nicolas P. D. and Sim, Sukin and Veis, Libor and Aspuru-Guzik, Alán},
+    title = {Quantum Chemistry in the Age of Quantum Computing},
+    journal = {Chemical Reviews},
+    volume = {119},
+    number = {19},
+    pages = {10856-10915},
+    year = {2019},
+    month = {08},
+    abstract = {Practical challenges in simulating quantum systems on classical computers have been widely recognized in the quantum physics and quantum chemistry communities over the past century. Although many approximation methods have been introduced, the complexity of quantum mechanics remains hard to appease. The advent of quantum computation brings new pathways to navigate this challenging and complex landscape. By manipulating quantum states of matter and taking advantage of their unique features such as superposition and entanglement, quantum computers promise to efficiently deliver accurate results for many important problems in quantum chemistry, such as the electronic structure of molecules. In the past two decades, significant advances have been made in developing algorithms and physical hardware for quantum computing, heralding a revolution in simulation of quantum systems. This Review provides an overview of the algorithms and results that are relevant for quantum chemistry. The intended audience is both quantum chemists who seek to learn more about quantum computing and quantum computing researchers who would like to explore applications in quantum chemistry.},
+    issn = {0009-2665},
+    doi = {10.1021/acs.chemrev.8b00803},
+    url = {https://doi.org/10.1021/acs.chemrev.8b00803},
+    eprint = {https://pubs.acs.org/chreay/article-pdf/119/19/10856/17605329/cr8b00803.pdf},
+}
+
+
 
 % ==========================================================
 % VQE
 % ==========================================================
+@Article{Kumar2025VQEReview,
+author={Kumar, Sumit and Ghosh, Kalpak and Lee, Seung-Cheol and Yamijala, Sharma S. R. K. C.},
+title={Quantum Computing for Chemical Applications: Variational Algorithms and Beyond},
+journal={Journal of the Indian Institute of Science},
+year={2025},
+month={10},
+day={18},
+abstract={Simulating quantum systems with high accuracy remains one of the fundamental challenges in science, with applications ranging from drug discovery to materials design. In particular, quantum chemical simulations play a pivotal role in advancing fields such as chemistry, materials science, and biology. While classical computational methods have achieved considerable success, their ability to simulate complex quantum systems often requires several approximations, making the results inaccurate. Quantum computers are anticipated to overcome these challenges by providing more accurate simulations of complex quantum systems. However, the current generation of quantum devices is limited by noise and decoherence, restricting their practical applications. To overcome these limitations, hybrid quantum-classical algorithms such as the variational quantum eigensolver (VQE) have been developed. In this review, we discuss several notable examples where VQE and its variants have been successfully applied to quantum chemistry problems, highlighting both the current capabilities and the future potential of quantum computing for quantum chemical applications.},
+issn={0019-4964},
+doi={10.1007/s41745-025-00488-2},
+url={https://doi.org/10.1007/s41745-025-00488-2}
+}
+
+@article{Sharma2020VQENoiseResilience,
+doi = {10.1088/1367-2630/ab784c},
+url = {https://doi.org/10.1088/1367-2630/ab784c},
+year = {2020},
+month = {04},
+publisher = {IOP Publishing},
+volume = {22},
+number = {4},
+pages = {043006},
+author = {Sharma, Kunal and Khatri, Sumeet and Cerezo, M and Coles, Patrick J},
+title = {Noise resilience of variational quantum compiling},
+journal = {New Journal of Physics},
+abstract = {Variational hybrid quantum-classical algorithms (VHQCAs) are near-term algorithms that leverage classical optimization to minimize a cost function, which is efficiently evaluated on a quantum computer. Recently VHQCAs have been proposed for quantum compiling, where a target unitary U is compiled into a short-depth gate sequence V. In this work, we report on a surprising form of noise resilience for these algorithms. Namely, we find one often learns the correct gate sequence V (i.e. the correct variational parameters) despite various sources of incoherent noise acting during the cost-evaluation circuit. Our main results are rigorous theorems stating that the optimal variational parameters are unaffected by a broad class of noise models, such as measurement noise, gate noise, and Pauli channel noise. Furthermore, our numerical implementations on IBM’s noisy simulator demonstrate resilience when compiling the quantum Fourier transform, Toffoli gate, and W-state preparation. Hence, variational quantum compiling, due to its robustness, could be practically useful for noisy intermediate-scale quantum devices. Finally, we speculate that this noise resilience may be a general phenomenon that applies to other VHQCAs such as the variational quantum eigensolver.}
+}
+
+
 @article{Anand2022UCCReview,
     author = {Anand, Abhinav and Schleich, Philipp and Alperin-Lea, Sumner and Jensen, Phillip W. K. and Sim, Sukin and Díaz-Tinoco, Manuel and Kottmann, Jakob S. and Degroote, Matthias and Izmaylov, Artur F. and Aspuru-Guzik, Alán},
     title = {A quantum computing view on unitary coupled cluster theory},
@@ -154,4 +277,80 @@ url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/qua.26352},
 eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/qua.26352},
 abstract = {Abstract The variational quantum eigensolver (VQE) algorithm, designed to calculate the energy of molecular ground states on near-term quantum computers, requires specification of symmetries that describe the system, for example, spin state and number of electrons. This opens the possibility of using VQE to obtain excited states as the lowest-energy solutions of a given set of symmetries. In this paper, the performances of various unitary coupled cluster (UCC) ansätze applied to VQE calculations on excited states are investigated using quantum circuits designed to represent single reference and multireference wavefunctions to calculate energy curves with respect to variations in the molecular geometry. These ansätze include standard Unitary Coupled Cluster Singles and Doubles (UCCSD), as well as modified versions of Unitary Coupled Cluster Generalized Singles and Doubles (UCCGSD) and k-UpCCGSD, which are engineered to tackle excited states without undesired spin symmetry crossover to lower states during VQE optimization. These studies are carried out on a range of systems, including H2, H3, H4, NH, OH+, CH2, and , covering examples of spin singlet, doublet, and triplet molecular ground states with single and multireference excited states. In most cases, our calculations are in excellent agreement with results from full-configuration interaction calculations on classical machines, thus showing that the VQE algorithm is capable of calculating the lowest excited state at a certain symmetry, including multireference closed- and open-shell states, by setting appropriate restrictions on the excitations considered in the cluster operator and appropriate constraints in the qubit register encoding the starting mean field state.},
 year = {2021}
+}
+
+% ==========================================================
+% Quantum Subspace Methods
+% ==========================================================
+% QSM Review
+@article{Motta2024QSMReview,
+doi = {10.1088/2516-1075/ad3592},
+url = {https://doi.org/10.1088/2516-1075/ad3592},
+year = {2024},
+month = {03},
+publisher = {IOP Publishing},
+volume = {6},
+number = {1},
+pages = {013001},
+author = {Motta, Mario and Kirby, William and Liepuoniute, Ieva and Sung, Kevin J and Cohn, Jeffrey and Mezzacapo, Antonio and Klymko, Katherine and Nguyen, Nam and Yoshioka, Nobuyuki and Rice, Julia E},
+title = {Subspace methods for electronic structure simulations on quantum computers},
+journal = {Electronic Structure},
+abstract = {Quantum subspace methods (QSMs) are a class of quantum computing algorithms where the time-independent Schrödinger equation for a quantum system is projected onto a subspace of the underlying Hilbert space. This projection transforms the Schrödinger equation into an eigenvalue problem determined by measurements carried out on a quantum device. The eigenvalue problem is then solved on a classical computer, yielding approximations to ground- and excited-state energies and wavefunctions. QSMs are examples of hybrid quantum–classical methods, where a quantum device supported by classical computational resources is employed to tackle a problem. QSMs are rapidly gaining traction as a strategy to simulate electronic wavefunctions on quantum computers, and thus their design, development, and application is a key research field at the interface between quantum computation and electronic structure (ES). In this review, we provide a self-contained introduction to QSMs, with emphasis on their application to the ES of molecules. We present the theoretical foundations and applications of QSMs, and we discuss their implementation on quantum hardware, illustrating the impact of noise on their performance.}
+}
+
+% Q-sc-EOM
+@article{Asthana2023QscEOM,
+    author = {Asthana, Ayush and Kumar, Ashutosh and Abraham, Vibin and Grimsley, Harper and Zhang, Yu and Cincio, Lukasz and Tretiak, Sergei and Dub, Pavel A. and Economou, Sophia E. and Barnes, Edwin and Mayhall, Nicholas J.},
+    title = {Quantum self-consistent equation-of-motion method for computing molecular excitation energies, ionization potentials, and electron affinities on a quantum computer},
+    journal = {Chemical Science},
+    volume = {14},
+    number = {9},
+    pages = {2405-2418},
+    year = {2023},
+    month = {03},
+    abstract = { Near-term quantum computers are expected to facilitate material and chemical research through accurate molecular simulations. Several developments have already shown that accurate ground-state energies for small molecules can be evaluated on present-day quantum devices. Although electronically excited states play a vital role in chemical processes and applications, the search for a reliable and practical approach for routine excited-state calculations on near-term quantum devices is ongoing. Inspired by excited-state methods developed for the unitary coupled-cluster theory in quantum chemistry, we present an equation-of-motion-based method to compute excitation energies following the variational quantum eigensolver algorithm for ground-state calculations on a quantum computer. We perform numerical simulations on H2, H4, H2O, and LiH molecules to test our quantum self-consistent equation-of-motion (q-sc-EOM) method and compare it to other current state-of-the-art methods. q-sc-EOM makes use of self-consistent operators to satisfy the vacuum annihilation condition, a critical property for accurate calculations. It provides real and size-intensive energy differences corresponding to vertical excitation energies, ionization potentials and electron affinities. We also find that q-sc-EOM is more suitable for implementation on NISQ devices as it is expected to be more resilient to noise compared with the currently available methods. },
+    issn = {2041-6520},
+    doi = {10.1039/d2sc05371c},
+    url = {https://doi.org/10.1039/d2sc05371c},
+    eprint = {https://pubs.rsc.org/sc/article-pdf/14/9/2405/8773915/d2sc05371c.pdf},
+}
+
+% QSM Generalised Eigenvalue Problem
+@article{Kwao2026QSMGeneralisedEigenvalueProblem,
+    author = {Kwao, Prince Frederick and Poyyapakkam Sundar, Srivathsan and Gupt, Brajesh and Asthana, Ayush},
+    title = {Generalized Eigenvalue Problem in Subspace-Based Excited-State Methods for Quantum Computers},
+    journal = {Journal of Chemical Theory and Computation},
+    volume = {22},
+    number = {6},
+    pages = {2892-2903},
+    year = {2026},
+    month = {03},
+    abstract = {Solving challenging problems in quantum chemistry is one of the most promising applications of quantum computers. Within the quantum algorithms proposed for problems in excited-state quantum chemistry, subspace-based quantum algorithms, including quantum subspace expansion (QSE), quantum equation of motion (qEOM), and quantum self-consistent equation-of-motion (q-sc-EOM), are promising for pre-fault-tolerant quantum devices. The working equation of QSE and qEOM requires solving a generalized eigenvalue equation with associated matrix elements measured on a quantum computer. Our careful analytical and numerical analysis of the standard and generalized eigenvalue problems, especially in the context of excited-state methods, shows that the errors in eigenvalues magnify drastically with an increase in the condition number of the overlap matrix when a generalized eigenvalue equation is solved in the presence of statistical sampling errors. This makes methods such as QSE unstable for errors that are unavoidable when using quantum computers. Further, at very high condition numbers of the overlap matrix, the QSE’s working equation could not be solved without any additional steps in the presence of sampling errors, as it becomes ill-conditioned. It was possible to use the thresholding technique in this case to solve the equation, but the solutions achieved had missing excited states, which may be a problem for future chemical studies. We also show that excited-state methods that have an eigenvalue equation as the working equation, such as q-sc-EOM, do not have the problems associated with the condition number and could be generally more stable to errors and therefore more suitable candidates for excited-state quantum chemistry calculations using quantum computers.},
+    issn = {1549-9618},
+    doi = {10.1021/acs.jctc.5c02010},
+    url = {https://doi.org/10.1021/acs.jctc.5c02010},
+    eprint = {https://pubs.acs.org/jctcce/article-pdf/22/6/2892/63146721/ct5c02010.pdf},
+}
+
+
+
+
+
+% ==========================================================
+% QSE
+% ==========================================================
+% Original QSE paper
+@article{mcclean2017qse,
+  title = {Hybrid quantum-classical hierarchy for mitigation of decoherence and determination of excited states},
+  author = {McClean, Jarrod R. and Kimchi-Schwartz, Mollie E. and Carter, Jonathan and de Jong, Wibe A.},
+  journal = {Phys. Rev. A},
+  volume = {95},
+  issue = {4},
+  pages = {042308},
+  numpages = {10},
+  year = {2017},
+  month = {04},
+  publisher = {American Physical Society},
+  doi = {10.1103/PhysRevA.95.042308},
+  url = {https://link.aps.org/doi/10.1103/PhysRevA.95.042308}
 }
