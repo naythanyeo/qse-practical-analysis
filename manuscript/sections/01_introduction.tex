@@ -9,23 +9,20 @@ These limitations have motivated hybrid quantum-classical algorithms that use  q
 Quantum Subspace Methods (QSM) build on this idea by projecting the full eigenvalue problem onto a compact trial subspace. If the chosen subspace accurately captures the low-energy manifold, the target ground and excited state solutions can be recovered without diagonalising the full many-body Hamiltonian \cite{Motta2024QSMReview}. 
 
 % PARA 4: Formalisation of QSE
-Quantum Subspace Expansion (QSE), introduced by McClean et al. \cite{mcclean2017qse}, is a prominent operator-generated realisation of this framework. QSE constructs a trial subspace by applying a selected set of operators ${\hat{O}_{\mu}}$ to a reference state $\left|\Psi_{\mathrm{ref}}\right\rangle$, often the VQE ground state. The full many-body Hamiltonian is represented within this subspace through the projected Hamiltonian and overlap matrices, defined as follows.
-
+Quantum Subspace Expansion (QSE), introduced by McClean et al. \cite{mcclean2017qse}, is a prominent operator-generated realisation of this framework. QSE constructs a trial subspace by applying a selected set of operators ${\hat{O}_{\mu}}$ to a reference state $\left|\Psi_{\mathrm{ref}}\right\rangle$, often the VQE ground state. The full many-body Hamiltonian is represented within this subspace through the projected Hamiltonian and overlap matrices,
 \QSEProjectedMatricesEquation
-In general, the basis formed by the operator set is not orthogonal. This means that the overlap matrix $S$ is not the identify $I$, and that the eigenvalue problem must be solved in its generalised form
+The $k$-th approximate state is then written as
+\KthReferenceStateEquation
+where $\mathbf{c}_k$ is the corresponding vector of expansion coefficients. Applying the Rayleigh-Ritz variational procedure within this trial subspace yields the coefficients and Ritz energies through the generalised eigenvalue problem.
+\GeneralisedEigenvalueProblemKEquation
 
+% PARA 5: Limitations of QSE
+In general, the operator-generated basis states are not orthogonal, such that $\mathbf{S} \neq \mathbf{I}$. Solving this generalised eigenvalue problem typically requires a whitening transformation containing factors proportional to $\frac{1}{\sqrt{\lambda_i}}$, whereby $\lambda_i$ are the eigenvalues of $\mathbf{S}$. 
+If the generated basis states are nearly linearly-dependent,  $\mathbf{S}$ develops very small or even near-null eigenvalues. 
+Consequently, measurement errors in the matrix elements are strongly amplified, rendering the projected problem numerically unstable. This ill-conditiong of $\mathbf{S}$ is a well-known limitation of QSE, and is particularly consequential because statistical shot noises are inherent to real quantum hardware measurements. 
 
-% Add in rayleigh ritz coeff to this
+% PARA 6: Then given that, why still bother with QSE
 
-% 1) Now then talk about QSE, it is one subspace method that builds projected matrices around a ground state
-% 2) List the equations for the H and S matrices terms 
-% 3) By diagonalising, can get the excited states from it 
-
-% PARA 5: Limitations of QSE, solving Hc=ESc, conditioning problem 
-% 1) talk about the key limitation, ie basis is not orthogonal ill conditioning can occur 
-% 2) Have to solve generlaised eigenvalue problem instead, which is prone to numerical instabilty due to inversion of S 
-
-% PARA 6: Then given that, why still bother with QSE? 
 % 1) compared to QSE, other subspace methods seem to avoid this like EOM, cause it forms an othrogonal basis --> no ill conditioning 
 % 2) BUT, QSE is still relevant because
 % 2a) you find exact states instead of differences, 
