@@ -176,3 +176,88 @@ def plot_active_space_error_iqr(error_data):
 # ========================================================
 # Notebook 2: Dimensions of QSE Subspace
 # ========================================================
+def plot_spin_eigenvalue_spread(eigenvalue_data, active_space):
+    """
+    Plot UCCSD singlet and triplet overlap eigenvalue spreads.
+    Input: Dicitionary of {singlet: (points), triplet: (points)}
+    Split 2 panel plot, log y axis scale 
+    """
+    figure, axes = plt.subplots(1, 2, figsize=(13, 5), sharey=True)
+
+    for axis, expansion in zip(axes, ("singlet", "triplet")):
+        indices, eigenvalues = zip(*eigenvalue_data[expansion])
+        axis.scatter(indices, eigenvalues, s=16, color="black", alpha=0.55)
+        axis.set_yscale("log")
+        axis.set_ylim(1e-14, 1e2)
+        axis.set_title(expansion.title())
+        axis.set_xlabel("Eigenvalue index")
+        axis.grid(True, which="both", alpha=0.2)
+
+    axes[0].set_ylabel("Overlap eigenvalue")
+    figure.suptitle(f"UCCSD {active_space} Overlap Eigenvalue Spread")
+    figure.tight_layout()
+    return figure
+
+
+def plot_triplet_eigenvalue_spread(eigenvalue_points, active_space):
+    """
+    Plot the 1UpCCGSDSinglet triplet overlap eigenvalue spread
+    Same as before but only singlet panel graph 
+    """
+    indices, eigenvalues = zip(*eigenvalue_points)
+    figure, axis = plt.subplots(figsize=(7, 5))
+    axis.scatter(indices, eigenvalues, s=16, color="black", alpha=0.55)
+    axis.set_yscale("log")
+    axis.set_ylim(1e-14, 1e2)
+    axis.set_title(f"1UpCCGSDSinglet {active_space} Triplet Overlap Eigenvalue Spread")
+    axis.set_xlabel("Eigenvalue index")
+    axis.set_ylabel("Overlap eigenvalue")
+    axis.grid(True, which="both", alpha=0.2)
+    figure.tight_layout()
+    return figure
+
+
+def plot_eigenvector_composition(composition_data, active_space):
+    """
+    Plot mean QSE operator composition for singlet and triplet eigenvectors.
+    Input: {singlet: {0: {Number occupied: [percentage], ...}}
+            triplet: {0: ...}}
+    Plots as a two panel eigenvector stacked bar chart
+    """
+    categories = ["Number occupied", "OV", "Rest"]
+    # Legends at the bottom
+    category_labels = {
+        "Number occupied": "Number Operator (Occupied)",
+        "OV": "Occupied to Virtual Operators",
+        "Rest": "Other Operators",
+    }
+    colors = sns.color_palette("colorblind", len(categories))
+    figure, axes = plt.subplots(1, 2, figsize=(14, 5.5), sharey=True)
+
+    for axis, expansion in zip(axes, ("singlet", "triplet")):
+        ranks = list(composition_data[expansion])
+        positions = np.arange(len(ranks))
+        bottom = np.zeros(len(ranks))
+
+        for category, color in zip(categories, colors):
+            percentages = [composition_data[expansion][rank][category] for rank in ranks]
+            axis.bar(positions, percentages, bottom=bottom, width=0.9,
+                     color=color, label=category_labels[category])
+            bottom += percentages
+
+        tick_step = max(1, len(ranks) // 12)
+        tick_positions = positions[::tick_step]
+        axis.set_xticks(tick_positions, [ranks[index] for index in tick_positions])
+        axis.set_ylim(0, 100)
+        axis.set_title(expansion.title())
+        axis.set_xlabel("Eigenvector rank")
+        axis.grid(axis="y", alpha=0.2)
+
+    axes[0].set_ylabel("Mean composition (%)")
+    handles, labels = axes[0].get_legend_handles_labels()
+    figure.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.01),
+                  ncol=3, frameon=False)
+    figure.suptitle(f"UCCSD {active_space} Overlap Eigenvector Composition", y=0.98)
+    sns.despine()
+    figure.tight_layout(rect=(0, 0.12, 1, 0.92))
+    return figure
