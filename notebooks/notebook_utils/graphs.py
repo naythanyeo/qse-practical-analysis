@@ -11,6 +11,8 @@ from IPython.display import HTML, display
 from io import BytesIO
 import base64
 
+from notebook_utils.chem import CHEMICAL_ACCURACY
+
 
 def show_scrollable_figs(figs, max_height=750, max_width="100%", dpi=150):
     """
@@ -71,9 +73,40 @@ def plot_error_distribution(error_data):
     return figure
 
 
+def plot_projection_error(projection_error_data):
+    """
+    Fig 2?
+    Plot exact-state projection against QSE energy error
+    Input: Dictionary of (projection, error) for each root type
+    Plots: 4 Panel scatter plot 
+    """
+    states = ["s0", "s1", "t1", "t2"]
+    projection_ticks = np.round(np.arange(0.90, 1.001, 0.01), 2)
+    tick_labels = ["<0.9", *[f"{value:.2f}" for value in projection_ticks[1:-1]], "1.0"]
+    figure, axes = plt.subplots(2, 2, figsize=(12, 9), sharex=True, sharey=True)
+
+    for state, axis in zip(states, axes.flat):
+        projections, errors = zip(*projection_error_data[state])
+        axis.scatter(projections, errors, color="black", alpha=0.65)
+        axis.axhline(1000 * CHEMICAL_ACCURACY, color="black", linestyle=":")
+        axis.set_yscale("log")
+        axis.set_xlim(0.895, 1.005)
+        axis.set_xticks(projection_ticks, tick_labels, rotation=45)
+        axis.set_title(state)
+        axis.set_xlabel("Exact-state projection")
+        axis.set_ylabel("Absolute energy error (mHa)")
+
+    figure.suptitle("UCCSD 6e6o Error and Projection Spread")
+    figure.tight_layout()
+    return figure
+
+
 def plot_bad_spin_roots(bad_spin_roots, active_space, threshold=0.01):
     """
-    Plot bad-spin root counts for one active space, separated by expansion.
+    Fig SI 1
+    Input: Bad spin roots count in a dictionary, active space 
+    Plot bad-spin root counts for one active space, separated by expansion
+    Active space and threshold for title label
     """
     ansatzes = list(bad_spin_roots)
     colors = sns.color_palette("colorblind", len(ansatzes))
