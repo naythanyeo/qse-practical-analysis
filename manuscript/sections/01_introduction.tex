@@ -19,14 +19,15 @@ where $\mathbf{c}_k$ is the corresponding vector of expansion coefficients. Appl
 % PARA 5: Limitations of QSE
 In general, the operator-generated basis states are not orthogonal, such that $\mathbf{S} \neq \mathbf{I}$. Solving this generalised eigenvalue problem typically requires a whitening transformation containing factors proportional to $\frac{1}{\sqrt{\lambda_i}}$, whereby $\lambda_i$ are the eigenvalues of $\mathbf{S}$. 
 If the generated basis states are nearly linearly-dependent,  $\mathbf{S}$ develops very small or even near-null eigenvalues. 
-Consequently, measurement errors in the matrix elements are strongly amplified, rendering the projected problem numerically unstable. This ill-conditiong of $\mathbf{S}$ is a well-known limitation of QSE, and is particularly consequential because statistical shot noises are inherent to real quantum hardware measurements. 
+Consequently, measurement errors in the matrix elements are strongly amplified, rendering the projected problem numerically unstable. This ill-conditiong of $\mathbf{S}$ is a well-known limitation of QSE, and particularly consequential because statistical shot noises are inherent to real quantum hardware measurements. 
 
 % PARA 6: Then given that, why still bother with QSE
+Alternative QSM formulations like Quantum Self-Consistent Equation-Of-Motion (Q-SC-EOM) methods avoid this source of instability by constructing an orthogonal excitation manifold \cite{Asthana2023QscEOM}. This reduces the overlap matrix to the identiy, and consequently the generalised eigenvalue problem into an ordinary one.
+This has been shown to significantly outperform QSE especially when the condition number of $\mathbf{S}$ is large \cite{Kwao2026QSMGeneralisedEigenvalueProblem}. 
+QSE nevertheless remains of practical interest because its operator-generated subspace can be constructed more directly and with fewer formal restrictions. 
+Selected operators act directly on the reference state, allowing different pools to be introduced without requiring the transformed operators to satisfy the killer condition. 
+This also makes the resulting approximate states comparatively straightforward to construct and interpret as linear combinations of the generated basis states. 
 
-% 1) compared to QSE, other subspace methods seem to avoid this like EOM, cause it forms an othrogonal basis --> no ill conditioning 
-% 2) BUT, QSE is still relevant because
-% 2a) you find exact states instead of differences, 
-% 2b) Flexibility in terms of referene state and operator pool 
 
 % PARA 7: Current literature gaps
 % 1) But a lot of current literature for QSE at least only study small systems and stretch tested them
