@@ -140,7 +140,37 @@ def plot_bad_spin_roots(bad_spin_roots, active_space, threshold=0.01):
     figure.tight_layout(rect=(0, 0, 1, 0.86))
     return figure
 
+def plot_active_space_error_iqr(error_data):
+    """
+    Fig 3??
+    Plot median UCCSD errors and their interquartile ranges by active space.
+    Input: Dictionary of dictionaries  with spread of errors
+    Plots: IQR range only 
+    """
+    states = ["s0", "s1", "t1", "t2"]
+    active_spaces = list(error_data)
+    positions = np.arange(len(active_spaces))
+    figure, axes = plt.subplots(2, 2, figsize=(12, 9), sharex=True, sharey=True)
 
+    for state, axis in zip(states, axes.flat):
+        state_errors = [error_data[active_space][state] for active_space in active_spaces]
+        medians = np.asarray([np.median(values) for values in state_errors])
+        quartiles = np.asarray([np.percentile(values, [25, 75]) for values in state_errors])
+        iqr = np.vstack((medians - quartiles[:, 0], quartiles[:, 1] - medians))
+
+        axis.errorbar(medians, positions, xerr=iqr, fmt="o", color="black", capsize=4)
+        axis.axvline(1000 * CHEMICAL_ACCURACY, color="black", linestyle=":")
+        axis.set_xscale("log")
+        axis.set_yticks(positions, active_spaces)
+        axis.tick_params(axis="y", labelleft=True)
+        axis.set_title(state)
+        axis.set_xlabel("Absolute energy error (mHa)")
+        axis.grid(axis="x", alpha=0.2)
+
+    axes[0, 0].invert_yaxis()
+    figure.suptitle("UCCSD Error Scaling Across Active Spaces")
+    figure.tight_layout()
+    return figure
 
 
 # ========================================================
