@@ -27,6 +27,11 @@
 % 5) We try then to remove these effects, ie use hungarian matching based on wavefunction overlap and filter for spin purity. However, this only marginally improves the median. The Std Dev also remains high. This indicates that there is some underlying issue about the representability itself. Ie this motivates direct assesment if the exact states are contained within the QSE subsapce 
 
 \subsubsection{Geometric representability of exact states}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/projection_error/projection_error_6e6o_UCCSD.png}
+    \caption{Absolute QSE energy errors as a function of the projection of exact states onto the QSE subspace for UCCSD in the $6e6o$ active space. Results are shown for the lowest singlet and triplet states, with the dotted line indicating the chemical-accuracy threshold.}
+\end{figure}
 % MAIN GRAPH: 6e6o, scatter plot of the log errors against the projection from 0.9 to 1, less than 0.9 will be <0.9. split 4 panels by s0 s1 t1 t2. Either Main or SI. In this case use batch hungarian matching with spin filter
 % CONTENT
 % To investigate that further, we then look at whether the QSE errors can be explained by an incomplete representation of exact states within the one body QSE subspace 
@@ -34,9 +39,13 @@
 % State how chemical accuracy is only observed when projection is near 1. So if the subspace does not contain the root, as expected the energies will be bad. However, this does not gurantee that the energies will be good because even if the subspace has a very large projection, the energy difference depends heavily on the energy scale of the missing 1% direction. This means that the missing or bad energys can be explained by two reasons, one is straight up missing projection, the operator pool is completely insufficient. Second is that even if the subspace can represent majority of the state, the ritz energies might still be large because...? 
 
 \subsubsection{Active-space dependence of representability and accuracy}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/active_space_scaling/uccsd_low_lying_error_iqr.png}
+    \caption{Dependence of UCCSD QSE energy errors on active-space size. Results are shown for the lowest singlet and triplet states across the $2e2o$, $2e3o$, $4e3o$, $4e4o$, $4e5o$, $6e5o$, and $6e6o$ active spaces. Markers and horizontal error bars summarize the central error and spread across the molecular benchmark, while the dotted line denotes chemical accuracy.}
+\end{figure}
 % Next, we then consider the effects of active space scaling on the accuracy of the QSE 
 % MAIN FIGURE: IQR plot for UCCSD for the variance active spaces, split panel, with dotted line drawn chemical accuracy, same log scale used for all 
-% REPEAT SI: present this exact same plot for all the other ansatz but in SI. 
 % CONTENT
 % 1) Talk about how for active spaces of 2e2o 2e3o 4e3o etc, the solution is almost exact. Cause the number of physically represented directions is less than tha total QSE operators. This means that the states can be reprsented almost exactly throughout even for the exact states 
 % 2) Phrase it more that for smaller active spaces the performance generally better than above, but this indicates that as active space grows, the performance and representability drops 
@@ -46,6 +55,17 @@
 
 \subsection{Stable Dimensions of QSE}
 \subsubsection{Eigenvalue Distribution}
+\begin{figure}[htbp]
+    \centering
+    \makebox[\linewidth][l]{\textbf{(a)}}
+    \includegraphics[width=\linewidth]{figures/overlap_eigenvalue_spread/uccsd_6e6o.png}
+
+    \vspace{0.5em}
+
+    \makebox[\linewidth][l]{\textbf{(b)}}
+    \includegraphics[width=\linewidth]{figures/overlap_eigenvector_composition/uccsd_6e6o.png}
+    \caption{Structure of the UCCSD overlap matrix in the $6e6o$ active space. The upper panel shows the overlap-eigenvalue spectrum for the singlet and triplet sectors across the molecular benchmark. The lower panel decomposes the corresponding overlap eigenvectors into contributions from occupied-number operators, occupied-to-virtual operators, and other operators.}
+\end{figure}
 % MAIN PLOT: show the eigenvalue spread across all 28 molecules, all ansatz separated by colour scatter plot. Use this one panel singlet another panel triplets. active space 6e6o
 % SI / MAIN PLOT: show the eigenvector breakdown stacked bar plot across the states, whatever is there currenlty 
 % SI: same plot as first one but active space 2e3o
@@ -67,12 +87,31 @@
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
 % Before the other subsections, introduce that this section bridges the former. Given that we know that small eigenvalues are important, how then can we appropriately select eigenvalues when noise is introduced. 
 \subsubsection{Effects of Thresholding to mitigate Sampling Noise}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/shots/threshold_shot_error_6e6o.png}
+    \caption{Mean absolute QSE energy error as a function of the overlap-eigenvalue threshold for the $6e6o$ active space at different shot counts. The dotted line indicates chemical accuracy, and the curves show the trade-off between suppressing sampling-noise amplification and discarding physically relevant subspace directions.}
+\end{figure}
 % MAIN GRAPH: Here we show the plot of error for 6e6o against threshold on the x axis, with different shots being plotted. General shape of this is a U shaped graph, Ie the error decreases to a minimum as threshold icnreases, then increases after. For all shots error, define as median for s0 s1 t1 t2 for all molecules UCCSD compared to the statevector 
 % CONTENT
 % 1) In general, thresholding should be used to remove eigenvectors with tiny eigenvalues because they amplify noise rather than add on meaningful information. Every eigenvector can be thought off as adding on additional corrections to the QSE subspace. However, in the presecnece of noise, these corections instead become corrupted and physically meaningless when the eigenvalues are too tiny. The larger the errors, the less resistant it is from noise. 
 % 2) As we increase the threshold and throw out more eigenvalues, the error generally decreases because we are removing eigenvectors that contribute more amplified noise than meaningful information. However, we eventually hit a minimum because beyond a certain point we then start throwing out eigenvectors that are also physically meaningful. This causes the observed minimum and an optimal threshold that should be used 
 % 3) As we use more and more shots, this means that the error decreases. This adds on to our resolving power. Meaning with a better accuracy, we can now accurately resolve smaller eigenvalues, so the minimum or optimal threshold will decrease as shot count increases 
 \subsubsection{Active Space Dependence of Shot Noise}
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}[t]{0.48\linewidth}
+        \centering
+        \makebox[\linewidth][l]{\textbf{(a)}}
+        \includegraphics[width=\linewidth]{figures/shots/active_space_shot_scaling_regression.png}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\linewidth}
+        \centering
+        \makebox[\linewidth][l]{\textbf{(b)}}
+        \includegraphics[width=\linewidth]{figures/shots/best_threshold_heatmap.png}
+    \end{minipage}
+    \caption{Finite-shot scaling and threshold selection across active spaces. (a) Minimum mean QSE energy error as a function of the active-space scaling variable $N_{\mathrm{orb}}^2/\sqrt{N_{\mathrm{shots}}}$, with the linear regression and coefficient of determination shown. (b) Mean optimal overlap-eigenvalue threshold as a function of active space and shot count.}
+\end{figure}
 % MAIN GRAPH: Show the scatter plot of median error for each active space and shot count. Plot on x axis n^2 / sqrt(shots). Show this for both singlets and triplets, show the regression line also. This one use the best threshold 
 % MAIN GRAPH: maybe different panel. Show the heat map of best thresholds for each active space and shot count 
 % CONTENT
@@ -99,6 +138,11 @@
 % 4) Suggest that the matrices are not totally random, and that for both projected matrices, structures do exist
 
 \subsubsection{Effects of Noise on Structure}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/matrix_heatmaps/uccsd_6e6o_shot_overlap.png}
+    \caption{Effect of finite-shot noise on the structure of UCCSD overlap matrices in the $6e6o$ singlet sector. The statevector matrix is compared with matrices reconstructed using shot counts from $1\,\mathrm{k}$ to $1\,\mathrm{M}$, illustrating the progressive disruption of the underlying matrix structure by sampling noise.}
+\end{figure}
 % MAIN FIGURE: show how noise affects this. One plot of the side by side heatmaps for statevector vs shots. Structurally is there any differences. Two rows for singlet and triplet. One for sparse and another for dense matrices? 
 % CONTENT
 % 1) When noise is added, the block list structure observed ends up being disrupted (hopefully)
