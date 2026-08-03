@@ -384,7 +384,11 @@ def plot_shot_eigenvalue_spread(eigenvalue_data, active_space, n_shots):
 # Notebook 4: Scaling and Heatmaps
 # ========================================================
 def plot_h_s_element_regression(points):
-    """Plot corresponding off-diagonal QSE overlap and Hamiltonian elements."""
+    """
+    Scatter plot of the Hij and Sij correlation
+    Input: list of points (Hij and Sij)
+    Scatter plots them and does linear regression
+    """
     s_elements, h_elements = np.asarray(points, dtype=float).T
     retained = (s_elements > 1e-12) & (h_elements > 1e-12)
     s_elements = s_elements[retained]
@@ -402,10 +406,89 @@ def plot_h_s_element_regression(points):
              title="Corresponding Off-Diagonal QSE Matrix Elements")
     axis.text(
         0.04, 0.96,
-        rf"$\log_{{10}}|H_{{ij}}| = {regression.slope:.3f}\log_{{10}}|S_{{ij}}| {regression.intercept:+.3f}$"
-        + "\n" + rf"$R^2 = {regression.rvalue**2:.4f}$",
+        rf"$R^2 = {regression.rvalue**2:.4f}$",
         transform=axis.transAxes, va="top",
         bbox={"facecolor": "white", "alpha": 0.9, "edgecolor": "none"},
     )
     axis.grid(True, which="both", alpha=0.2)
+    return figure
+
+
+def plot_reordered_overlap_heatmaps(matrix_data, active_space, expansion):
+    """
+    Plot 28 reordered overlap matrices
+    Input: Dictionary of sorted matrix data 
+    Plots regular heatmap for each of them (7 by 4)
+    """
+    figure, axes = plt.subplots(4, 7, figsize=(20, 12), layout="constrained")
+    log_matrices = []
+    for _, matrix, _ in matrix_data:
+        magnitude = np.abs(matrix)
+        log_matrix = np.full(magnitude.shape, np.nan)
+        retained = magnitude >= 1e-12
+        log_matrix[retained] = np.log10(magnitude[retained])
+        log_matrices.append(log_matrix)
+    vmin = min(np.nanmin(matrix) for matrix in log_matrices)
+    vmax = max(np.nanmax(matrix) for matrix in log_matrices)
+    colormap = sns.color_palette("magma", as_cmap=True)
+    colormap.set_bad("black")
+
+    for axis, (molecule, _, _), log_matrix in zip(axes.flat, matrix_data, log_matrices):
+        image = axis.imshow(log_matrix, cmap=colormap, vmin=vmin, vmax=vmax, aspect="equal")
+        axis.set_title(molecule, fontsize=9)
+        axis.set_xticks([])
+        axis.set_yticks([])
+
+    figure.colorbar(image, ax=axes, shrink=0.72, label=r"$\log_{10}|S_{ij}|$")
+    figure.suptitle(
+        f"UCCSD {active_space} {expansion.title()} Overlap Matrices",
+    )
+    return figure
+
+
+def plot_shot_overlap_heatmaps(matrix_data, active_space):
+    """
+    Plots the same heatmaps but for shots data
+    Input: Dictionary of matrix data, by molecule 
+    3 molecules only from the data, each molecule has SV and shots S
+    Plots the same heatmaps from before
+    """
+    molecules = list(matrix_data)
+    columns = list(matrix_data[molecules[0]])
+    figure, axes = plt.subplots(3, 5, figsize=(14, 9), layout="constrained")
+
+    log_matrices = []
+    for matrices in matrix_data.values():
+        for matrix in matrices.values():
+            magnitude = np.abs(matrix)
+            log_matrix = np.full(magnitude.shape, np.nan)
+            retained = magnitude >= 1e-12
+            log_matrix[retained] = np.log10(magnitude[retained])
+            log_matrices.append(log_matrix)
+
+    vmin = min(np.nanmin(matrix) for matrix in log_matrices)
+    vmax = max(np.nanmax(matrix) for matrix in log_matrices)
+    colormap = sns.color_palette("magma", as_cmap=True)
+    colormap.set_bad("black")
+
+    for row, molecule in enumerate(molecules):
+        for column, label in enumerate(columns):
+            matrix = matrix_data[molecule][label]
+            magnitude = np.abs(matrix)
+            log_matrix = np.full(magnitude.shape, np.nan)
+            retained = magnitude >= 1e-12
+            log_matrix[retained] = np.log10(magnitude[retained])
+            image = axes[row, column].imshow(
+                log_matrix, cmap=colormap, vmin=vmin, vmax=vmax, aspect="equal"
+            )
+            axes[row, column].set_xticks([])
+            axes[row, column].set_yticks([])
+
+            if row == 0:
+                axes[row, column].set_title(label)
+            if column == 0:
+                axes[row, column].set_ylabel(molecule)
+
+    figure.colorbar(image, ax=axes, shrink=0.82, label=r"$\log_{10}|S_{ij}|$")
+    figure.suptitle(f"UCCSD {active_space} Singlet Overlap Matrices")
     return figure
