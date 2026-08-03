@@ -23,19 +23,14 @@ Consequently, measurement errors in the matrix elements are strongly amplified, 
 
 % PARA 6: Then given that, why still bother with QSE
 Alternative QSM formulations like Quantum Self-Consistent Equation-Of-Motion (Q-SC-EOM) methods avoid this source of instability by constructing an orthogonal excitation manifold \cite{Asthana2023QscEOM}. This reduces the overlap matrix to the identiy, and consequently the generalised eigenvalue problem into an ordinary one.
-This has been shown to significantly outperform QSE especially when the condition number of $\mathbf{S}$ is large \cite{Kwao2026QSMGeneralisedEigenvalueProblem}. 
-QSE nevertheless remains of practical interest because its operator-generated subspace can be constructed more directly and with fewer formal restrictions. 
-Selected operators act directly on the reference state, allowing different pools to be introduced without requiring the transformed operators to satisfy the killer condition. 
-This also makes the resulting approximate states comparatively straightforward to construct and interpret as linear combinations of the generated basis states. 
-
+Doing so has been shown to outperform QSE in spectral accuracy especially when the condition number of $\mathbf{S}$ is large \cite{Kwao2026QSMGeneralisedEigenvalueProblem}. 
+QSE nevertheless remains of practical interest due to its direct and comparatively flexible formulation. 
+While q-sc-EOM is formulated primarily to recover excitation energy differences relative to a reference state, QSE yields Ritz approximations to absolute energies. QSE therefore serves a dual purpose within the same projected calculation: refinement of the approximate ground state through the lowest Ritz solution, and recovery of excited-state approximations through the higher solutions. \cite{mcclean2017qse,yoshioka2022GeneralisedQSE}
+Furthermore, QSE does not require its expansion operators to satisfy the vacuum-annihilation condition imposed in self-consistent EOM formulations, allowing a wider range of physically motivated operator pools to be considered. This flexibility leaves substantial scope for tailoring the generated subspace and improving the balance between spectral representability and numerical stability.
 
 % PARA 7: Current literature gaps
-% 1) But a lot of current literature for QSE at least only study small systems and stretch tested them
-% 2) for this method, a lot is still unknown about the represntabity and spectral accuracy beyondd thos stress test systems, and how to practically apply this 
-% 3) also talk about how the ill conditioning problem is not well quantified. ie people just talk about overlap but dont really dive much deeper. TBC pointer? 
+% NEED TO CITE
+Much of the existing QSE literature has evaluated the method using selected molecular systems, often at distorted geometries chosen to probe strongly correlated or numerically challenging regimes. Although these studies have established important limitations in subspace representability and numerical stability, it remains unclear how frequently such limitations arise across chemically diverse molecules under more routine equilibrium conditions. Recent work has also shown that overlap-matrix thresholding can suppress instabilities in the generalized eigenvalue problem. However, the appropriate regularization generally depends on both the underlying system and the level of measurement noise, while overly aggressive thresholding may remove physically relevant subspace directions. A broader characterization is therefore needed to determine how QSE accuracy, representability, and numerical recoverability behave across molecular systems, and how regularization should be applied in practice.
 
-% PARA 8: Study Design and Justification
-% 1) FIRST we want to look and study the representabity and accuracy of a set of molecules instead, basically state what is special aobut the 28 mols 
-% 2) also talk about how the representability should be tested and measured wrt to the cohoice of reference frame. state here the 6 ansatz investigated 
-% 3) wan tto do a deep dive of the instabilty problem 
-% 4) also talk about the operator pools used, ie we want xxx so we did that 
+% PARA 8: Contributions of work
+In this work, we address these questions through a systematic benchmark of spin-resolved QSE across 28 chemically varied molecules\cite{thiels2008benchmark}. Statevector simulations are first used to isolate the intrinsic representability and accuracy of the operator-generated subspace. We compare several reference ansatz classes, ranging from restricted to more expressive constructions, to determine how the prepared reference influences the recoverable spectrum. We then analyse the origins and practical consequences of overlap-matrix ill-conditioning under finite-shot sampling, including its dependence on the overlap spectrum and regularization threshold. Finally, we quantify the associated scaling and measurement requirements, provide practical guidance for threshold selection, and identify directions for improving the construction and numerical treatment of QSE subspaces. The principal contribution of this work is therefore a systematic assessment of when molecular QSE remains both sufficiently expressive and numerically recoverable for practical excited-state calculations.
