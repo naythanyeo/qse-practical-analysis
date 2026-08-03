@@ -2,6 +2,7 @@
 
 import numpy as np
 from numpy import linalg as la
+from scipy import linalg as sla
 
 
 def general_solve(H, S, threshold):
@@ -19,6 +20,27 @@ def general_solve(H, S, threshold):
     # Solve the regular eigenvalue problem
     solved_energies, wavefunctions = la.eigh(H_transformed)
     return solved_energies, wavefunctions
+
+
+def threshold_ladder_solve(H, S, thresholds, n_states):
+    thresholds = np.asarray(thresholds, dtype=float)
+    sigma, U = la.eigh(S)
+
+    base_mask = sigma > thresholds.min()
+    sigma = sigma[base_mask]
+    V = U[:, base_mask] / np.sqrt(sigma)
+    H_transformed = V.conj().T @ H @ V
+
+    energies = np.full((len(thresholds), n_states), np.nan)
+    for index, threshold in enumerate(thresholds):
+        mask = sigma > threshold
+        if np.count_nonzero(mask) < n_states:
+            continue
+
+        H_reduced = H_transformed[np.ix_(mask, mask)]
+        energies[index] = sla.eigvalsh(H_reduced, subset_by_index=(0, n_states - 1))
+
+    return energies
 
 
 def dimension_solve(H, S, dim):

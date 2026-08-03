@@ -5,10 +5,12 @@ Within notebook controls the plotting or saving of that figure
 """
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.colors import LogNorm
 import seaborn as sns
 import numpy as np
 from IPython.display import HTML, display
 from io import BytesIO
+from scipy.stats import linregress
 import base64
 
 from notebook_utils.chem import CHEMICAL_ACCURACY
@@ -260,4 +262,150 @@ def plot_eigenvector_composition(composition_data, active_space):
     figure.suptitle(f"UCCSD {active_space} Overlap Eigenvector Composition", y=0.98)
     sns.despine()
     figure.tight_layout(rect=(0, 0.12, 1, 0.92))
+    return figure
+
+
+# ========================================================
+# Notebook 3: Shot Noise and Thresholding
+# ========================================================
+def plot_threshold_shot_errors(error_data, thresholds):
+    """
+    Plot mean QSE errors against overlap threshold for each shot count
+    Input: Error data is a dictionry of form {shot: [mean errors]}
+    Total 41 thresholds used from the threshold ladder
+    """
+    colors = sns.color_palette("viridis", len(error_data))
+    figure, axis = plt.subplots(figsize=(9, 6))
+
+    for (n_shots, errors), color in zip(error_data.items(), colors):
+        label = f"{n_shots // 1000}k" if n_shots < 1_000_000 else "1M"
+        axis.plot(thresholds, errors, marker="o", markersize=4, linewidth=1.5,
+                  color=color, label=label)
+
+    axis.axhline(1000 * CHEMICAL_ACCURACY, color="black", linestyle=":",
+                 label="Chemical accuracy")
+    axis.set_xscale("log")
+    axis.set_ylim(0, 20)
+    axis.set_xlabel("Overlap eigenvalue threshold")
+    axis.set_ylabel("Mean absolute energy error (mHa)")
+    axis.set_title("Mean Error Against Threshold and Shot Count")
+    axis.grid(True, which="both", alpha=0.2)
+    axis.legend(loc="upper center", bbox_to_anchor=(0.5, -0.16),
+                ncol=6, frameon=False, title="Shot count", fontsize=9,
+                handlelength=1.5, columnspacing=1.2, labelspacing=0.4)
+    sns.despine()
+    figure.tight_layout(rect=(0, 0.1, 1, 1))
+    return figure
+
+
+def plot_best_threshold_heatmap(best_threshold_data):
+    """
+    Plot the mean optimal overlap threshold by active space and shot count
+    Input: Dicionary of dictionaries
+    Plots heatmap from that
+    """
+    threshold_df = pd.DataFrame.from_dict(best_threshold_data, orient="index")
+    annotations = threshold_df.map(lambda value: f"{value:.1e}")
+    shot_labels = [f"{n_shots // 1000}k" if n_shots < 1_000_000 else "1M"
+                   for n_shots in threshold_df.columns]
+
+    figure, axis = plt.subplots(figsize=(12, 6))
+    sns.heatmap(
+        threshold_df, cmap="Blues", norm=LogNorm(vmin=1e-4, vmax=1),
+        annot=annotations, fmt="", linewidths=0.5, ax=axis,
+        cbar_kws={"label": "Mean optimal overlap threshold"},
+    )
+    axis.set_xticklabels(shot_labels, rotation=45, ha="right")
+    axis.set_xlabel("Shot count")
+    axis.set_ylabel("Active space")
+    axis.set_title("Mean Optimal Threshold by Active Space and Shot Count")
+    figure.tight_layout()
+    return figure
+
+
+def plot_error_scaling_regression(scaling_points):
+    """
+    Plot mean shot errors against the orbital and shot-count scaling coordinate
+    Input list of coordinates
+    Plot and do linear regression
+    """
+    x, y = np.asarray(scaling_points, dtype=float).T
+    regression = linregress(x, y)
+    x_fit = np.linspace(x.min(), x.max(), 200)
+
+    figure, axis = plt.subplots(figsize=(8, 6))
+    axis.scatter(x, y, color="black", alpha=0.65)
+    axis.plot(x_fit, regression.intercept + regression.slope * x_fit, color="black")
+    axis.text(0.04, 0.95, rf"$R^2 = {regression.rvalue**2:.3f}$",
+              transform=axis.transAxes, va="top")
+    axis.set_xlabel(r"$N_{\mathrm{orb}}^2 / \sqrt{N_{\mathrm{shots}}}$")
+    axis.set_ylabel("Mean minimum energy error (mHa)")
+    axis.set_title("Shot-Noise Scaling of Minimum QSE Error")
+    axis.grid(alpha=0.2)
+    sns.despine()
+    figure.tight_layout()
+    return figure
+
+
+def plot_shot_eigenvalue_spread(eigenvalue_data, active_space, n_shots):
+    """
+    Plot statevector and sampled overlap eigenvalue spreads.
+    Input dictionary of {Singlet: {SV: [eigenvalsh], Shots: [eigenvalsh]...}}
+    Plots in blue (SV) and red (shots) with negative axis shown
+    """
+    figure, axes = plt.subplots(1, 2, figsize=(13, 5), sharey=True)
+
+    for axis, expansion in zip(axes, ("singlet", "triplet")):
+        shot_indices, shot_eigenvalues = zip(*eigenvalue_data[expansion]["shots"])
+        sv_indices, sv_eigenvalues = zip(*eigenvalue_data[expansion]["statevector"])
+        shot_eigenvalues = np.where(np.abs(shot_eigenvalues) < 1e-14, 0, shot_eigenvalues)
+        sv_eigenvalues = np.where(np.abs(sv_eigenvalues) < 1e-14, 0, sv_eigenvalues)
+
+        axis.scatter(sv_indices, sv_eigenvalues, s=16, color="blue", alpha=0.7,
+                     label="Statevector", zorder=2)
+        axis.scatter(shot_indices, shot_eigenvalues, s=12, color="red", alpha=0.3,
+                     label="Shots", zorder=3)
+        axis.axhline(0, color="black", linewidth=1.5, zorder=4)
+        axis.set_yscale("symlog", linthresh=1e-14, linscale=2)
+        axis.set_ylim(-1e-2, 1e2)
+        axis.set_title(expansion.title())
+        axis.set_xlabel("Eigenvalue index")
+        axis.grid(True, which="both", alpha=0.2)
+
+    axes[0].set_ylabel("Overlap eigenvalue")
+    handles, labels = axes[0].get_legend_handles_labels()
+    figure.legend(handles, labels, loc="lower center", ncol=2, frameon=False)
+    figure.suptitle(f"UCCSD {active_space} Overlap Eigenvalue Lifting ({n_shots:,} shots)")
+    figure.tight_layout(rect=(0, 0.08, 1, 0.95))
+    return figure
+
+
+# ========================================================
+# Notebook 4: Scaling and Heatmaps
+# ========================================================
+def plot_h_s_element_regression(points):
+    """Plot corresponding off-diagonal QSE overlap and Hamiltonian elements."""
+    s_elements, h_elements = np.asarray(points, dtype=float).T
+    retained = (s_elements > 1e-12) & (h_elements > 1e-12)
+    s_elements = s_elements[retained]
+    h_elements = h_elements[retained]
+
+    regression = linregress(np.log10(s_elements), np.log10(h_elements))
+    fit_s = np.logspace(np.log10(s_elements.min()), np.log10(s_elements.max()), 300)
+    fit_h = 10 ** regression.intercept * fit_s ** regression.slope
+
+    figure, axis = plt.subplots(figsize=(7, 5), constrained_layout=True)
+    axis.scatter(s_elements, h_elements, s=5, alpha=0.08, color="tab:blue",
+                 linewidths=0, rasterized=True)
+    axis.plot(fit_s, fit_h, color="tab:red", linewidth=2)
+    axis.set(xscale="log", yscale="log", xlabel=r"$|S_{ij}|$", ylabel=r"$|H_{ij}|$",
+             title="Corresponding Off-Diagonal QSE Matrix Elements")
+    axis.text(
+        0.04, 0.96,
+        rf"$\log_{{10}}|H_{{ij}}| = {regression.slope:.3f}\log_{{10}}|S_{{ij}}| {regression.intercept:+.3f}$"
+        + "\n" + rf"$R^2 = {regression.rvalue**2:.4f}$",
+        transform=axis.transAxes, va="top",
+        bbox={"facecolor": "white", "alpha": 0.9, "edgecolor": "none"},
+    )
+    axis.grid(True, which="both", alpha=0.2)
     return figure
