@@ -1,17 +1,27 @@
 \subsection{Accuracy and Representability of the QSE Subspace}
-% This section dives deeper onto the subspace representability of QSE. Mainly should answer the question, how well can QSE represent states 
-\subsubsection{Dependence of QSE Spectral Accuracy on reference Ansatz}
-% This subsection focuses on how the reference ansatz states affect the QSE accuracy 
-% Main table: Ansatz will be the rows, plot the median error for s0 s1 t1 t2 at a fixed active space of 6e6o. LHS of table include circuit depth / parameter count 
-% SI: Box and whisker to show the distrbution for UCCSD s0 s1 t1 t2 horizontally without the labels 
-% CONTENT
-% 1) Talk about how more expressive ansatz like UCCGSD is good for finding a better ground state s0. For restricted ones like paired ansatz its particularly bad for the ground state (too restrictive)
-% 2) For the low lying states triplet states, the ansatz choice still matter, but not as significnatly? For singlet states error is considerably higher
-% 3) Brief here is that ansatz choice definitely matters, but in terms of representabilty, UCCSD presents a good balance between flexibility and cost. paired ansatz too restrictive and generlaised ansatz too expensive without providing must benefit for low lying excited states 
-% 4) Talk about how the median here is reported because the errors had extreme tails caused by several outlier states. Very bad outlier problem for no reason at all.. Show box and whisker for UCCSD for eg s0 s1 t1 t2 
-% 5) Link to next section to try to explain the outliers 
+In this section, we study the spectral accuracy and representability of low-lying roots generated with QSE using statevector simulations. The QSE excitation energies are compared against exact CASCI energies within the same active space. Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2, to characterise QSE performance in the low-energy region of the spectrum.
+
+\subsubsection{Spectral Accuracy Across QSE Reference Ansätze}
+\input{tables/results/table1_ansatz_errors}
+
+A clear dependence on the choice of reference ansatz is observed, with more expressive ansatz generally producing more accurate QSE spectra. The paired k-UpCCGSDSinglet ansatz restricts excitations heavily to only singles and paired doubles. Consequently, this ansatz exhibits the largest errors in the predicted spectrum. While increasing the number of layers from k=1 to k=3 systematically improves their performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restricts of its excitation manifold.
+In comparison, UCCSDSinglet and UCCSD achieve similar accuracies across the low-lying states. Although UCCSDSinglet imposes additional parameter-tying constraints, both ansatz span the same excitation manifold, and therefore yield comparable errors.
+UCCGSD, which provides the most flexible excitation manifold considered here, generally produces the lowest errors, albeit at the cost of considerably greater circuit depth. 
+These results demonstrate the expected trade-off between reference-state expressiveness and circuit complexity.
+
+Furthermore, we note that the influence of the reference ansatz is considerably more pronounced for the ground state than for the excited states. For S0, the difference in median error between the paired and unpaired ansatz exceeds an order of magnitude, whereas the corresponding variation for S1, T1 and T2 is substantially smaller. 
+This behaviour can be understood from the construction of QSE. Although the projected Hamiltonian variationally refines all states within the QSE subspace, the ground-state solution remains strongly dominated by the original VQE reference. 
+Consequently, deficiencies in the reference wavefunction can only be partially corrected through the QSE expansion, making the accuracy of the ground-state energy more sensitive to the quality of the underlying VQE reference.
+In contrast, the excited states contain more substantial contributions from the other operator-generated basis states, which provide greater flexibility beyond the original reference. These contributions can partially compensate for imperfections in the VQE wavefunction, thereby reducing the sensitivity of the excited-state energies to the choice of ansatz.
+ 
+Beyond the dependence on the reference ansatz, the excited states are generally recovered with appreciably larger errors than the ground state. 
+Among the low-lying excited states considered, S1 is consistently the least accurately reproduced, while T1 and T2 perform better but generally remain outside chemical accuracy. 
+The errors are also distributed unevenly across the molecular benchmark, with a broad spread and a small number of large-error outliers forming pronounced tails in the distribution (Fig. S1). This skewness motivates the use of the median as a more representative measure of typical performance than the mean. 
+In the remainder of this section, we examine these large-error outliers in greater detail, beginning with the effects of root assignment and spin purity.
 
 \subsubsection{Root assignment and Spin purity}
+
+
 % Here, we consider the effects of incorrect roots matching that could cause the outliers observed 
 % EXAMPLES: Choose one 6e6o wrongly ordered root, IE bad match with index root but good match with overlap root
 % EXAMPLE: Choose one spin contaminated root that was found from the wrong spin sector 
