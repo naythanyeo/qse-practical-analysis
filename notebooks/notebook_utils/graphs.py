@@ -492,3 +492,43 @@ def plot_shot_overlap_heatmaps(matrix_data, active_space):
     figure.colorbar(image, ax=axes, shrink=0.82, label=r"$\log_{10}|S_{ij}|$")
     figure.suptitle(f"UCCSD {active_space} Singlet Overlap Matrices")
     return figure
+
+
+def plot_commuting_group_scaling(commuting_group_data):
+    """
+    Plot mean commuting groups against the number of spatial orbitals
+    INPUT: commuting_group_data, dictionary of singlet and triplet keys
+    Plots data and gets the regression curve 
+    """
+    fig, axes = plt.subplots(1, 2, 
+                             sharey=True,
+                             sharex=True,
+                             layout="constrained")
+    for axis, expansion in zip(axes, commuting_group_data.keys()):
+        group_data = commuting_group_data[expansion]
+
+        num_orbitals = np.asarray(sorted(group_data), dtype=float)
+        num_groups = np.asarray([group_data[num_orbital] for num_orbital in num_orbitals])
+        regression = linregress(np.log10(num_orbitals), np.log10(num_groups))
+        fit_orbitals = np.logspace(np.log10(num_orbitals.min()), np.log10(num_orbitals.max()), 200)
+        fit_groups = 10 ** regression.intercept * fit_orbitals ** regression.slope
+
+        axis.scatter(num_orbitals, num_groups, color="black", s=45, zorder=2)
+        axis.plot(fit_orbitals, fit_groups, color="black", linewidth=1.5, zorder=1)
+        axis.set_xscale("log")
+        axis.set_yscale("log")
+        axis.set_xticks(num_orbitals, [str(int(value)) for value in num_orbitals])
+        axis.set_title(f"{"Singlet" if expansion=="singlet" else "Triplet"}")
+        axis.text(
+            0.04, 0.96,
+            rf"$N_{{\mathrm{{groups}}}} \propto n^{{{regression.slope:.2f}}}$"
+            "\n"
+            rf"$R^2 = {regression.rvalue**2:.4f}$",
+            transform=axis.transAxes, va="top",
+            bbox={"facecolor": "white", "alpha": 0.9, "edgecolor": "none"},
+        )
+        axis.grid(True, which="both", alpha=0.2)
+    fig.suptitle("Commuting-Group Scaling")
+    fig.supylabel("Mean number of commuting groups")
+    fig.supxlabel("Number of Spatial Orbitals")
+    return fig
