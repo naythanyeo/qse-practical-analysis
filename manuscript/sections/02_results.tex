@@ -1,7 +1,7 @@
 \subsection{Accuracy and Representability of the QSE Subspace}
 In this section, we study the spectral accuracy and representability of low-lying roots generated with QSE using statevector simulations. The QSE excitation energies are compared against exact CASCI energies within the same active space. Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2, to characterise QSE performance in the low-energy region of the spectrum.
 
-\subsubsection{Spectral Accuracy Across QSE Reference Ansätze}
+\subsubsection{General Trends in QSE Spectral Accuracy}
 \input{tables/results/table1_ansatz_errors}
 
 A clear dependence on the choice of reference ansatz is observed, with more expressive ansatz generally producing more accurate QSE spectra. The paired k-UpCCGSDSinglet ansatz restricts excitations heavily to only singles and paired doubles. Consequently, this ansatz exhibits the largest errors in the predicted spectrum. While increasing the number of layers from k=1 to k=3 systematically improves their performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restricts of its excitation manifold.
@@ -17,24 +17,32 @@ In contrast, the excited states contain more substantial contributions from the 
 Beyond the dependence on the reference ansatz, the excited states are generally recovered with appreciably larger errors than the ground state. 
 Among the low-lying excited states considered, S1 is consistently the least accurately reproduced, while T1 and T2 perform better but generally remain outside chemical accuracy. 
 The errors are also distributed unevenly across the molecular benchmark, with a broad spread and a small number of large-error outliers forming pronounced tails in the distribution (Fig. S1). This skewness motivates the use of the median as a more representative measure of typical performance than the mean. 
-In the remainder of this section, we examine these large-error outliers in greater detail, beginning with the effects of root assignment and spin purity.
 
-\subsubsection{Root assignment and Spin purity}
+\subsubsection{Root assignment}
+We next examine the large-error cases in greater detail. We observe that in several instances, the target exact state is not recovered as a distinct state within the QSE spectrum. 
+Pyrrole (UCCSD) provides a clear example of this. The first excited singlet obtained from QSE has an energy of -205.883672Ha, whereas the exact S1 and S2 energies are -205.988082Ha and -205.883871Ha respectively. 
+The QSE root also has negligible overlap with the exact S1 state, $4.14\times10^{-6}$, but an overlap of 0.997 with S2. 
+The recovered state is therefore an accurate approximation to S2 rather than S1, while no corresponding QSE root is recovered for S1. 
+This corresponds to a different failure mode compared to an exact state that is simply poorly represented.
 
+To better quantify the effect of this index-based root assignment errors, we additionally performed an overlap-based Hungarian matching that maximises the total wavefunction overlap between QSE and exact CASCI states. This removes the effects of missing or wrongly assigned roots on the raw errors, and instead present them as unrecovered states.
+For UCCSD at 6e6o, S0 and T1 retain complete matching with no change in their errors. For S1 and T2, the fractions of recovered states decrease to $75\%$ and $93\%$, respectively, while the median errors decrease from 23.7 to 18.2 mHa for S1 and from 3.2 to 2.6 mHa for T2.
+Therefore, while this additional failure mode can also affect the low-lying states, it does not appear to be the dominant source of the observed errors.
 
-% Here, we consider the effects of incorrect roots matching that could cause the outliers observed 
-% EXAMPLES: Choose one 6e6o wrongly ordered root, IE bad match with index root but good match with overlap root
-% EXAMPLE: Choose one spin contaminated root that was found from the wrong spin sector 
-% SI FIGURE: Bad spin roots occurence across ansatz for singlet vs triplets, the stacked bar graph 
-% SI table: Grouped trotter approximation? TBC tbh If not just show the VQE state spin values for UCCSD vs UCCSDSinglet 
-% STATS: Hungarian matching, check out the new median error 
+\subsubsection{Spin purity}
+We next examine the spin purity of the recovered QSE spectrum. Although the QSE operator pools used in this study are spin adapted, this does not by itself guarantee spin-pure Ritz states because the underlying VQE reference is not perfectly spin pure. 
+Consequently, small spin-contaminated components of the reference state can be carried into the QSE subspace by the excitation operators.
+We therefore first examine how these spin-contaminated states are distributed across the recovered spectrum (Fig. S1).
 
-% CONTENT
-% 1) First effect considered is that the QSE itself might give wrongly ordered roots. --> Show this with examples. 
-% 2) Consider why the root reordering can occur? Like state that this is more of a linear algebra thing?? TBC find sources 
-% 3) Consider also spin contamination. Show that spin contamination can exist with an example. Explain that this can occur because the ground reference state is not pure, and that tiny impurities can get projected and amplified. Ie that wrong spin component is amplified.  Show how the spin contamination is significant for UCCGSD, appearing sometimes at low lying excited states. For paired ansatz, almost none at all. For UCCSD and UCCSDSinglet, interestingly, the more flexible UCCSD provided for less spin contamination. 
-% 4) Note that this was not just because UCCSD provided a better QSE root, but after optimisation from VQE, the UCCSD VQE state was also more pure. State that this could be due to the trotter approximation failure. 
-% 5) We try then to remove these effects, ie use hungarian matching based on wavefunction overlap and filter for spin purity. However, this only marginally improves the median. The Std Dev also remains high. This indicates that there is some underlying issue about the representability itself. Ie this motivates direct assesment if the exact states are contained within the QSE subsapce 
+We observe that spin contamination is relatively uncommon among the lower-lying roots, but becomes increasingly prevelant at higher energies. 
+Its extent also depends strongly on the reference ansatz: the paired ansätze produce almost entirely spin-pure spectra, whereas the more expressive UCCGSD ansatz exhibits the most severe spin contamination among the ansätze considered.
+
+Interestingly, the spin-adapted UCCSDSinglet ansatz, which ties parameters associated with equivalent spatial-orbital transitions, exhibits greater spin contamination than the more flexible UCCSD ansatz, both in the number of contaminated roots (Fig. S1) and in the mean spin deviation (Table S1). 
+We attribute this behaviour to errors introduced by the Trotter approximation. As the number of Trotter steps is increased, the spin contamination of UCCSDSinglet decreases systematically, whereas that of UCCSD remains approximately unchanged. In our calculations, the benefit of parameter tying becomes apparent only beyond 16 Trotter steps (Table S2). 
+The greater variational flexibility of UCCSD may therefore make it less sensitive to these Trotterisation errors at low Trotter order, partially offsetting the loss of explicit spin adaptation.
+
+Taken together with the spectral-error analysis above, these results highlight UCCSD as a favourable compromise among the ansätze considered. 
+It maintains relatively low spectral errors while exhibiting substantially less spin contamination than the more expressive UCCGSD ansatz. UCCSD therefore provides a useful balance between spectral accuracy, spin purity, and ansatz complexity within the present implementation.
 
 \subsubsection{Geometric representability of exact states}
 \begin{figure}[htbp]
@@ -42,8 +50,8 @@ In the remainder of this section, we examine these large-error outliers in great
     \includegraphics[width=\linewidth]{figures/projection_error/projection_error_6e6o_UCCSD.png}
     \caption{Absolute QSE energy errors as a function of the projection of exact states onto the QSE subspace for UCCSD in the $6e6o$ active space. Results are shown for the lowest singlet and triplet states, with the dotted line indicating the chemical-accuracy threshold.}
 \end{figure}
-% MAIN GRAPH: 6e6o, scatter plot of the log errors against the projection from 0.9 to 1, less than 0.9 will be <0.9. split 4 panels by s0 s1 t1 t2. Either Main or SI. In this case use batch hungarian matching with spin filter
-% CONTENT
+Beyond errors pertaining to outliers, we further look at the geometric representability of QSE states to better qualify the errors. We define a quantity called the projection 
+
 % To investigate that further, we then look at whether the QSE errors can be explained by an incomplete representation of exact states within the one body QSE subspace 
 % Define projection metric used, and what it shows etc 
 % State how chemical accuracy is only observed when projection is near 1. So if the subspace does not contain the root, as expected the energies will be bad. However, this does not gurantee that the energies will be good because even if the subspace has a very large projection, the energy difference depends heavily on the energy scale of the missing 1% direction. This means that the missing or bad energys can be explained by two reasons, one is straight up missing projection, the operator pool is completely insufficient. Second is that even if the subspace can represent majority of the state, the ritz energies might still be large because...? 
@@ -54,15 +62,14 @@ In the remainder of this section, we examine these large-error outliers in great
     \includegraphics[width=\linewidth]{figures/active_space_scaling/uccsd_low_lying_error_iqr.png}
     \caption{Dependence of UCCSD QSE energy errors on active-space size. Results are shown for the lowest singlet and triplet states across the $2e2o$, $2e3o$, $4e3o$, $4e4o$, $4e5o$, $6e5o$, and $6e6o$ active spaces. Markers and horizontal error bars summarize the central error and spread across the molecular benchmark, while the dotted line denotes chemical accuracy.}
 \end{figure}
-% Next, we then consider the effects of active space scaling on the accuracy of the QSE 
-% MAIN FIGURE: IQR plot for UCCSD for the variance active spaces, split panel, with dotted line drawn chemical accuracy, same log scale used for all 
-% CONTENT
+Lastly, we consider the effects of active space scaling on the representability of the QSE subspace. The figure above shows
+
 % 1) Talk about how for active spaces of 2e2o 2e3o 4e3o etc, the solution is almost exact. Cause the number of physically represented directions is less than tha total QSE operators. This means that the states can be reprsented almost exactly throughout even for the exact states 
 % 2) Phrase it more that for smaller active spaces the performance generally better than above, but this indicates that as active space grows, the performance and representability drops 
 % 3) explain roughly that the operator pool grows with O(N^2) but the FCI is exponential. This points to the fact again that a linear operator might not be sufficient 
 % 4) state brutally that in terms of scaling, for the current operator used it is likely insufficinet because already at 6e6o the median is above chemical accuracy for excited states, only for ground state it remains ok. For practical use of QSE to predict excited states, efforts should be focused on developing the operator pool further and explore the effects at larger active spaces. 
 
-
+\clearpage
 \subsection{Stable Dimensions of QSE}
 \subsubsection{Eigenvalue Distribution}
 \begin{figure}[htbp]
@@ -76,6 +83,9 @@ In the remainder of this section, we examine these large-error outliers in great
     \includegraphics[width=\linewidth]{figures/overlap_eigenvector_composition/uccsd_6e6o.png}
     \caption{Structure of the UCCSD overlap matrix in the $6e6o$ active space. The upper panel shows the overlap-eigenvalue spectrum for the singlet and triplet sectors across the molecular benchmark. The lower panel decomposes the corresponding overlap eigenvectors into contributions from occupied-number operators, occupied-to-virtual operators, and other operators.}
 \end{figure}
+Beyond the representability and accuracy of the QSE spectrum, we now seek to better quantify and study the instability problem. This problem can result in numerical instabilities arising when solving the generalised eigenvalue problem for overlap matrices with very large condition number. In th e
+
+
 % MAIN PLOT: show the eigenvalue spread across all 28 molecules, all ansatz separated by colour scatter plot. Use this one panel singlet another panel triplets. active space 6e6o
 % SI / MAIN PLOT: show the eigenvector breakdown stacked bar plot across the states, whatever is there currenlty 
 % SI: same plot as first one but active space 2e3o
@@ -93,7 +103,7 @@ In the remainder of this section, we examine these large-error outliers in great
 % 1) transition, the next then logical question will be, can the instability of QSE then be solved by only considering these stable eigenvalues? after they consistently have a eigenvalue of 1. what if we just use them 
 % 2) Show the stat of what happens when you restrict the subspace down to only number and OV. IE filter for those eigenvalues only, only retain the stable dimensions. Show that the errors increase significantly 
 % 3) Claim now that as a whole, the stable dimensions are formed by well supported QSE operators. They have stable eigenvalues, and in the presecnec of noise will not result in numerical instabilities since there is not amplification. However, these directions are not sufficient to represent the QSE subspace well. In fact, they form a strong base only. However, it is the tiny eigenvalues from the other operators that provide important correlations to the system. This then leads to the next section, how then can we choose which eigenvalues to retain 
-
+\clearpage
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
 % Before the other subsections, introduce that this section bridges the former. Given that we know that small eigenvalues are important, how then can we appropriately select eigenvalues when noise is introduced. 
 \subsubsection{Effects of Thresholding to mitigate Sampling Noise}
@@ -135,7 +145,7 @@ In the remainder of this section, we examine these large-error outliers in great
 % 2) State that empiracally that the number of commuting groups for each matrix scales with n^3.7 ish? Discuss here that global grouping was done, and that some terms belong 10^-12 for eg were dropped. 
 % 3) This puts an estimate number of shots for chemically accurate results to scale with n^8. Its slightly better estimate than the n^12 scaling by that paper, but likely its because of global grouping of commuting terms that made a difference. 
 % 4) caveat that this is a estimate based on errors wrt to the statevector. Also that the scaling is estimated using the current singles operator pool which assumes n^2 matrix size scaling. If lets say a doubles operator were used which scales with n^4, then the approximate scaling for total shot budget is more closer to n^8 * n^8 = n^16 terms. This scaling is very dependent on the operator pool 
-
+\clearpage
 \subsection{Structure of the Projected QSE Matrices}
 % Link from the previous section, short intro line that says. Following the steep shot-cost scaling observed, we further examined whether the projected QSE matrices contained structure that could potentially be exploited by future measurement or reconstructions methods
 \subsubsection{Structural Correlations and Sparsity}
