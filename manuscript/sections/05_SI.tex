@@ -2,6 +2,10 @@
 \renewcommand{\thefigure}{S\arabic{figure}}
 \providecommand{\theHfigure}{\thefigure}
 \renewcommand{\theHfigure}{SI.\arabic{figure}}
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\providecommand{\theHtable}{\thetable}
+\renewcommand{\theHtable}{SI.\arabic{table}}
 
 \begin{figure}[htbp]
     \centering
@@ -16,6 +20,8 @@
     \caption{Spin-contaminated roots across ansatz families in the $6e6o$ active space.}
     \label{fig:si-spin-contaminated-roots}
 \end{figure}
+
+\input{tables/results/table_S1_spin_contamination}
 
 \begin{figure}[htbp]
     \centering
