@@ -74,12 +74,19 @@ Thus, a one-body-generated QSE subspace may capture most of the wavefunction whi
     \includegraphics[width=\linewidth]{figures/active_space_scaling/uccsd_low_lying_error_iqr.png}
     \caption{Dependence of UCCSD QSE energy errors on active-space size. Results are shown for the lowest singlet and triplet states across the $2e2o$, $2e3o$, $4e3o$, $4e4o$, $4e5o$, $6e5o$, and $6e6o$ active spaces. Markers and horizontal error bars summarize the central error and spread across the molecular benchmark, while the dotted line denotes chemical accuracy.}
 \end{figure}
-Lastly, we consider the effects of active space scaling on the representability of the QSE subspace. The figure above shows
 
-% 1) Talk about how for active spaces of 2e2o 2e3o 4e3o etc, the solution is almost exact. Cause the number of physically represented directions is less than tha total QSE operators. This means that the states can be reprsented almost exactly throughout even for the exact states 
-% 2) Phrase it more that for smaller active spaces the performance generally better than above, but this indicates that as active space grows, the performance and representability drops 
-% 3) explain roughly that the operator pool grows with O(N^2) but the FCI is exponential. This points to the fact again that a linear operator might not be sufficient 
-% 4) state brutally that in terms of scaling, for the current operator used it is likely insufficinet because already at 6e6o the median is above chemical accuracy for excited states, only for ground state it remains ok. For practical use of QSE to predict excited states, efforts should be focused on developing the operator pool further and explore the effects at larger active spaces. 
+Lastly, we consider the effects of active space scaling on the accuracy of the recovered QSE spectra (Fig 2). 
+For the smallest active spaces, $2e2o$, $2e3o$, and $4e3o$, the recovered spectra are nearly exact. Beyond these cases, the errors generally increase as the active space is enlarged.
+
+The near-exact recovery in the smallest active spaces is consistent with the relative dimensionality of the QSE subspace. In these cases, the one-body operator pool generates more basis states than there are physically accessible determinants within the relevant spin sector.
+The QSE subspace can therefore span most of the relevant Hilbert space, leaving little room for representability error.
+
+This favourable dimensionality does not persist as the active space grows. The number of one-body QSE operators scales polynomially, approximately as $n^2$, whereas the dimension of the full configuration-interaction (FCI) space grows combinatorially with the number of electrons and orbitals. 
+Therefore, the fraction of the many-electron space accessible to the generated QSE subspace decreases with system size. 
+
+At the largest active spaces considered in this study, the low-lying excited states are still not recovered to chemical accuracy. 
+This suggests that one-body expansion operators alone may be insufficient for chemically accurate excited-state calculations, and that a larger operator manifold consisting of two-body excitation operators may instead be required.
+Consequently, etermining how the choice and size of the operator pool affect representability and spectral accuracy as active space grows will be essential for assessing the practical applicability of QSE beyond the relatively small active spaces considered in this work.
 
 \clearpage
 \subsection{Stable Dimensions of QSE}
