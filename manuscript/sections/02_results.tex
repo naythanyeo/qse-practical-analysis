@@ -45,19 +45,31 @@ Taken together with the spectral-error analysis above, these results highlight U
 It maintains relatively low spectral errors while exhibiting substantially less spin contamination than the more expressive UCCGSD ansatz. UCCSD therefore provides a useful balance between spectral accuracy, spin purity, and ansatz complexity within the present implementation.
 
 \subsubsection{Geometric representability of exact states}
-\begin{figure}[htbp]
+\begin{figure}[!ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/projection_error/projection_error_6e6o_UCCSD.png}
+    \includegraphics[width=0.9\linewidth]{figures/projection_error/projection_error_6e6o_UCCSD.png}
     \caption{Absolute QSE energy errors as a function of the projection of exact states onto the QSE subspace for UCCSD in the $6e6o$ active space. Results are shown for the lowest singlet and triplet states, with the dotted line indicating the chemical-accuracy threshold.}
 \end{figure}
-Beyond errors pertaining to outliers, we further look at the geometric representability of QSE states to better qualify the errors. We define a quantity called the projection 
 
-% To investigate that further, we then look at whether the QSE errors can be explained by an incomplete representation of exact states within the one body QSE subspace 
-% Define projection metric used, and what it shows etc 
-% State how chemical accuracy is only observed when projection is near 1. So if the subspace does not contain the root, as expected the energies will be bad. However, this does not gurantee that the energies will be good because even if the subspace has a very large projection, the energy difference depends heavily on the energy scale of the missing 1% direction. This means that the missing or bad energys can be explained by two reasons, one is straight up missing projection, the operator pool is completely insufficient. Second is that even if the subspace can represent majority of the state, the ritz energies might still be large because...? 
+Beyond the failure modes discussed above, we next examine the geometric representability of the target states within the QSE subspace. 
+To quantify this, we define a projection metric for each exact state as the squared norm of its projection onto the full one-body-generated QSE subspace. 
+This directly measures how much of the exact wavefunction is captured by the QSE subspace.
+
+Figure 1 compares the exact-state projection with the corresponding QSE energy error for S0, S1, T1 and T2. 
+For S0, the projections are strongly concentrated near unity, consistent with the ground state being well represented within the QSE subspace. 
+On the other hand, the excited states show reduced projections and larger energy errors, most significantly observed for S1. 
+
+As expected, low projection is generally associated with large energy errors, since a substantial component of the exact state lies outside the QSE subspace and cannot be represented by any linear combination of its basis states. 
+However, the converse is not necessarily true: projections exceeding 0.99 do not consistently yield energies within chemical accuracy, and a considerable spread in error remains even among these highly projected states. 
+
+This distinction is important in the context of the original QSE construction, which was motivated by the expectation that low-lying molecular excited states are dominated by single-electron promotions, such that a one-body-generated subspace captures a significant fraction of their wavefunction support \cite{mcclean2017qse}. 
+However, the projection results show that capturing the dominant support is not sufficient to guarantee spectral accuracy. 
+Even when an exact state lies almost entirely within the QSE subspace, the remaining missing component can contain energetically important directions that are absent from the projected problem. 
+Moreover, even a small component missing from the QSE subspace can change the orientation of the best Ritz approximation, effectively rotating the recovered state away from the exact target.
+Thus, a one-body-generated QSE subspace may capture most of the wavefunction while remaining incomplete in the directions required for accurate spectral recovery.
 
 \subsubsection{Active-space dependence of representability and accuracy}
-\begin{figure}[htbp]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{figures/active_space_scaling/uccsd_low_lying_error_iqr.png}
     \caption{Dependence of UCCSD QSE energy errors on active-space size. Results are shown for the lowest singlet and triplet states across the $2e2o$, $2e3o$, $4e3o$, $4e4o$, $4e5o$, $6e5o$, and $6e6o$ active spaces. Markers and horizontal error bars summarize the central error and spread across the molecular benchmark, while the dotted line denotes chemical accuracy.}
@@ -85,10 +97,6 @@ Lastly, we consider the effects of active space scaling on the representability 
 \end{figure}
 Beyond the representability and accuracy of the QSE spectrum, we now seek to better quantify and study the instability problem. This problem can result in numerical instabilities arising when solving the generalised eigenvalue problem for overlap matrices with very large condition number. In th e
 
-
-% MAIN PLOT: show the eigenvalue spread across all 28 molecules, all ansatz separated by colour scatter plot. Use this one panel singlet another panel triplets. active space 6e6o
-% SI / MAIN PLOT: show the eigenvector breakdown stacked bar plot across the states, whatever is there currenlty 
-% SI: same plot as first one but active space 2e3o
 % CONTENT:
 % Transition: Now beyond just the representability and accuracy, we dive deeper into the instability problem, which has been typically identified as the central problem of QSE due to non-orthogonality of its basis
 % 1) First quantify the problem. Many studies typically quantify the instability with condition number, which is the max / min eigenvalue of the S matrix. When this is very large, known to have numerical instabilities. Here we then look at the distribution of eigenvalues, and the figure above shows that clear structures in the eigenvalue breakdown. 
