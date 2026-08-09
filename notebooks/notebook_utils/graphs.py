@@ -265,6 +265,44 @@ def plot_eigenvector_composition(composition_data, active_space):
     return figure
 
 
+def plot_dimension_error_distribution(dimension_errors):
+    """
+    Compare maximum and stable QSE-dimension errors by low-lying state.
+    Input: Dictionary containing all the errors
+    Plots max vs stable states box plot, coloured 
+    """
+    states = ("s0", "s1", "t1", "t2")
+    methods = {
+        "max_states": ("Max states", "tab:blue"),
+        "stable_states": ("Stable states", "tab:orange"),
+    }
+    positions = np.arange(len(states))
+    figure, axis = plt.subplots(figsize=(9, 6))
+
+    for offset, (method, (label, color)) in zip((-0.2, 0.2), methods.items()):
+        boxes = axis.boxplot(
+            [dimension_errors[method][state] for state in states],
+            positions=positions + offset,
+            widths=0.35,
+            patch_artist=True,
+            boxprops={"facecolor": color, "edgecolor": color},
+            medianprops={"color": "black"},
+            whiskerprops={"color": color},
+            capprops={"color": color},
+            flierprops={"markeredgecolor": color},
+        )
+        boxes["boxes"][0].set_label(label)
+
+    axis.set_xticks(positions, states)
+    axis.set_ylabel("Absolute energy error (mHa)")
+    axis.set_title("UCCSD 6e6o: Maximum and Stable QSE Dimensions")
+    axis.grid(axis="y", alpha=0.2)
+    axis.legend(frameon=False)
+    sns.despine()
+    figure.tight_layout()
+    return figure
+
+
 # ========================================================
 # Notebook 3: Shot Noise and Thresholding
 # ========================================================
