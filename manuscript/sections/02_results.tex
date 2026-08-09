@@ -102,19 +102,42 @@ Consequently, etermining how the choice and size of the operator pool affect rep
     \includegraphics[width=\linewidth]{figures/overlap_eigenvector_composition/uccsd_6e6o.png}
     \caption{Structure of the UCCSD overlap matrix in the $6e6o$ active space. The upper panel shows the overlap-eigenvalue spectrum for the singlet and triplet sectors across the molecular benchmark. The lower panel decomposes the corresponding overlap eigenvectors into contributions from occupied-number operators, occupied-to-virtual operators, and other operators.}
 \end{figure}
-Beyond the representability and accuracy of the QSE spectrum, we now seek to better quantify and study the instability problem. This problem can result in numerical instabilities arising when solving the generalised eigenvalue problem for overlap matrices with very large condition number. In th e
+Having examined the representability and spectral accuracy of the QSE subspace, we next turn to its numerical stability. 
+As discussed in the Introduction, very small eigenvalues of the overlap matrix S can strongly amplify noise, making the generalised eigenvalue problem highly sensitive to perturbations.
+Here, we examine the full eigenvalue spectrum of S (Figure 2(a)) to understand why these near-null directions arise in the first place. 
 
-% CONTENT:
-% Transition: Now beyond just the representability and accuracy, we dive deeper into the instability problem, which has been typically identified as the central problem of QSE due to non-orthogonality of its basis
-% 1) First quantify the problem. Many studies typically quantify the instability with condition number, which is the max / min eigenvalue of the S matrix. When this is very large, known to have numerical instabilities. Here we then look at the distribution of eigenvalues, and the figure above shows that clear structures in the eigenvalue breakdown. 
-% 2) Claim that the eigenvalues are directly linked to how strongly supported each eigenvector is. meaning, eigenvectors can be decomposed to into the basis of QSE operators that it was formed from. When each qse operator acts on the reference VQE state, some operators will be more well supported than others. Eg OV operators acting on the VQE state are more well supported since the HF state dominates. OO and VV operators will not be killed entirely because each ansatz has higher order terms, but they are generally less strongly supported. 
-% 3) Show that indeed this forms a stable rank within the operator pool. For singlets the number (occupied) and OV operators form a ultra stable rank. this has minimum eigenvalue of 1. Quote the stats in SI 
-% 4) For triplets, the number operator instead gets killed off because of the operator construction. IE if the antisymmetrised "number" operator will kill the HF state? need to show this or be more rigorous in the arguments here tbh. Also quote the stats in SI, show the eigenvector decomposition value. Show also that for paired ansatz especially, the number operator can only act on that one state, then for 1Up it gets killed until near null. Must find out more and justify the number operator here 
-% 5) Also show that when the physcial subsapce is less than the total number of dimensions, then the eigenvalues also reflect that, ie being near null. So the eigenvalues have some physical motivations behind it 
+One clear trend that emerges is between the eigenvalue magnitude and the composition of its corresponding eigenvector. 
+We first classify the QSE excitation operators into three groups: occupied number operators, occupied-to-virtual (OV) excitations, and the remaining excitation classes. 
+Each eigenvector of S can then be decomposed into basis states corresponding to each category (Figure 2(b)). 
+One clear trend emerges betwen the eigenvalue magnitude and the composition of its corresponding eigenvector.
+The largest eigenvalues are generally associated with OV-dominated eigenmodes. Singlets additionally contain a strongly supported occupied-number mode, while the remaining operator classes contribute predominantly to smaller-eigenvalue directions. 
+For the singlet subspace, this produces one number-dominated eigenvector followed by a block of OV-dominated eigenvectors with eigenvalues close to unity, after which the spectrum drops to progressively smaller values. The triplet subspace retains the OV-dominated stable block, but the corresponding occupied-number contribution is much more weakly supported.
+
+This behaviour can be understood from how the different QSE operators act on the underlying VQE reference. 
+Because the reference state is dominated by the Hartree Fock determinant, operators that act directly on this component generate strongly supported basis directions and therefore larger overlap eigenvalues. 
+In contrast, operators that annihilate the dominant Hartree Fock component, or act primarily on the smaller correlated components of the reference state, generate much weaker directions and correspondingly smaller eigenvalues.
+
+This operator-support picture also explains the contrasting behaviour of the occupied number operators in the singlet and triplet sectors. As defined in \cref{eq:qse-singlet-operator-pool,eq:qse-triplet-operator-pool}, the diagonal singlet operator for an occupied spatial orbital $i$ is proportional to $\hat n_{i\alpha}+\hat n_{i\beta}$, so that
+\SingletOnHFEquation
+
+The dominant Hartree-Fock component therefore provides strong support for this direction, consistent with the large singlet overlap eigenvalues observed. In contrast, the $M_S=0$ triplet diagonal operator is proportional to $\hat n_{i\alpha}-\hat n_{i\beta}$, which gives
+\TripletOnHFEquation
+
+The $M_S=\pm1$ diagonal triplet operators likewise annihilate the closed-shell Hartree-Fock determinant because the corresponding spin-flip attempts to create an electron in an already occupied spin orbital. 
+The triplet number operators therefore receive support only from configurations containing singly occupied spatial orbitals. 
+This is particularly consequential for 1-UpCCGSD, which only allows for singles and paired doubles excitations. Its specturm shown in Fig. S2, highlights the corresponding $M$ number-operator directions appearing as near-null eigenvalues.
+
+A second source of near-null directions observed occurs within the $2e2o$, $2e3o$, and $4e3o$ active spaces. In those cases, the number of nominal QSE basis states exceeds the dimension of the physically accessible subspace within the relevant spin sector. 
+This results in redundant linear combinations, which manifest as near null eigenvalues of the overlap matrix S. 
+More generally, this occurs for small active spaces in which the orbital window does not extend beyond $HOMO\pm1$ and $LUMO\pm1$. 
+The resulting near-null eigenvalues are therefore not caused by weak operator support alone, but can arise simply from the dimensionality constraint of the many-electron Hilbert space.
+
+Across the active spaces considered, produces a recurring stable block in the overlap spectrum. For singlets, the occupied-number direction together with the OV-generated directions form the most strongly supported part of the subspace, while for triplets the stable block is dominated by the OV-generated directions. The corresponding stable dimensions are therefore approximately $1+n_{\mathrm{occ}}n_{\mathrm{vir}}$ for singlets and $3n_{\mathrm{occ}}n_{\mathrm{vir}}$ for triplets, with the remaining directions progressively less well supported. This separation between stable and weakly supported modes provides a physical interpretation of the overlap-spectrum structure and motivates the thresholding analysis considered next.
+
+
 
 \subsubsection{Significance of Small Eigenvalues}
-% MAIN STAT: median error after restriction of qse to only the number and OV operators, and for the triplets to only OV ones. Show also the drop in projection!! 
-% CONTENT
+The presence of stables states 
 % 1) transition, the next then logical question will be, can the instability of QSE then be solved by only considering these stable eigenvalues? after they consistently have a eigenvalue of 1. what if we just use them 
 % 2) Show the stat of what happens when you restrict the subspace down to only number and OV. IE filter for those eigenvalues only, only retain the stable dimensions. Show that the errors increase significantly 
 % 3) Claim now that as a whole, the stable dimensions are formed by well supported QSE operators. They have stable eigenvalues, and in the presecnec of noise will not result in numerical instabilities since there is not amplification. However, these directions are not sufficient to represent the QSE subspace well. In fact, they form a strong base only. However, it is the tiny eigenvalues from the other operators that provide important correlations to the system. This then leads to the next section, how then can we choose which eigenvalues to retain 
@@ -122,7 +145,7 @@ Beyond the representability and accuracy of the QSE spectrum, we now seek to bet
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
 % Before the other subsections, introduce that this section bridges the former. Given that we know that small eigenvalues are important, how then can we appropriately select eigenvalues when noise is introduced. 
 \subsubsection{Effects of Thresholding to mitigate Sampling Noise}
-\begin{figure}[htbp]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{figures/shots/threshold_shot_error_6e6o.png}
     \caption{Mean absolute QSE energy error as a function of the overlap-eigenvalue threshold for the $6e6o$ active space at different shot counts. The dotted line indicates chemical accuracy, and the curves show the trade-off between suppressing sampling-noise amplification and discarding physically relevant subspace directions.}
@@ -133,7 +156,7 @@ Beyond the representability and accuracy of the QSE spectrum, we now seek to bet
 % 2) As we increase the threshold and throw out more eigenvalues, the error generally decreases because we are removing eigenvectors that contribute more amplified noise than meaningful information. However, we eventually hit a minimum because beyond a certain point we then start throwing out eigenvectors that are also physically meaningful. This causes the observed minimum and an optimal threshold that should be used 
 % 3) As we use more and more shots, this means that the error decreases. This adds on to our resolving power. Meaning with a better accuracy, we can now accurately resolve smaller eigenvalues, so the minimum or optimal threshold will decrease as shot count increases 
 \subsubsection{Active Space Dependence of Shot Noise}
-\begin{figure}[htbp]
+\begin{figure}[!ht]
     \centering
     \begin{minipage}[t]{0.48\linewidth}
         \centering
@@ -164,8 +187,7 @@ Beyond the representability and accuracy of the QSE spectrum, we now seek to bet
 \subsection{Structure of the Projected QSE Matrices}
 % Link from the previous section, short intro line that says. Following the steep shot-cost scaling observed, we further examined whether the projected QSE matrices contained structure that could potentially be exploited by future measurement or reconstructions methods
 \subsubsection{Structural Correlations and Sparsity}
-% SI FIGURE: Scatter plot of the Hij and Sij terms. Show the regression and correlation also 
-% MAIN FIGURE: Show the top 3 most sparse and bottom 3 least sparse S matrices. Colour code this by setting a threshold to 0. 
+
 % CONTENT
 % 1) First, we note that there was a strong correlation between the H and S matrix elements terms. In general this is not guranteed analytically because when S terms are small, ie the two states do not overlap significantly, the Hamiltonian can stil connect them. However, empiracally there is a strong relation between H and S elements. 
 % 2) we also observe that the QSE matrices contain blockwise sparse regions. This is very apparent in certain molecules, eg xx that is the least sparse. Can see clear blocks of strongly overlapped operators eg between the diagonal and OV blocks. 
@@ -173,7 +195,7 @@ Beyond the representability and accuracy of the QSE spectrum, we now seek to bet
 % 4) Suggest that the matrices are not totally random, and that for both projected matrices, structures do exist
 
 \subsubsection{Effects of Noise on Structure}
-\begin{figure}[htbp]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{figures/matrix_heatmaps/uccsd_6e6o_shot_overlap.png}
     \caption{Effect of finite-shot noise on the structure of UCCSD overlap matrices in the $6e6o$ singlet sector. The statevector matrix is compared with matrices reconstructed using shot counts from $1\,\mathrm{k}$ to $1\,\mathrm{M}$, illustrating the progressive disruption of the underlying matrix structure by sampling noise.}
