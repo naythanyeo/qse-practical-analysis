@@ -88,6 +88,8 @@ At the largest active spaces considered in this study, the low-lying excited sta
 This suggests that one-body expansion operators alone may be insufficient for chemically accurate excited-state calculations, and that a larger operator manifold consisting of two-body excitation operators may instead be required.
 Consequently, etermining how the choice and size of the operator pool affect representability and spectral accuracy as active space grows will be essential for assessing the practical applicability of QSE beyond the relatively small active spaces considered in this work.
 
+* TBC 6e7o, 8e7o and 8e8o data will include here later
+
 \clearpage
 \subsection{Stable Dimensions of QSE}
 \subsubsection{Eigenvalue Distribution}
@@ -125,22 +127,28 @@ The dominant Hartree-Fock component therefore provides strong support for this d
 
 The $M_S=\pm1$ diagonal triplet operators likewise annihilate the closed-shell Hartree-Fock determinant because the corresponding spin-flip attempts to create an electron in an already occupied spin orbital. 
 The triplet number operators therefore receive support only from configurations containing singly occupied spatial orbitals. 
-This is particularly consequential for 1-UpCCGSD, which only allows for singles and paired doubles excitations. Its specturm shown in Fig. S2, highlights the corresponding $M$ number-operator directions appearing as near-null eigenvalues.
+This is particularly consequential for 1-UpCCGSD, which only allows for singles and paired doubles excitations. Its specturm shown in Fig. S3, highlights the corresponding $M$ number-operator directions appearing as near-null eigenvalues.
 
 A second source of near-null directions observed occurs within the $2e2o$, $2e3o$, and $4e3o$ active spaces. In those cases, the number of nominal QSE basis states exceeds the dimension of the physically accessible subspace within the relevant spin sector. 
 This results in redundant linear combinations, which manifest as near null eigenvalues of the overlap matrix S. 
 More generally, this occurs for small active spaces in which the orbital window does not extend beyond $HOMO\pm1$ and $LUMO\pm1$. 
 The resulting near-null eigenvalues are therefore not caused by weak operator support alone, but can arise simply from the dimensionality constraint of the many-electron Hilbert space.
 
-Across the active spaces considered, produces a recurring stable block in the overlap spectrum. For singlets, the occupied-number direction together with the OV-generated directions form the most strongly supported part of the subspace, while for triplets the stable block is dominated by the OV-generated directions. The corresponding stable dimensions are therefore approximately $1+n_{\mathrm{occ}}n_{\mathrm{vir}}$ for singlets and $3n_{\mathrm{occ}}n_{\mathrm{vir}}$ for triplets, with the remaining directions progressively less well supported. This separation between stable and weakly supported modes provides a physical interpretation of the overlap-spectrum structure and motivates the thresholding analysis considered next.
-
-
-
 \subsubsection{Significance of Small Eigenvalues}
-The presence of stables states 
-% 1) transition, the next then logical question will be, can the instability of QSE then be solved by only considering these stable eigenvalues? after they consistently have a eigenvalue of 1. what if we just use them 
-% 2) Show the stat of what happens when you restrict the subspace down to only number and OV. IE filter for those eigenvalues only, only retain the stable dimensions. Show that the errors increase significantly 
-% 3) Claim now that as a whole, the stable dimensions are formed by well supported QSE operators. They have stable eigenvalues, and in the presecnec of noise will not result in numerical instabilities since there is not amplification. However, these directions are not sufficient to represent the QSE subspace well. In fact, they form a strong base only. However, it is the tiny eigenvalues from the other operators that provide important correlations to the system. This then leads to the next section, how then can we choose which eigenvalues to retain 
+Taken together, these trends reveal a recurring block of comparatively large overlap eigenvalues associated with the strongly supported operator classes identified above.
+The corresponding stable dimensions are therefore approximately $1+n_{\mathrm{occ}}n_{\mathrm{vir}}$ for singlets and $3n_{\mathrm{occ}}n_{\mathrm{vir}}$ for triplets, with the remaining directions progressively less well supported. 
+We term these dimensions \textit{stable} because their associated overlap eigenvalues remain consistently of order 1 or larger. Retaining these directions therefore does not introduce any strong noise amplifications.
+
+This naturally raises the question of whether these \textit{stable} dimensions alone are sufficient to recover most of the low-energy QSE spectrum. 
+This is of significant interest because a consistently stable rank would provide a natural basis for thresholding, particularly when shot-sampling noise is introduced.
+To test this, we restrict the QSE subspace to the stable, strongly supported dimensions identified above and solve the resulting generalised eigenvalue problem.
+However, restricting the QSE subspace to only these stable dimensions severely degrades the recovered spectrum, producing markedly larger energy errors across the target states (Fig. S4).
+
+This suggests that while the stable dimensions form a well-conditioned core of the QSE subspace, they themselves are insufficiently to recover the low-lying states accurately. 
+The remaining weakly supported directions contribute important correlation effects that cannot be trivially discarded.
+This establishes a central trade-off: removing weak directions improves numerical stability, but can simultaneously degrade the representability and accuracy of the QSE subspace. 
+The next question is therefore how to choose the retained overlap eigenmodes so as to balance numerical stability against the representability and spectral accuracy of the QSE subspace in the presence of noise.
+
 \clearpage
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
 % Before the other subsections, introduce that this section bridges the former. Given that we know that small eigenvalues are important, how then can we appropriately select eigenvalues when noise is introduced. 
