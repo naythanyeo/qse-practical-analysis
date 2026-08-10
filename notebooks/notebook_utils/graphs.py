@@ -336,6 +336,11 @@ def plot_threshold_shot_errors(error_data, thresholds):
     return figure
 
 
+def format_latex_scientific(value):
+    coefficient, exponent = f"{value:.1e}".split("e")
+    return rf"${coefficient} \times 10^{{{int(exponent)}}}$"
+
+
 def plot_best_threshold_heatmap(best_threshold_data):
     """
     Plot the mean optimal overlap threshold by active space and shot count
@@ -343,14 +348,14 @@ def plot_best_threshold_heatmap(best_threshold_data):
     Plots heatmap from that
     """
     threshold_df = pd.DataFrame.from_dict(best_threshold_data, orient="index")
-    annotations = threshold_df.map(lambda value: f"{value:.1e}")
+    annotations = threshold_df.map(format_latex_scientific)
     shot_labels = [f"{n_shots // 1000}k" if n_shots < 1_000_000 else "1M"
                    for n_shots in threshold_df.columns]
 
-    figure, axis = plt.subplots(figsize=(12, 6))
+    figure, axis = plt.subplots(figsize=(8.5, 6))
     sns.heatmap(
         threshold_df, cmap="Blues", norm=LogNorm(vmin=1e-4, vmax=1),
-        annot=annotations, fmt="", linewidths=0.5, ax=axis,
+        annot=annotations, annot_kws={"fontsize": 8}, fmt="", linewidths=0.5, ax=axis,
         cbar_kws={"label": "Mean optimal overlap threshold"},
     )
     axis.set_xticklabels(shot_labels, rotation=45, ha="right")
