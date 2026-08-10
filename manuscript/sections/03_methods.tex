@@ -42,14 +42,14 @@ Spin operators were constructed in the same second quantisation basis as follows
 All fermionic Hamiltonian, spin and excitation operators were mapped to qubit operators using the Jordan-Wigner (JW) transformation.
 
 \subsubsection{Ground State Reference}
-As introduced above, approximate ground-state reference wavefunctions were prepared using parameterised Unitary Coupled-Cluster (UCC) Ansatz. 
-In this study, six ansatz families were used, namely: UCCSD, UCCSDSinglet, UCCGSD, and \(k\)-UpCCGSDSinglet with \(k=1,2,\) and \(3\). The Ansatz were characterised by the excitation generators included in the cluster operator $\hat{T}$, summarised in the following table.
+As introduced above, approximate ground-state reference wavefunctions were prepared using parameterised Unitary Coupled-Cluster (UCC) ansatz. 
+In this study, six ansatz families were used, namely: UCCSD, UCCSDSinglet, UCCGSD, and \(k\)-UpCCGSDSinglet with \(k=1,2,\) and \(3\). The ansätze were characterised by the excitation generators included in the cluster operator $\hat{T}$, summarised in the following table.
 
 \input{tables/methods/ansatz}
 
 For each ansatz, candidate singles and doubles transitions were first enumerated in fermionic form. Only canonical transitions that excite from a lower to higher spin orbital were retained because the reverse transitions would already be included through $\hat{T}^{\dagger}$ before exponentiation. All retained generators were spin conserving: single excitations preserved spin labels, while double excitations preserved the total number of $\alpha$ and $\beta$ spin electrons. 
 
-The non-generalised UCCSD and UCCSDSinglet ansatz were restricted to occupied-to-virtual single and double excitations relative to the reference Hartree-Fock determinant \cite{Anand2022UCCReview}. In contrast, the generalised UCCGSD ansatz allowed generalised orbital transitions between occupied--occupied and virtual--virtual spin orbitals \cite{Lee2018GeneralisedAnsatzOriginal, Diniz2021GeneralisedAnsatzAdaptations}.
+The non-generalised UCCSD and UCCSDSinglet ansätze were restricted to occupied-to-virtual single and double excitations relative to the reference Hartree-Fock determinant \cite{Anand2022UCCReview}. In contrast, the generalised UCCGSD ansatz allowed generalised orbital transitions between occupied--occupied and virtual--virtual spin orbitals \cite{Lee2018GeneralisedAnsatzOriginal, Diniz2021GeneralisedAnsatzAdaptations}.
 To reduce the size of the generalised-double operator pool, mixed-direction double excitations, in which one electron was promoted while the other was relaxed, were excluded. Across the $4e4o$ to $8e8o$ active spaces, this practical restriction reduced the number of independent parameters by 42.2--45.2\% and the circuit depth by 46.4--47.6\%.
 
 The $k$-UpCCGSDSinglet ansatz combined generalised singles with generalised paired doubles. For each paired double excitation, an $\alpha\beta$ electron pair was removed from one spatial orbital and created in another. 
@@ -147,7 +147,7 @@ This subtraction isolates the number of spin-($S$) multiplets because the ($M_S=
 
 For the $2e2o$, $2e3o$, and $4e3o$ active spaces, the number of physically available roots was smaller than the nominal number of QSE expansion operators. The retained dimension was therefore capped by the corresponding physical root count. This cap was in place because it was noted empirically that additional operator directions beyond the physically available space produced near-null eigenvalues. More generally, this restriction applies to active spaces that do not include orbitals extending from HOMO-1 through LUMO+1. 
 
-For the triplet subspace, the retained dimension was further limited to ($3n_\mathrm{o}(n_\mathrm{o}-1)$). The triplet number operators were extremely weakly supported by the paired reference states and generated overlap eigenvalues that could not be resolved reliably above numerical precision. For consistency across ansatz, these directions were therefore excluded for all triplet statevector calculations. 
+For the triplet subspace, the retained dimension was further limited to ($3n_\mathrm{o}(n_\mathrm{o}-1)$). The triplet number operators were extremely weakly supported by the paired reference states and generated overlap eigenvalues that could not be resolved reliably above numerical precision. For consistency across ansatz families, these directions were therefore excluded for all triplet statevector calculations. 
 
 For finite-shot calculations, a threshold $\tau$ was used to define the retained subspace. Only eigenvectors with eigenvalues satisfying $\lambda_i > \tau$ were retained. The thresholds $\tau$ were drawn from a fixed logarithmic grid from $10^{-4}$ to $10^{0}$ in increments of 0.1 in the exponent. 
 

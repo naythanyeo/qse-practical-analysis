@@ -4,19 +4,19 @@ In this section, we study the spectral accuracy and representability of low-lyin
 \subsubsection{General Trends in QSE Spectral Accuracy}
 \input{tables/results/table1_ansatz_errors}
 
-A clear dependence on the choice of reference ansatz is observed, with more expressive ansatz generally producing more accurate QSE spectra. The paired k-UpCCGSDSinglet ansatz restricts excitations heavily to only singles and paired doubles. Consequently, this ansatz exhibits the largest errors in the predicted spectrum. While increasing the number of layers from k=1 to k=3 systematically improves their performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restricts of its excitation manifold.
-In comparison, UCCSDSinglet and UCCSD achieve similar accuracies across the low-lying states. Although UCCSDSinglet imposes additional parameter-tying constraints, both ansatz span the same excitation manifold, and therefore yield comparable errors.
+A clear dependence on the choice of reference ansatz is observed, with more expressive ansätze generally producing more accurate QSE spectra. The paired k-UpCCGSDSinglet ansatz restricts excitations heavily to only singles and paired doubles. Consequently, this ansatz exhibits the largest errors in the predicted spectrum. While increasing the number of layers from k=1 to k=3 systematically improves their performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restricts of its excitation manifold.
+In comparison, UCCSDSinglet and UCCSD achieve similar accuracies across the low-lying states. Although UCCSDSinglet imposes additional parameter-tying constraints, both ansätze span the same excitation manifold, and therefore yield comparable errors.
 UCCGSD, which provides the most flexible excitation manifold considered here, generally produces the lowest errors, albeit at the cost of considerably greater circuit depth. 
 These results demonstrate the expected trade-off between reference-state expressiveness and circuit complexity.
 
-Furthermore, we note that the influence of the reference ansatz is considerably more pronounced for the ground state than for the excited states. For S0, the difference in median error between the paired and unpaired ansatz exceeds an order of magnitude, whereas the corresponding variation for S1, T1 and T2 is substantially smaller. 
+Furthermore, we note that the influence of the reference ansatz is considerably more pronounced for the ground state than for the excited states. For S0, the difference in median error between the paired and unpaired ansätze exceeds an order of magnitude, whereas the corresponding variation for S1, T1 and T2 is substantially smaller. 
 This behaviour can be understood from the construction of QSE. Although the projected Hamiltonian variationally refines all states within the QSE subspace, the ground-state solution remains strongly dominated by the original VQE reference. 
 Consequently, deficiencies in the reference wavefunction can only be partially corrected through the QSE expansion, making the accuracy of the ground-state energy more sensitive to the quality of the underlying VQE reference.
 In contrast, the excited states contain more substantial contributions from the other operator-generated basis states, which provide greater flexibility beyond the original reference. These contributions can partially compensate for imperfections in the VQE wavefunction, thereby reducing the sensitivity of the excited-state energies to the choice of ansatz.
  
 Beyond the dependence on the reference ansatz, the excited states are generally recovered with appreciably larger errors than the ground state. 
 Among the low-lying excited states considered, S1 is consistently the least accurately reproduced, while T1 and T2 perform better but generally remain outside chemical accuracy. 
-The errors are also distributed unevenly across the molecular benchmark, with a broad spread and a small number of large-error outliers forming pronounced tails in the distribution (Fig. S1). This skewness motivates the use of the median as a more representative measure of typical performance than the mean. 
+The errors are also distributed unevenly across the molecular benchmark, with a broad spread and a small number of large-error outliers forming pronounced tails in the distribution (\cref{fig:si-error-distribution}). This skewness motivates the use of the median as a more representative measure of typical performance than the mean. 
 
 \subsubsection{Root assignment}
 We next examine the large-error cases in greater detail. We observe that in several instances, the target exact state is not recovered as a distinct state within the QSE spectrum. 
@@ -32,12 +32,12 @@ Therefore, while this additional failure mode can also affect the low-lying stat
 \subsubsection{Spin purity}
 We next examine the spin purity of the recovered QSE spectrum. Although the QSE operator pools used in this study are spin adapted, this does not by itself guarantee spin-pure Ritz states because the underlying VQE reference is not perfectly spin pure. 
 Consequently, small spin-contaminated components of the reference state can be carried into the QSE subspace by the excitation operators.
-We therefore first examine how these spin-contaminated states are distributed across the recovered spectrum (Fig. S1).
+We therefore first examine how these spin-contaminated states are distributed across the recovered spectrum (\cref{fig:si-spin-contaminated-roots}).
 
 We observe that spin contamination is relatively uncommon among the lower-lying roots, but becomes increasingly prevelant at higher energies. 
 Its extent also depends strongly on the reference ansatz: the paired ansätze produce almost entirely spin-pure spectra, whereas the more expressive UCCGSD ansatz exhibits the most severe spin contamination among the ansätze considered.
 
-Interestingly, the spin-adapted UCCSDSinglet ansatz, which ties parameters associated with equivalent spatial-orbital transitions, exhibits greater spin contamination than the more flexible UCCSD ansatz, both in the number of contaminated roots (Fig. S1) and in the mean spin deviation (Table S1). 
+Interestingly, the spin-adapted UCCSDSinglet ansatz, which ties parameters associated with equivalent spatial-orbital transitions, exhibits greater spin contamination than the more flexible UCCSD ansatz, both in the number of contaminated roots (\cref{fig:si-spin-contaminated-roots}) and in the mean spin deviation (Table S1). 
 We attribute this behaviour to errors introduced by the Trotter approximation. As the number of Trotter steps is increased, the spin contamination of UCCSDSinglet decreases systematically, whereas that of UCCSD remains approximately unchanged. In our calculations, the benefit of parameter tying becomes apparent only beyond 16 Trotter steps (Table S2). 
 The greater variational flexibility of UCCSD may therefore make it less sensitive to these Trotterisation errors at low Trotter order, partially offsetting the loss of explicit spin adaptation.
 
@@ -49,13 +49,14 @@ It maintains relatively low spectral errors while exhibiting substantially less 
     \centering
     \includegraphics[width=0.9\linewidth]{figures/projection_error/projection_error_6e6o_UCCSD.png}
     \caption{Absolute QSE energy errors as a function of the projection of exact states onto the QSE subspace for UCCSD in the $6e6o$ active space. Results are shown for the lowest singlet and triplet states, with the dotted line indicating the chemical-accuracy threshold.}
+    \label{fig:projection-error}
 \end{figure}
 
 Beyond the failure modes discussed above, we next examine the geometric representability of the target states within the QSE subspace. 
 To quantify this, we define a projection metric for each exact state as the squared norm of its projection onto the full one-body-generated QSE subspace. 
 This directly measures how much of the exact wavefunction is captured by the QSE subspace.
 
-Figure 1 compares the exact-state projection with the corresponding QSE energy error for S0, S1, T1 and T2. 
+\Cref{fig:projection-error} compares the exact-state projection with the corresponding QSE energy error for S0, S1, T1 and T2. 
 For S0, the projections are strongly concentrated near unity, consistent with the ground state being well represented within the QSE subspace. 
 On the other hand, the excited states show reduced projections and larger energy errors, most significantly observed for S1. 
 
@@ -73,9 +74,10 @@ Thus, a one-body-generated QSE subspace may capture most of the wavefunction whi
     \centering
     \includegraphics[width=\linewidth]{figures/active_space_scaling/uccsd_low_lying_error_iqr.png}
     \caption{Dependence of UCCSD QSE energy errors on active-space size. Results are shown for the lowest singlet and triplet states across the $2e2o$, $2e3o$, $4e3o$, $4e4o$, $4e5o$, $6e5o$, and $6e6o$ active spaces. Markers and horizontal error bars summarize the central error and spread across the molecular benchmark, while the dotted line denotes chemical accuracy.}
+    \label{fig:active-space-scaling}
 \end{figure}
 
-Lastly, we consider the effects of active space scaling on the accuracy of the recovered QSE spectra (Fig 2). 
+Lastly, we consider the effects of active space scaling on the accuracy of the recovered QSE spectra (\cref{fig:active-space-scaling}). 
 For the smallest active spaces, $2e2o$, $2e3o$, and $4e3o$, the recovered spectra are nearly exact. Beyond these cases, the errors generally increase as the active space is enlarged.
 
 The near-exact recovery in the smallest active spaces is consistent with the relative dimensionality of the QSE subspace. In these cases, the one-body operator pool generates more basis states than there are physically accessible determinants within the relevant spin sector.
@@ -103,14 +105,15 @@ Consequently, etermining how the choice and size of the operator pool affect rep
     \makebox[\linewidth][l]{\textbf{(b)}}
     \includegraphics[width=\linewidth]{figures/overlap_eigenvector_composition/uccsd_6e6o.png}
     \caption{Structure of the UCCSD overlap matrix in the $6e6o$ active space. The upper panel shows the overlap-eigenvalue spectrum for the singlet and triplet sectors across the molecular benchmark. The lower panel decomposes the corresponding overlap eigenvectors into contributions from occupied-number operators, occupied-to-virtual operators, and other operators.}
+    \label{fig:eigenvalue-distribution}
 \end{figure}
 Having examined the representability and spectral accuracy of the QSE subspace, we next turn to its numerical stability. 
 As discussed in the Introduction, very small eigenvalues of the overlap matrix S can strongly amplify noise, making the generalised eigenvalue problem highly sensitive to perturbations.
-Here, we examine the full eigenvalue spectrum of S (Figure 2(a)) to understand why these near-null directions arise in the first place. 
+Here, we examine the full eigenvalue spectrum of S (\cref{fig:eigenvalue-distribution}, upper panel) to understand why these near-null directions arise in the first place. 
 
 One clear trend that emerges is between the eigenvalue magnitude and the composition of its corresponding eigenvector. 
 We first classify the QSE excitation operators into three groups: occupied number operators, occupied-to-virtual (OV) excitations, and the remaining excitation classes. 
-Each eigenvector of S can then be decomposed into basis states corresponding to each category (Figure 2(b)). 
+Each eigenvector of S can then be decomposed into basis states corresponding to each category (\cref{fig:eigenvalue-distribution}, lower panel). 
 One clear trend emerges betwen the eigenvalue magnitude and the composition of its corresponding eigenvector.
 The largest eigenvalues are generally associated with OV-dominated eigenmodes. Singlets additionally contain a strongly supported occupied-number mode, while the remaining operator classes contribute predominantly to smaller-eigenvalue directions. 
 For the singlet subspace, this produces one number-dominated eigenvector followed by a block of OV-dominated eigenvectors with eigenvalues close to unity, after which the spectrum drops to progressively smaller values. The triplet subspace retains the OV-dominated stable block, but the corresponding occupied-number contribution is much more weakly supported.
@@ -127,7 +130,7 @@ The dominant Hartree-Fock component therefore provides strong support for this d
 
 The $M_S=\pm1$ diagonal triplet operators likewise annihilate the closed-shell Hartree-Fock determinant because the corresponding spin-flip attempts to create an electron in an already occupied spin orbital. 
 The triplet number operators therefore receive support only from configurations containing singly occupied spatial orbitals. 
-This is particularly consequential for 1-UpCCGSD, which only allows for singles and paired doubles excitations. Its specturm shown in Fig. S3, highlights the corresponding $M$ number-operator directions appearing as near-null eigenvalues.
+This is particularly consequential for 1-UpCCGSD, which only allows for singles and paired doubles excitations. Its spectrum, shown in \cref{fig:si-1up-triplet-eigenvalues}, highlights the corresponding $M$ number-operator directions appearing as near-null eigenvalues.
 
 A second source of near-null directions observed occurs within the $2e2o$, $2e3o$, and $4e3o$ active spaces. In those cases, the number of nominal QSE basis states exceeds the dimension of the physically accessible subspace within the relevant spin sector. 
 This results in redundant linear combinations, which manifest as near null eigenvalues of the overlap matrix S. 
@@ -142,14 +145,14 @@ We term these dimensions \textit{stable} because their associated overlap eigenv
 This naturally raises the question of whether these \textit{stable} dimensions alone are sufficient to recover most of the low-energy QSE spectrum. 
 This is of significant interest because a consistently stable rank would provide a natural basis for thresholding, particularly when shot-sampling noise is introduced.
 To test this, we restrict the QSE subspace to the stable, strongly supported dimensions identified above and solve the resulting generalised eigenvalue problem.
-However, restricting the QSE subspace to only these stable dimensions severely degrades the recovered spectrum, producing markedly larger energy errors across the target states (Fig. S4).
+However, restricting the QSE subspace to only these stable dimensions severely degrades the recovered spectrum, producing markedly larger energy errors across the target states (\cref{fig:si-max-stable-error-distribution}).
 
 This suggests that while the stable dimensions form a well-conditioned core of the QSE subspace, they themselves are insufficiently to recover the low-lying states accurately. 
 The remaining weakly supported directions contribute important correlation effects that cannot be trivially discarded.
 This establishes a central trade-off: removing weak directions improves numerical stability, but can simultaneously degrade the representability and accuracy of the QSE subspace. 
 
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
-This trade-off becomes particularly important under finite-shot sampling, where the near-null region of the overlap spectrum is most strongly perturbed, resulting in the smallest eigenvalues even becoming negative (Fig. S5). 
+This trade-off becomes particularly important under finite-shot sampling, where the near-null region of the overlap spectrum is most strongly perturbed, resulting in the smallest eigenvalues even becoming negative (\cref{fig:si-eigenvalue-lifting}). 
 This motivates the use of overlap-eigenvalue thresholding to remove poorly resolved directions.
 In this section, we therefore examine how thresholding can be used appropriately to regularise QSE under finite-shot noise, with sampling-induced errors quantified relative to the corresponding statevector QSE energies.
 Unless otherwise stated, $N_{\mathrm{shots}}$ denotes the number of shots allocated to each commuting measurement group.
@@ -158,8 +161,9 @@ Unless otherwise stated, $N_{\mathrm{shots}}$ denotes the number of shots alloca
     \centering
     \includegraphics[width=\linewidth]{figures/shots/threshold_shot_error_6e6o.png}
     \caption{Mean absolute QSE energy error as a function of the overlap-eigenvalue threshold for the $6e6o$ active space at different shot counts. The dotted line indicates chemical accuracy, and the curves show the trade-off between suppressing sampling-noise amplification and discarding physically relevant subspace directions.}
+    \label{fig:threshold-shot-error}
 \end{figure}
-Figure 4 shows a clear minimum in the QSE error as a function of the overlap-eigenvalue threshold, indicating that an optimal degree of regularisation exists for each noise level. 
+\Cref{fig:threshold-shot-error} shows a clear minimum in the QSE error as a function of the overlap-eigenvalue threshold, indicating that an optimal degree of regularisation exists for each noise level. 
 As the number of shots increases and the sampling noise decreases, this minimum shifts towards lower thresholds and lower overall errors.
 
 This behaviour reflects the competing effects of thresholding. Directions associated with very small overlap eigenvalues are particularly susceptible to noise amplification, such that their contribution to the recovered spectrum can become dominated by statistical error rather than useful physical information. 
@@ -183,13 +187,14 @@ Increasing the shot count improves the precision of the projected matrix element
         \includegraphics[width=\linewidth]{figures/shots/best_threshold_heatmap.png}
     \end{minipage}
     \caption{Finite-shot scaling and threshold selection across active spaces. (a) Minimum mean QSE energy error as a function of the active-space scaling variable $N_{\mathrm{orb}}^2/\sqrt{N_{\mathrm{shots}}}$, with the linear regression and coefficient of determination shown. (b) Mean optimal overlap-eigenvalue threshold-ladder index as a function of active space and shot count, where index $0$ corresponds to $10^{-4}$ and index $40$ to $1$.}
+    \label{fig:shot-scaling}
 \end{figure}
 
 We further find that finite-shot errors depend systematically on the size of the QSE projected matrices. 
 Empirically, the minimum error after threshold optimisation scales approximately as 
 \ErrorScalingEquation
-where $n_{\mathrm{orb}}$ is the number of active spatial orbitals (Fig 5a). 
-Consistent with this trend, the optimal overlap threshold generally increases with the active-space size and decreases with shot count (Fig 5b). 
+where $n_{\mathrm{orb}}$ is the number of active spatial orbitals (\cref{fig:shot-scaling}, panel (a)). 
+Consistent with this trend, the optimal overlap threshold generally increases with the active-space size and decreases with shot count (\cref{fig:shot-scaling}, panel (b)). 
 This indicates that progressively stronger regularisation is required as the projected problem grows or as the sampling precision is reduced. 
 
 This behaviour can be rationalised from the accumulation of finite-sampling errors across the projected matrices. 
@@ -202,10 +207,10 @@ For the singles-only operator pool used here, the projected-matrix dimension sca
 
 \subsubsection{Shot Budget Scaling}
 The empirical scaling in \cref{eq:error-scaling} can be used to estimate the measurement requirements for maintaining a fixed QSE accuracy as the active space grows. To maintain a constant error relative to the statevector, this would require approximately $N_{\mathrm{shots}} \propto n_{\mathrm{orb}}^4$. 
-For the $6e6o$ active space, recovering states to within chemical accuracy relative to the statevector already requires an excess of $2 \times 10^{5}$ shots per commuting group (Fig 4). 
+For the $6e6o$ active space, recovering states to within chemical accuracy relative to the statevector already requires an excess of $2 \times 10^{5}$ shots per commuting group (\cref{fig:threshold-shot-error}). 
 
 The total measurement cost also depends on the number of distinct commuting groups required to construct both projected matrices. 
-Across the active spaces studied, we empirically determine this scaling to be about $\mathcal{O}\!\left(n_{\mathrm{orb}}^{6.77}\right)$ for singlets and $\mathcal{O}\!\left(n_{\mathrm{orb}}^{6.75}\right)$ for triplets (Fig. S6). 
+Across the active spaces studied, we empirically determine this scaling to be about $\mathcal{O}\!\left(n_{\mathrm{orb}}^{6.77}\right)$ for singlets and $\mathcal{O}\!\left(n_{\mathrm{orb}}^{6.75}\right)$ for triplets (\cref{fig:si-commuting-group-scaling}). 
 Here, the number of commuting groups was taken by grouping commuting terms across both matrices, after discarding Puali terms with coefficients below $10^{-12}$. 
 
 Combining these two contributions gives an estimated total shot requirement for maintaining an approximately constant finite-shot accuracy as
@@ -223,10 +228,10 @@ While the preceding analysis indicates steep measurement overhead, we find that 
 In this section, we examine the recurring patterns and correlations within the projected H and S matrices, and how these features are affected by finite-shot sampling.
 
 \subsubsection{Structural Correlations and Sparsity}
-We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices (Fig. S7). In general, elements with small overlap $S_{ij}$ also tend to have small Hamiltonian couplings $H_{ij}$ and vice versa. 
+We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices (\cref{fig:si-h-s-element-correlation}). In general, elements with small overlap $S_{ij}$ also tend to have small Hamiltonian couplings $H_{ij}$ and vice versa. 
 This suggests that the Hamiltonian predominantly couples pairs of operator-generated states that already have appreciable overlap within the QSE subspace.
 
-The matrices also exhibit pronounced internal structure. The overlap-matrix heatmaps in Figs. S8 and S9 show consistently large diagonal elements, as expected from the self-overlap of the operator-generated states. 
+The matrices also exhibit pronounced internal structure. The overlap-matrix heatmaps in \cref{fig:si-full-singlet-heatmaps,fig:si-full-triplet-heatmaps} show consistently large diagonal elements, as expected from the self-overlap of the operator-generated states. 
 The off-diagonal elements are much less uniform. 
 Stronger couplings instead appear in recurring block-like regions associated with particular classes of excitation operators, leaving other regions weakly coupled or nearly empty.
 Consequently, the degree of sparsity varies substantially between matrices.
@@ -239,10 +244,11 @@ Regardless of the degree of sparsity, the QSE matrix elements exhibit clear stru
     \centering
     \includegraphics[width=\linewidth]{figures/matrix_heatmaps/uccsd_6e6o_shot_overlap.png}
     \caption{Effect of finite-shot noise on the structure of UCCSD overlap matrices in the $6e6o$ singlet sector. The statevector matrix is compared with matrices reconstructed using shot counts from $1\,\mathrm{k}$ to $1\,\mathrm{M}$, illustrating the progressive disruption of the underlying matrix structure by sampling noise.}
+    \label{fig:shot-overlap-structure}
 \end{figure}
 
 We next consider how finite-shot sampling affects the matrix structure identified above. 
-As shown in Fig. 6, sampling noise progressively obscures the detailed patterns present in the statevector overlap matrices. 
+As shown in \cref{fig:shot-overlap-structure}, sampling noise progressively obscures the detailed patterns present in the statevector overlap matrices. 
 The dominant diagonal elements remain visible even at relatively low shot counts, whereas the finer off-diagonal and block-like structures are substantially blurred. 
 Increasing the number of shots gradually restores these features, with the reconstructed matrices approaching the underlying statevector structure more closely at higher sampling precision.
 
@@ -252,15 +258,13 @@ The resulting errors are therefore expected to exhibit correlations across the r
 This provides an additional source of structure in the finite-shot problem beyond that already present in the underlying statevector matrices.
 
 \subsubsection{Outlook for Structure-Aware reconstruction}
-The observations above suggest that finite-shot QSE is not simply a problem of reconstructing two dense matrices from independent noisy estimates. 
+The observations above suggest that finite-shot QSE should not simply be treated as a problem of reconstructing two dense matrices from independent noisy estimates. 
 The corresponding elements of H and S are strongly correlated, the statevector matrices exhibit recurring internal structure, and the finite-shot perturbations themselves are expected to be correlated through the shared measurement groups. 
-Taken together, this makes the projected QSE problem highly structured at both the signal and noise levels.
+As such, the projected QSE problem is highly structured at both the signal and noise levels.
 
-We envisage that this structure may provide opportunities for classical post-processing methods that reconstruct the projected matrices more accurately from a limited number of measurements. 
-Related ideas have already been explored elsewhere in quantum error mitigation. Machine-learning approaches have been trained to map noisy expectation values toward their noise-free counterparts, substantially reducing the overhead of conventional mitigation schemes.  
-Other work has explicitly incorporated correlated measurement errors into classical reconstruction procedures rather than assuming independent readout noise.  
-More broadly, model-free error-mitigation methods have also shown that classical post-processing can suppress bias in measured expectation values without requiring a detailed microscopic noise model. 
+We envisage that this structure may provide opportunities for classical post-processing methods to reconstruct the projected matrices more accurately from a limited number of measurements. 
+Related approaches have already been explored in quantum error mitigation, where machine-learning and model-based methods exploit systematic structure or correlations in noisy measurement data to improve estimates of ideal observables \cite{Liao2024MLQEM, Aasen2025ReadoutMitigation}. 
+These methods are effective because the targeted errors are not treated as completely independent fluctuations, but instead contain patterns that can be learned or explicitly modelled. 
 
-While these approaches do not directly solve the QSE reconstruction problem considered here, they demonstrate that correlations and prior structure in quantum measurement data can be exploited during classical post-processing. 
-The steep shot scaling identified in earlier sections should therefore be viewed as the cost of the present direct-estimation strategy. 
-However, developing structure-aware reconstruction methods that exploit the features identified above may allow comparable spectral accuracy to be obtained from substantially fewer measurements.
+As such, the steep shot scaling identified above should therefore be interpreted as the cost of the present direct-estimation strategy. 
+Structure-aware reconstruction methods that exploit the features we identified may allow comparable spectral accuracy to be achieved with substantially fewer measurements.
