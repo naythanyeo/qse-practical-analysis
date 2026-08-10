@@ -2,7 +2,7 @@
 The dataset used comprised 28 closed-shell organic molecules from Thiel's excited-state benchmark set \cite{thiels2008benchmark}. The published Cartesian nuclear coordinates were referenced directly and used without further optimisation. 
 For each molecule, Restricted Hartree-Fock calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set. This set of canonical molecular orbitals was optimised once and used consistently throughout all subsequent CASCI, VQE and QSE calculations in the study. 
 
-Active spaces (denoted $n_e e\, n_{\mathrm{o}} o$) comprised the $n_e / 2$ occupied molecular spatial-orbitals closest to the HOMO and the $n_{\mathrm{o}} - n_e / 2$ virtual molecular spatial-orbitals closest to the LUMO. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
+Active spaces (denoted $n_e e\, n_{\mathrm{o}} o$) comprised the $n_e / 2$ occupied molecular spatial orbitals closest to the HOMO and the $n_{\mathrm{o}} - n_e / 2$ virtual molecular spatial orbitals closest to the LUMO. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
 
 \subsection{Exact Reference}
 Within each active space, the exact reference energies and wavefunctions were obtained from complete active-space configuration interaction (CASCI) calculations performed using PySCF. 
@@ -17,7 +17,7 @@ The resulting roots were then filtered according to their $\Ssq$ expectation val
 
 Throughout this study, wavefunctions were represented in a common active spin-orbital determinant basis by a state vector of length $\binom{2 n_{\mathrm{o}}}{n_{\mathrm{e}}}$. 
 This vector includes all determinants with $n_e$ electrons distributed among the $2n_{\mathrm{o}}$ active spin-orbitals (irrespective of their spin projections).
-Determinants were ordered lexicographically using an interleaved spin-orbital convention $(1\alpha, 1\beta, 2\alpha, 2\beta...)$.
+Determinants were ordered lexicographically using an interleaved spin-orbital convention $(1\alpha, 1\beta, 2\alpha, 2\beta, \ldots)$.
 
 PySCF represented each wavefunction as a two-dimensional CI coefficient matrix with dimensions $\binom{n_{\mathrm{o}}}{n_{\mathrm{\alpha}}}$ by $\binom{n_{\mathrm{o}}}{n_{\mathrm{\beta}}}$, corresponding to the $\alpha$ and $\beta$ electron occupation strings. These coefficients were embedded into the corresponding entries of the common state-vector representation.  During this conversion, the fermionic phase arising from the permutation between PySCF's separated $\alpha$ and $\beta$ electron ordering and the interleaved spin-orbital convention was included explicitly.
 
@@ -31,7 +31,7 @@ All calculations in this work used ideal noiseless circuit simulations without m
 \subsubsection{Hamiltonian and Spin Operators}
 For each active space, the electronic Hamiltonian was constructed in second quantisation as follows:
 \ElectronicHamiltonianEquation
-where $E_{\mathrm{nuc}}$ is the core nuclear repulsion energy and $p, q, r, s$ index the active spin orbitals. $h_{pq}$ and $g_{pqrs}$ are the one and two-electron integral coefficients evaluated in the fixed canonical Hartree-Fock MO basis.
+where $E_{\mathrm{nuc}}$ is the core nuclear repulsion energy and $p, q, r, s$ index the active spin-orbitals. $h_{pq}$ and $g_{pqrs}$ are the one- and two-electron integral coefficients evaluated in the fixed canonical Hartree-Fock MO basis.
 
 Spin operators were constructed in the same second quantisation basis as follows.
 
@@ -87,7 +87,7 @@ Following optimisation, the resulting VQE parameters were stored as a fixed grou
 As discussed in the introduction, separate one-body operator pools were used to construct the singlet and triplet-targeting QSE subspaces. The singlet operator pool, $\mathcal{O}^{S}$, was defined as
 
 \QSESingletOperatorPoolEquation
-wherby $i$ and $j$ to denote active spatial orbitals.
+where $i$ and $j$ denote active spatial orbitals.
 
 The triplet operator pool, $\mathcal{O}^{T}$, was constructed from all three spin-projection components, which were collected into a single operator pool.
 \QSETripletOperatorPoolEquation
@@ -97,7 +97,7 @@ operators, while the triplet pool contains
 $3n_{\mathrm{o}}^2$ operators. Individual pool elements were enumerated as
 $\{\hat{O}_\mu\}$, with $\mu$ and $\nu$ indexing arbitrary operators within the given pool.
 
-A projected observable matrix were constructed for the overlap, Hamiltonian and spin-squared matrices. Observable matrix elements were defined as follows: 
+Projected observable matrices were constructed for the overlap, Hamiltonian, and spin-squared matrices. Observable matrix elements were defined as follows: 
 \QSEProjectedObservablesEquation
 where the corresponding target observables were $\hat I, \hat H,$ and $\hat S^{2}$, respectively.
 
@@ -109,9 +109,9 @@ For all calculations performed, only the diagonal and upper-triangular matrix el
 \subsubsection{Finite-Shot Sampling}
 Finite-shot sampling was used to model the effects of statistical measurement noise on the projected Hamiltonian and overlap matrices. 
 For each calculation, all unique Pauli strings in the projected Hamiltonian and overlap observable matrices were first collected into a global measurement pool. Then, a largest-first greedy qubit-wise-commuting (QWC) grouping algorithm was used to partition the global measurement pool. 
-Grouping was performed globally across elements from both matrices which reduced the total number of commuting groups that needed to be measured. Preliminary data also showed that this method of global grouping, as opposed to grouping terms for each matrix element, resulted in much better agreement with the statevector results. 
+Grouping was performed globally across elements from both matrices, which reduced the total number of commuting groups required. Preliminary data also showed that this method of global grouping, as opposed to grouping terms for each matrix element, resulted in much better agreement with the statevector results. 
 
-For each commuting group, a separate measurement circuit was constructed by appending basis-rotation gates to the optimized VQE circuit, such that all Pauli strings in the group could be measured in the computational ($Z$) basis. Hadamard gates were applied to qubits measured in the ($X$) basis, while $S^{\dagger}$ followed by a Hadamard gate was applied to qubits measured in the ($Y$) basis. This produced a distinct rotated statevector for each commuting group.
+For each commuting group, a separate measurement circuit was constructed by appending basis-rotation gates to the optimized VQE circuit, such that all Pauli strings in the group could be measured in the computational $Z$ basis. Hadamard gates were applied to qubits measured in the $X$ basis, while $S^{\dagger}$ followed by a Hadamard gate was applied to qubits measured in the $Y$ basis. This produced a distinct rotated statevector for each commuting group.
 
 Measurement outcomes were generated for each rotated statevector using NumPy's multinomial sampler. The expectation values of all Pauli strings within a commuting group were estimated from the resulting sampled frequencies. These expectation values were then used to reconstruct the Hamiltonian and overlap matrices.
 
@@ -119,10 +119,10 @@ At each specified shot count, the finite-shot calculation was repeated using ten
 
 \subsection{Numerical Analysis and Evaluation Metrics}
 \subsubsection{Generalised Eigenvalue Problem}
-Due to the non-orthogonality of the QSE basis states, solving for the energy eigenvalues and wavefunctions involves solving a generalised eigenvalue problem $Hc = ESc$. This was done by first diagonalising the Hermitian overlap matrix $S$. 
+Due to the non-orthogonality of the QSE basis states, solving for the energy eigenvalues and wavefunctions involves solving a generalised eigenvalue problem $\mathbf{H}\mathbf{c} = E\mathbf{S}\mathbf{c}$. This was done by first diagonalising the Hermitian overlap matrix $\mathbf{S}$. 
 
 \DiagonaliseSEquation
-where the columns of $U$ are the eigenvectors of $S$ and $\Lambda$ is a diagonal matrix containing the eigenvalues of $S$. Then, we define the whitening factor
+where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\Lambda$ is a diagonal matrix containing the eigenvalues of $\mathbf{S}$. Then, we define the whitening factor
 
 \WhitenSEquation
 
@@ -162,12 +162,3 @@ $\tilde{\mathbf{V}}^{\dagger}\mathbf{S}\tilde{\mathbf{V}}=\mathbf{I}$, this
 expression becomes
 
 \SpinExpectationShortenedBasisEquation
-
-\subsubsection{Projection}
-TBC results first 
-
-\subsubsection{Triplet Degenerecies}
-TBC results first 
-
-\subsubsection{Non Index State Matching}
-TBC results first 
