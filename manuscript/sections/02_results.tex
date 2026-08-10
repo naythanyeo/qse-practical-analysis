@@ -147,22 +147,28 @@ However, restricting the QSE subspace to only these stable dimensions severely d
 This suggests that while the stable dimensions form a well-conditioned core of the QSE subspace, they themselves are insufficiently to recover the low-lying states accurately. 
 The remaining weakly supported directions contribute important correlation effects that cannot be trivially discarded.
 This establishes a central trade-off: removing weak directions improves numerical stability, but can simultaneously degrade the representability and accuracy of the QSE subspace. 
-The next question is therefore how to choose the retained overlap eigenmodes so as to balance numerical stability against the representability and spectral accuracy of the QSE subspace in the presence of noise.
 
-\clearpage
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
-% Before the other subsections, introduce that this section bridges the former. Given that we know that small eigenvalues are important, how then can we appropriately select eigenvalues when noise is introduced. 
+This trade-off becomes particularly important under finite-shot sampling, where the near-null region of the overlap spectrum is most strongly perturbed, resulting in the smallest eigenvalues even becoming negative (Fig. S5). 
+This motivates the use of overlap-eigenvalue thresholding to remove poorly resolved directions.
+In this section, we therefore examine how thresholding can be used appropriately to regularise QSE under finite-shot noise, with sampling-induced errors quantified relative to the corresponding statevector QSE energies.
+Unless otherwise stated, $N_{\mathrm{shots}}$ denotes the number of shots allocated to each commuting measurement group.
 \subsubsection{Effects of Thresholding to mitigate Sampling Noise}
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{figures/shots/threshold_shot_error_6e6o.png}
     \caption{Mean absolute QSE energy error as a function of the overlap-eigenvalue threshold for the $6e6o$ active space at different shot counts. The dotted line indicates chemical accuracy, and the curves show the trade-off between suppressing sampling-noise amplification and discarding physically relevant subspace directions.}
 \end{figure}
-% MAIN GRAPH: Here we show the plot of error for 6e6o against threshold on the x axis, with different shots being plotted. General shape of this is a U shaped graph, Ie the error decreases to a minimum as threshold icnreases, then increases after. For all shots error, define as median for s0 s1 t1 t2 for all molecules UCCSD compared to the statevector 
-% CONTENT
-% 1) In general, thresholding should be used to remove eigenvectors with tiny eigenvalues because they amplify noise rather than add on meaningful information. Every eigenvector can be thought off as adding on additional corrections to the QSE subspace. However, in the presecnece of noise, these corections instead become corrupted and physically meaningless when the eigenvalues are too tiny. The larger the errors, the less resistant it is from noise. 
-% 2) As we increase the threshold and throw out more eigenvalues, the error generally decreases because we are removing eigenvectors that contribute more amplified noise than meaningful information. However, we eventually hit a minimum because beyond a certain point we then start throwing out eigenvectors that are also physically meaningful. This causes the observed minimum and an optimal threshold that should be used 
-% 3) As we use more and more shots, this means that the error decreases. This adds on to our resolving power. Meaning with a better accuracy, we can now accurately resolve smaller eigenvalues, so the minimum or optimal threshold will decrease as shot count increases 
+Figure 4 shows a clear minimum in the QSE error as a function of the overlap-eigenvalue threshold, indicating that an optimal degree of regularisation exists for each noise level. 
+As the number of shots increases and the sampling noise decreases, this minimum shifts towards lower thresholds and lower overall errors.
+
+This behaviour reflects the competing effects of thresholding. Directions associated with very small overlap eigenvalues are particularly susceptible to noise amplification, such that their contribution to the recovered spectrum can become dominated by statistical error rather than useful physical information. 
+Increasing the threshold initially removes these poorly resolved directions and therefore reduces the QSE error. 
+However, beyond the optimum, further increasing the threshold begins to remove directions that still contain physically important contributions to the QSE subspace, causing the error to increase again. 
+The resulting minimum therefore represents a balance between suppressing noise-amplified directions and retaining sufficient information for accurate spectral recovery.
+
+Increasing the shot count improves the precision of the projected matrix elements and therefore allows progressively smaller overlap eigenvalues to be resolved reliably. Consequently, fewer directions need to be removed, shifting the optimal threshold towards smaller values as the shot count increases.
+
 \subsubsection{Active Space Dependence of Shot Noise}
 \begin{figure}[!ht]
     \centering
@@ -176,22 +182,42 @@ The next question is therefore how to choose the retained overlap eigenmodes so 
         \makebox[\linewidth][l]{\textbf{(b)}}
         \includegraphics[width=\linewidth]{figures/shots/best_threshold_heatmap.png}
     \end{minipage}
-    \caption{Finite-shot scaling and threshold selection across active spaces. (a) Minimum mean QSE energy error as a function of the active-space scaling variable $N_{\mathrm{orb}}^2/\sqrt{N_{\mathrm{shots}}}$, with the linear regression and coefficient of determination shown. (b) Mean optimal overlap-eigenvalue threshold as a function of active space and shot count.}
+    \caption{Finite-shot scaling and threshold selection across active spaces. (a) Minimum mean QSE energy error as a function of the active-space scaling variable $N_{\mathrm{orb}}^2/\sqrt{N_{\mathrm{shots}}}$, with the linear regression and coefficient of determination shown. (b) Mean optimal overlap-eigenvalue threshold-ladder index as a function of active space and shot count, where index $0$ corresponds to $10^{-4}$ and index $40$ to $1$.}
 \end{figure}
-% MAIN GRAPH: Show the scatter plot of median error for each active space and shot count. Plot on x axis n^2 / sqrt(shots). Show this for both singlets and triplets, show the regression line also. This one use the best threshold 
-% MAIN GRAPH: maybe different panel. Show the heat map of best thresholds for each active space and shot count 
-% CONTENT
-% 1) Addtionally, we also note that median errors scales approximately with the square of active space size. 
-% 2) Discuss why this might be the case, ie larger matrix means that the individual matrix element errors are increased. Total frobenius norm of error increases. So with larger matrix, the errors scale 
-% 3) Discuss the heatmap, show that the thresholds used generally will increase with active space size also. So IE at a fixed shot count, if you use a larger matrix, you would need larger threshold alos. 
+
+We further find that finite-shot errors depend systematically on the size of the QSE projected matrices. 
+Empirically, the minimum error after threshold optimisation scales approximately as 
+\ErrorScalingEquation
+where $n_{\mathrm{orb}}$ is the number of active spatial orbitals (Fig 5a). 
+Consistent with this trend, the optimal overlap threshold generally increases with the active-space size and decreases with shot count (Fig 5b). 
+This indicates that progressively stronger regularisation is required as the projected problem grows or as the sampling precision is reduced. 
+
+This behaviour can be rationalised from the accumulation of finite-sampling errors across the projected matrices. 
+The precision of expectation values estimated from $N_{\mathrm{shots}}$ repeated measurements follows a known $N_{\mathrm{shots}}^{-1/2}$ scaling \cite{Knill2007PrecisionScaling}. 
+This scaling characterises the errors of each individual matrix element. 
+However, as the active spaces grow, the number of matrix elements also increases. For a $d \times d$ projected matrix, the Frobenius norm of the accumulated finite-shot perturbation scales approximately as $\frac{d}{\sqrt{N_{\mathrm{shots}}}}$. 
+Perturbation bounds for generalised Hermitian eigenvalue problems relate the generalised-eigenvalue errors to the spectral norms of the perturbations in $H$ and $S$ \cite{Nakatsukasa2010ErrorBounds}. 
+Since the spectral norm is bounded above by the Frobenius norm, the growth of the accumulated matrix perturbation sets a natural upper scale for the resulting QSE energy errors. 
+For the singles-only operator pool used here, the projected-matrix dimension scales as $d \propto n_{\mathrm{orb}}^2$. The empirical dependence presented in \cref{eq:error-scaling} therefore follows the same scaling of the accumulated matrix perturbation.
+
 \subsubsection{Shot Budget Scaling}
-% SI INFO: need to show the total number of commuting groups present in the matrix. Show the linear regression fit here of how this scales with the active space n_o
-% CONTENT
-% 1) State that given how the errors scale with shot count, for QSE shots to be chemically accurate, we would then require shots per commuting group count scalling of N^4. Give an example, ie at current 6e6o, we need roughly how many shots per commuting group. 
-% 2) State that empiracally that the number of commuting groups for each matrix scales with n^3.7 ish? Discuss here that global grouping was done, and that some terms belong 10^-12 for eg were dropped. 
-% 3) This puts an estimate number of shots for chemically accurate results to scale with n^8. Its slightly better estimate than the n^12 scaling by that paper, but likely its because of global grouping of commuting terms that made a difference. 
-% 4) caveat that this is a estimate based on errors wrt to the statevector. Also that the scaling is estimated using the current singles operator pool which assumes n^2 matrix size scaling. If lets say a doubles operator were used which scales with n^4, then the approximate scaling for total shot budget is more closer to n^8 * n^8 = n^16 terms. This scaling is very dependent on the operator pool 
-\clearpage
+The empirical scaling in \cref{eq:error-scaling} can be used to estimate the measurement requirements for maintaining a fixed QSE accuracy as the active space grows. To maintain a constant error relative to the statevector, this would require approximately $N_{\mathrm{shots}} \propto n_{\mathrm{orb}}^4$. 
+For the $6e6o$ active space, recovering states to within chemical accuracy relative to the statevector already requires an excess of $2 \times 10^{5}$ shots per commuting group (Fig 4). 
+
+The total measurement cost also depends on the number of distinct commuting groups required to construct both projected matrices. 
+Across the active spaces studied, we empirically determine this scaling to be about $\mathcal{O}\!\left(n_{\mathrm{orb}}^{6.77}\right)$ for singlets and $\mathcal{O}\!\left(n_{\mathrm{orb}}^{6.75}\right)$ for triplets (Fig. S6). 
+Here, the number of commuting groups was taken by grouping commuting terms across both matrices, after discarding Puali terms with coefficients below $10^{-12}$. 
+
+Combining these two contributions gives an estimated total shot requirement for maintaining an approximately constant finite-shot accuracy as
+\TotalShotScalingEquation
+
+This empirically derived estimate indicates that QSE has a steep shot measurement overhead. Importantly, the present analysis considers only a one-body operator pool, whose size scales with $\mathcal{O}\!\left(n_{\mathrm{orb}}^{2}\right)$. 
+However, the representabiltiy results above suggest that more expressive operator pools may be required for chemically accurate excited-state recovery.
+Doing so can dramatically increase the shot overhead beyond the estimations we present in \cref{eq:total-shot-scaling}.
+For example, including two-body excitation operators would increase the operator-pool size to $\mathcal{O}\!\left(n_{\mathrm{orb}}^{4}\right)$. 
+If the observed dependence of finite-shot error on projected-matrix dimension persists, maintaining constant accuracy would then require approximately $\mathcal{O}\!\left(n_{\mathrm{orb}}^{8}\right)$ shots per commuting group. 
+The number of required measurement groups would also increase with the enlarged projected problem, leading to an even steeper scaling of the total measurement cost.
+
 \subsection{Structure of the Projected QSE Matrices}
 % Link from the previous section, short intro line that says. Following the steep shot-cost scaling observed, we further examined whether the projected QSE matrices contained structure that could potentially be exploited by future measurement or reconstructions methods
 \subsubsection{Structural Correlations and Sparsity}

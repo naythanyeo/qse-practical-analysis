@@ -388,3 +388,32 @@
         \label{eq:triplet-on-hf}
     \end{equation}%
 }
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Shot scaling
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Finite-shot error scaling
+\newcommand{\ErrorScalingEquation}{%
+    \begin{equation}
+        E_{\min}
+        \propto
+        \frac{N_{\mathrm{orb}}^{2}}
+             {\sqrt{N_{\mathrm{shots}}}}.
+        \label{eq:error-scaling}
+    \end{equation}%
+}
+
+% Total shot scaling
+\newcommand{\TotalShotScalingEquation}{%
+    \begin{equation}
+        N_{\mathrm{total}}
+        =
+        N_{\mathrm{shots}}N_{\mathrm{groups}}
+        \propto
+        N_{\mathrm{orb}}^{4}
+        N_{\mathrm{orb}}^{6.76}
+        \sim
+        N_{\mathrm{orb}}^{11}.
+        \label{eq:total-shot-scaling}
+    \end{equation}%
+}
