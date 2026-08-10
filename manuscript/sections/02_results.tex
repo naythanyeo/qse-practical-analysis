@@ -219,14 +219,20 @@ If the observed dependence of finite-shot error on projected-matrix dimension pe
 The number of required measurement groups would also increase with the enlarged projected problem, leading to an even steeper scaling of the total measurement cost.
 
 \subsection{Structure of the Projected QSE Matrices}
-% Link from the previous section, short intro line that says. Following the steep shot-cost scaling observed, we further examined whether the projected QSE matrices contained structure that could potentially be exploited by future measurement or reconstructions methods
-\subsubsection{Structural Correlations and Sparsity}
+While the preceding analysis indicates steep measurement overhead, we find that the projected matrices themselves exhibit substantial structure that may provide opportunities for more efficient reconstruction. 
+In this section, we examine the recurring patterns and correlations within the projected H and S matrices, and how these features are affected by finite-shot sampling.
 
-% CONTENT
-% 1) First, we note that there was a strong correlation between the H and S matrix elements terms. In general this is not guranteed analytically because when S terms are small, ie the two states do not overlap significantly, the Hamiltonian can stil connect them. However, empiracally there is a strong relation between H and S elements. 
-% 2) we also observe that the QSE matrices contain blockwise sparse regions. This is very apparent in certain molecules, eg xx that is the least sparse. Can see clear blocks of strongly overlapped operators eg between the diagonal and OV blocks. 
-% 3) also caveat that for denser QSE matrices, the structure also does exist between larger terms and smaller terms, though they are not straight up 0 
-% 4) Suggest that the matrices are not totally random, and that for both projected matrices, structures do exist
+\subsubsection{Structural Correlations and Sparsity}
+We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices (Fig. S7). In general, elements with small overlap $S_{ij}$ also tend to have small Hamiltonian couplings $H_{ij}$ and vice versa. 
+This suggests that the Hamiltonian predominantly couples pairs of operator-generated states that already have appreciable overlap within the QSE subspace.
+
+The matrices also exhibit pronounced internal structure. The overlap-matrix heatmaps in Figs. S8 and S9 show consistently large diagonal elements, as expected from the self-overlap of the operator-generated states. 
+The off-diagonal elements are much less uniform. 
+Stronger couplings instead appear in recurring block-like regions associated with particular classes of excitation operators, leaving other regions weakly coupled or nearly empty.
+Consequently, the degree of sparsity varies substantially between matrices.
+Interestingly, however, we find no clear relationship between this sparsity and the molecular properties considered across the benchmark. 
+This suggests that the observed coupling patterns are not determined by molecular identity alone, but also depend on the chosen active space and the orbitals included within it. 
+Regardless of the degree of sparsity, the QSE matrix elements exhibit clear structure rather than being uniformly distributed.
 
 \subsubsection{Effects of Noise on Structure}
 \begin{figure}[!ht]
@@ -234,13 +240,27 @@ The number of required measurement groups would also increase with the enlarged 
     \includegraphics[width=\linewidth]{figures/matrix_heatmaps/uccsd_6e6o_shot_overlap.png}
     \caption{Effect of finite-shot noise on the structure of UCCSD overlap matrices in the $6e6o$ singlet sector. The statevector matrix is compared with matrices reconstructed using shot counts from $1\,\mathrm{k}$ to $1\,\mathrm{M}$, illustrating the progressive disruption of the underlying matrix structure by sampling noise.}
 \end{figure}
-% MAIN FIGURE: show how noise affects this. One plot of the side by side heatmaps for statevector vs shots. Structurally is there any differences. Two rows for singlet and triplet. One for sparse and another for dense matrices? 
-% CONTENT
-% 1) When noise is added, the block list structure observed ends up being disrupted (hopefully)
-% 2) Add in discussions that in this paper we used global grouping of commuting terms. So there is probably some correlated errors. 
+
+We next consider how finite-shot sampling affects the matrix structure identified above. 
+As shown in Fig. 6, sampling noise progressively obscures the detailed patterns present in the statevector overlap matrices. 
+The dominant diagonal elements remain visible even at relatively low shot counts, whereas the finer off-diagonal and block-like structures are substantially blurred. 
+Increasing the number of shots gradually restores these features, with the reconstructed matrices approaching the underlying statevector structure more closely at higher sampling precision.
+
+Importantly, these finite-shot perturbations should not be interpreted as independent random errors applied to each matrix element. 
+In our measurement procedure, Pauli terms are grouped globally across the projected matrices, such that the same sampled measurement outcomes contribute to multiple matrix elements. 
+The resulting errors are therefore expected to exhibit correlations across the reconstructed matrices. 
+This provides an additional source of structure in the finite-shot problem beyond that already present in the underlying statevector matrices.
 
 \subsubsection{Outlook for Structure-Aware reconstruction}
-% Maybe for later on we can have structure aware reconstruction 
-% 1) Dont speculate anything, but just state that empiraclly there is a structure, and that correlated errors are a thing due to the grouping. Also that the H and S elements are related. All this is not to say that we can predict it directly, but it highlights that QSE as a method has strong structure observed 
-% 2) Suggest that because of this, possibly for 
-%CITE PAPERS: need to find studies that use for eg post processing techniques to remove noise
+The observations above suggest that finite-shot QSE is not simply a problem of reconstructing two dense matrices from independent noisy estimates. 
+The corresponding elements of H and S are strongly correlated, the statevector matrices exhibit recurring internal structure, and the finite-shot perturbations themselves are expected to be correlated through the shared measurement groups. 
+Taken together, this makes the projected QSE problem highly structured at both the signal and noise levels.
+
+We envisage that this structure may provide opportunities for classical post-processing methods that reconstruct the projected matrices more accurately from a limited number of measurements. 
+Related ideas have already been explored elsewhere in quantum error mitigation. Machine-learning approaches have been trained to map noisy expectation values toward their noise-free counterparts, substantially reducing the overhead of conventional mitigation schemes.  
+Other work has explicitly incorporated correlated measurement errors into classical reconstruction procedures rather than assuming independent readout noise.  
+More broadly, model-free error-mitigation methods have also shown that classical post-processing can suppress bias in measured expectation values without requiring a detailed microscopic noise model. 
+
+While these approaches do not directly solve the QSE reconstruction problem considered here, they demonstrate that correlations and prior structure in quantum measurement data can be exploited during classical post-processing. 
+The steep shot scaling identified in earlier sections should therefore be viewed as the cost of the present direct-estimation strategy. 
+However, developing structure-aware reconstruction methods that exploit the features identified above may allow comparable spectral accuracy to be obtained from substantially fewer measurements.
