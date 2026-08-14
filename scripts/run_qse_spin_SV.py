@@ -18,10 +18,16 @@ from script_utils import (
 )
 
 
-ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", "6e5o", "6e6o"]
+ACTIVE_SPACES = ["6e7o", "8e7o", "8e8o"]
 """
-,  "6e7o", "8e7o", "8e8o"
+"2e2o", "2e3o", "4e3o", "4e4o", "4e5o", "6e5o", "6e6o", 
 """
+from qibochem.ansatz.ucc import (
+    Ansatz_UCCSD
+)
+ANSATZ_FUNCTIONS = {
+    "UCCSD": Ansatz_UCCSD,
+}
 MAX_WORKERS = 2
 
 
