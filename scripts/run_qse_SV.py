@@ -19,12 +19,20 @@ from script_utils import (
 
 
 ACTIVE_SPACES = [
-    "2e2o", "2e3o", "4e3o", "4e4o", 
+    "8e8o"
 ]
 """
-"4e5o", "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
+"2e2o", "2e3o", "4e3o", "4e4o", "4e5o", "6e5o", "6e6o", "6e7o", "8e7o", ,
 """
-MAX_WORKERS = 4
+
+MAX_WORKERS = 8
+from qibochem.ansatz.ucc import (
+    Ansatz_UCCSD
+)
+ANSATZ_FUNCTIONS = {
+    "UCCSD": Ansatz_UCCSD,
+}
+
 
 def run_molecule_expansion(molecule_name, active_space, expansion, excitation_generator, spin_projection):
     # First get all the file paths within the molecule and active space
@@ -65,7 +73,7 @@ def run_molecule_expansion(molecule_name, active_space, expansion, excitation_ge
         print(ansatz_name)
 
         final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name)
-        H, S = qse.run_qse(final_circuit, protocol)
+        H, S = qse.run_qse_light(final_circuit, protocol)
 
         # Save the results, path and then metadata
         save_npz(
