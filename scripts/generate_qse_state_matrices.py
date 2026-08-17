@@ -1,6 +1,7 @@
 """Generate optimized VQE states in the fixed-electron determinant basis."""
 
 import numpy as np
+from scipy.sparse import csr_matrix
 
 from script_utils import (
     ANSATZ_FUNCTIONS,
@@ -108,18 +109,21 @@ def operator2partial_permu_mat(fermionic_operator, determinant_bitstrings):
         bitstring: index
         for index, bitstring in enumerate(determinant_bitstrings)
     }
-    # First create a matrix of zeros 
-    matrix = np.zeros(
-        (len(determinant_bitstrings), len(determinant_bitstrings)),
-        dtype=float,
-    )
+    # Define csr matrix data fields
+    row_data, cols_data, matrix_data = [], [], []
 
     for col, source_det in enumerate(determinant_bitstrings):
         # Act the operator on each bitstring  
         results = operator_on_bitstring(fermionic_operator, source_det)
         for target_det, coeff in results:
             row = determinant_index[target_det]
-            matrix[row, col] += coeff
+            row_data.append(row)
+            cols_data.append(col)
+            matrix_data.append(coeff)
+
+    # Build sparse matrix
+    dim = len(determinant_bitstrings)
+    matrix = csr_matrix((matrix_data, (row_data, cols_data)), shape=(dim, dim))
 
     return matrix
 
