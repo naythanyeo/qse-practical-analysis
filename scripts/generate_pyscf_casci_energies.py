@@ -18,7 +18,7 @@ from script_utils import (
 
 N_ROOTS = 10
 
-ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", "6e5o", "6e6o"]
+ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"]
 """
 ,  "6e7o", "8e7o", "8e8o"
 """
