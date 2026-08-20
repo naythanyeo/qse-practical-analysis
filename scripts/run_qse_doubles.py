@@ -45,7 +45,9 @@ def generate_singlet_singles_and_select_doubles(excitation_params: dict):
 
     homo_lumo1 = openfermion.FermionOperator(f"{2*lumo1_orb+1}^ {2*lumo1_orb}^ {2*homo_orb+1} {2*homo_orb}")
 
-    homo1_lumo1_a = (
+    homo1_lumo1 = openfermion.FermionOperator(f"{2*lumo1_orb+1}^ {2*lumo1_orb}^ {2*homo1_orb+1} {2*homo1_orb}")
+
+    homo1_lumo1_unpaired_a = (
         # alpha-alpha
         openfermion.FermionOperator(
             f"{2*lumo1_orb}^ {2*homo_orb} "
@@ -68,7 +70,7 @@ def generate_singlet_singles_and_select_doubles(excitation_params: dict):
         ) 
     )
 
-    homo1_lumo1_b = ( 
+    homo1_lumo1_unpaired_b = ( 
         # alpha-alpha
         openfermion.FermionOperator(
             f"{2*lumo_orb}^ {2*homo_orb} "
@@ -91,7 +93,8 @@ def generate_singlet_singles_and_select_doubles(excitation_params: dict):
         ) 
     )
 
-    all_operators = single_operators + [homo_lumo, homo1_lumo, homo_lumo1, homo1_lumo1_a, homo1_lumo1_b]
+    all_operators = single_operators + [homo_lumo, homo1_lumo, homo_lumo1, homo1_lumo1, 
+                                        homo1_lumo1_unpaired_a, homo1_lumo1_unpaired_b]
 
     return all_operators
 
