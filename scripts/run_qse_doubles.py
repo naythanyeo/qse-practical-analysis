@@ -45,14 +45,53 @@ def generate_singlet_singles_and_select_doubles(excitation_params: dict):
 
     homo_lumo1 = openfermion.FermionOperator(f"{2*lumo1_orb+1}^ {2*lumo1_orb}^ {2*homo_orb+1} {2*homo_orb}")
 
-    homo1_lumo1 = (
-        openfermion.FermionOperator(f"{2*lumo1_orb}^ {2*lumo_orb}^ {2*homo1_orb} {2*homo_orb}") + 
-        openfermion.FermionOperator(f"{2*lumo1_orb}^ {2*lumo_orb+1}^ {2*homo1_orb+1} {2*homo_orb}") + 
-        openfermion.FermionOperator(f"{2*lumo1_orb+1}^ {2*lumo_orb}^ {2*homo1_orb} {2*homo_orb+1}") + 
-        openfermion.FermionOperator(f"{2*lumo1_orb+1}^ {2*lumo_orb+1}^ {2*homo1_orb+1} {2*homo_orb+1}") 
+    homo1_lumo1_a = (
+        # alpha-alpha
+        openfermion.FermionOperator(
+            f"{2*lumo1_orb}^ {2*homo_orb} "
+            f"{2*lumo_orb}^ {2*homo1_orb}"
+        )
+        + # alpha-beta
+        openfermion.FermionOperator(
+            f"{2*lumo1_orb+1}^ {2*homo_orb+1} "
+            f"{2*lumo_orb}^ {2*homo1_orb}"
+        ) 
+        + # beta-alpha
+        openfermion.FermionOperator(
+            f"{2*lumo_orb+1}^ {2*homo1_orb+1} "
+            f"{2*lumo1_orb}^ {2*homo_orb}"
+        ) 
+        + # beta-beta
+        openfermion.FermionOperator(
+            f"{2*lumo1_orb+1}^ {2*homo_orb+1} "
+            f"{2*lumo_orb+1}^ {2*homo1_orb+1}"
+        ) 
     )
 
-    all_operators = single_operators + [homo_lumo, homo1_lumo, homo_lumo1, homo1_lumo1]
+    homo1_lumo1_b = ( 
+        # alpha-alpha
+        openfermion.FermionOperator(
+            f"{2*lumo_orb}^ {2*homo_orb} "
+            f"{2*lumo1_orb}^ {2*homo1_orb}"
+        )
+        + # alpha-beta
+        openfermion.FermionOperator(
+            f"{2*lumo_orb+1}^ {2*homo_orb+1} "
+            f"{2*lumo1_orb}^ {2*homo1_orb}"
+        ) 
+        + # beta-alpha
+        openfermion.FermionOperator(
+            f"{2*lumo1_orb+1}^ {2*homo1_orb+1} "
+            f"{2*lumo_orb}^ {2*homo_orb}"
+        ) 
+        + # beta-beta
+        openfermion.FermionOperator(
+            f"{2*lumo_orb+1}^ {2*homo_orb+1} "
+            f"{2*lumo1_orb+1}^ {2*homo1_orb+1}"
+        ) 
+    )
+
+    all_operators = single_operators + [homo_lumo, homo1_lumo, homo_lumo1, homo1_lumo1_a, homo1_lumo1_b]
 
     return all_operators
 
