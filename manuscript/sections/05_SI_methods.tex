@@ -1,10 +1,10 @@
-\subsection{Molecular Geometries and Active Space Preparation}
+\subsubsection{Molecular Geometries and Active Space Preparation}
 The dataset used comprised 28 closed-shell organic molecules from Thiel's excited-state benchmark set \cite{thiels2008benchmark}. The published Cartesian nuclear coordinates were referenced directly and used without further optimisation. 
 For each molecule, Restricted Hartree-Fock calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set. This set of canonical molecular orbitals was optimised once and used consistently throughout all subsequent CASCI, VQE and QSE calculations in the study. 
 
 Active spaces (denoted $n_e e\, n_{\mathrm{o}} o$) comprised the $n_e / 2$ occupied molecular spatial orbitals closest to the HOMO and the $n_{\mathrm{o}} - n_e / 2$ virtual molecular spatial orbitals closest to the LUMO. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
 
-\subsection{Exact Reference}
+\subsubsection{Exact Reference}
 Within each active space, the exact reference energies and wavefunctions were obtained from complete active-space configuration interaction (CASCI) calculations performed using PySCF. 
 Calculations were separated by spin-projection sector $M_S$ by setting the number of active $\alpha$ and $\beta$ spin electrons to be 
 
@@ -22,13 +22,13 @@ Determinants were ordered lexicographically using an interleaved spin-orbital co
 PySCF represented each wavefunction as a two-dimensional CI coefficient matrix with dimensions $\binom{n_{\mathrm{o}}}{n_{\mathrm{\alpha}}}$ by $\binom{n_{\mathrm{o}}}{n_{\mathrm{\beta}}}$, corresponding to the $\alpha$ and $\beta$ electron occupation strings. These coefficients were embedded into the corresponding entries of the common state-vector representation.  During this conversion, the fermionic phase arising from the permutation between PySCF's separated $\alpha$ and $\beta$ electron ordering and the interleaved spin-orbital convention was included explicitly.
 
 
-\subsection{Quantum Computing Framework}
+\subsubsection{Quantum Computing Framework}
 All quantum-circuit calculations in this study were performed using classical simulations implemented with the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. These frameworks were used to construct, represent and simulate the quantum circuits employed.
 A research fork of Qibochem was developed to support the computational workflow used in the study. The fork introduced configurable ansatz classes, optimised circuit evaluation routines, support for measuring spin observables, and dedicated functionality for constructing and sampling the projected matrices required for Quantum Subspace Expansion calculations. 
 
 All calculations in this work used ideal noiseless circuit simulations without modelling any hardware. Only finite-sampling noise arising from a limited number of measurement shots was considered in the relevant sections.
 
-\subsubsection{Hamiltonian and Spin Operators}
+\paragraph{Hamiltonian and Spin Operators.}
 For each active space, the electronic Hamiltonian was constructed in second quantisation as follows:
 \ElectronicHamiltonianEquation
 where $E_{\mathrm{nuc}}$ is the core nuclear repulsion energy and $p, q, r, s$ index the active spin-orbitals. $h_{pq}$ and $g_{pqrs}$ are the one- and two-electron integral coefficients evaluated in the fixed canonical Hartree-Fock MO basis.
@@ -41,7 +41,7 @@ Spin operators were constructed in the same second quantisation basis as follows
 
 All fermionic Hamiltonian, spin and excitation operators were mapped to qubit operators using the Jordan-Wigner (JW) transformation.
 
-\subsubsection{Ground State Reference}
+\paragraph{Ground State Reference.}
 As introduced above, approximate ground-state reference wavefunctions were prepared using parameterised Unitary Coupled-Cluster (UCC) ansatz. 
 In this study, six ansatz families were used, namely: UCCSD, UCCSDSinglet, UCCGSD, and \(k\)-UpCCGSDSinglet with \(k=1,2,\) and \(3\). The ansätze were characterised by the excitation generators included in the cluster operator $\hat{T}$, summarised in the following table.
 
@@ -83,7 +83,7 @@ Parameters associated with excitation generators shared with the preceding ansat
 
 Following optimisation, the resulting VQE parameters were stored as a fixed ground-state reference wavefunction. This fixed reference set was used consistently for all subsequent statevector and finite-shot QSE calculations.
 
-\subsubsection{QSE Operator Pools and Projected Matrices}
+\paragraph{QSE Operator Pools and Projected Matrices.}
 As discussed in the introduction, separate one-body operator pools were used to construct the singlet and triplet-targeting QSE subspaces. The singlet operator pool, $\mathcal{O}^{S}$, was defined as
 
 \QSESingletOperatorPoolEquation
@@ -106,7 +106,7 @@ The resulting Pauli-string expectation values were then evaluated with respect t
 For all calculations performed, only the diagonal and upper-triangular matrix elements, $\mu \leq \nu$ were constructed and evaluated. Lower-triangular matrix terms were then reconstructed using Hermitian symmetry.
 
 
-\subsubsection{Finite-Shot Sampling}
+\paragraph{Finite-Shot Sampling.}
 Finite-shot sampling was used to model the effects of statistical measurement noise on the projected Hamiltonian and overlap matrices. 
 For each calculation, all unique Pauli strings in the projected Hamiltonian and overlap observable matrices were first collected into a global measurement pool. Then, a largest-first greedy qubit-wise-commuting (QWC) grouping algorithm was used to partition the global measurement pool. 
 Grouping was performed globally across elements from both matrices, which reduced the total number of commuting groups required. Preliminary data also showed that this method of global grouping, as opposed to grouping terms for each matrix element, resulted in much better agreement with the statevector results. 
@@ -117,8 +117,8 @@ Measurement outcomes were generated for each rotated statevector using NumPy's m
 
 At each specified shot count, the finite-shot calculation was repeated using ten statistically independent sampling iterations. The resulting Hamiltonian and overlap matrices were solved independently, and the reported energy errors were calculated from the mean of the ten independently obtained energies.
 
-\subsection{Numerical Analysis and Evaluation Metrics}
-\subsubsection{Generalised Eigenvalue Problem}
+\subsubsection{Numerical Analysis and Evaluation Metrics}
+\paragraph{Generalised Eigenvalue Problem.}
 Due to the non-orthogonality of the QSE basis states, solving for the energy eigenvalues and wavefunctions involves solving a generalised eigenvalue problem $\mathbf{H}\mathbf{c} = E\mathbf{S}\mathbf{c}$. This was done by first diagonalising the Hermitian overlap matrix $\mathbf{S}$. 
 
 \DiagonaliseSEquation
@@ -151,7 +151,7 @@ For the triplet subspace, the retained dimension was further limited to ($3n_\ma
 
 For finite-shot calculations, a threshold $\tau$ was used to define the retained subspace. Only eigenvectors with eigenvalues satisfying $\lambda_i > \tau$ were retained. The thresholds $\tau$ were drawn from a fixed logarithmic grid from $10^{-4}$ to $10^{0}$ in increments of 0.1 in the exponent. 
 
-\subsubsection{Spin-expectation Evaluation}
+\paragraph{Spin-expectation Evaluation.}
 
 For the $k^\mathrm{th}$ recovered state, the spin expectation value was calculated as follows:
 

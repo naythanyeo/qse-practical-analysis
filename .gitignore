@@ -46,6 +46,7 @@ manuscript/tables/generated/
 data/raw_matrices
 data/cache/
 data/processed_dataframes
+data/visualise/
 
 # Common large data/output formats
 *.h5
