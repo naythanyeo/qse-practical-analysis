@@ -2,6 +2,8 @@
 General helper functions related to QSE operators.
 """
 
+import numpy as np
+
 from qibochem.selected_ci.qse import generate_singlet_singles, generate_triplet_singles
 
 from notebook_utils.general import parse_active_space
@@ -19,6 +21,27 @@ def get_qse_operators(active_space):
     }
     return (generate_singlet_singles(excitation_params), 
             generate_triplet_singles(excitation_params))
+
+def get_excitation_percentages(pvec, hf_state):
+    """Return reference, single, double, and higher-excitation percentages."""
+    num_bits = len(hf_state)
+    num_electrons = hf_state.count("1")
+    bitstrings = [
+        format(index, f"0{num_bits}b")
+        for index in range(2**num_bits)
+        if format(index, f"0{num_bits}b").count("1") == num_electrons
+    ]
+
+    weights = np.abs(np.asarray(pvec, dtype=complex)) ** 2
+    total_weight = weights.sum()
+
+    percentages = np.zeros(4)
+    for bitstring, weight in zip(bitstrings, weights / total_weight):
+        # Group excitations larger than 3 together
+        rank = min(sum(bit != hf_bit for bit, hf_bit in zip(bitstring, hf_state)) // 2, 3)
+        percentages[rank] += weight
+
+    return tuple((100 * percentages).tolist())
 
 
 def get_operator_labels(operators, active_space):
