@@ -22,6 +22,8 @@ from script_utils import (
 )
 
 import openfermion
+from itertools import combinations_with_replacement
+import numpy as np
 
 ANSATZ_FUNCTIONS = {"UCCSD": Ansatz_UCCSD}
 ACTIVE_SPACES = ["6e6o"]
@@ -30,7 +32,11 @@ MAX_WORKERS = 8
 
 
 
-def generate_singlet_singles_and_select_doubles(excitation_params: dict):
+def generate_singlet_singles_and_select_paired_doubles(excitation_params: dict):
+    """
+    Generator function to include singles and only certain paired and one unpaired singlet adapt doubles
+    Meant to capture the dominant transitions
+    """
     single_operators = generate_singlet_singles(excitation_params)
     n_active_elec = excitation_params["n_elec"]
 
@@ -98,9 +104,50 @@ def generate_singlet_singles_and_select_doubles(excitation_params: dict):
 
     return all_operators
 
+def generate_singlet_adapt_singles(occupied, virtual):
+    """
+    Returns the spin adapt singles transitions only
+    """
+    return(
+        openfermion.FermionOperator(f"{2*virtual}^ {2*occupied}") +
+        openfermion.FermionOperator(f"{2*virtual+1}^ {2*occupied+1}")
+    )
+
+def normalise_operator(operator):
+    norm = np.sqrt(sum(abs(coefficient) ** 2 for coefficient in operator.terms.values()))
+    return operator / norm
+
+def generate_singles_and_ov_doubles(excitation_params: dict):
+    single_operators = generate_singlet_singles(excitation_params)
+
+    num_occupied = excitation_params["n_elec"] // 2
+    num_spatial_orbitals = excitation_params["n_orbs"] // 2
+
+    # First generate all the ov singles excitations only
+    ov_singles = [
+        generate_singlet_adapt_singles(occupied, virtual)
+        for occupied in range(num_occupied)
+        for virtual in range(num_occupied, num_spatial_orbitals)
+    ]
+
+    # Enumerate the doubles from those singles excitations
+    ov_doubles = [
+        openfermion.normal_ordered(left*right)
+        for left, right in combinations_with_replacement(ov_singles, 2)
+    ]
+
+    pooled_operators = single_operators + ov_doubles
+    normalised_operators = [
+        normalise_operator(operator)
+        for operator in pooled_operators
+    ]
+
+    return normalised_operators
+
+
 def run_molecule_expansion(molecule_name, active_space, excitation_generator):
     # First get all the file paths within the molecule and active space
-    expansion = "select_doubles"
+    expansion = "select_ov_doubles"
     output_paths = {
         ansatz_name: SV_OUTPUT_DIR / active_space / expansion / f"{molecule_name}_{ansatz_name}.npz"
         for ansatz_name in ANSATZ_FUNCTIONS
@@ -165,7 +212,7 @@ def main():
             futures = [
                 executor.submit(
                     run_molecule_expansion, molecule_name, active_space,
-                    generate_singlet_singles_and_select_doubles
+                    generate_singles_and_ov_doubles
                 )
                 for molecule_name in MOLECULE_NAMES
             ]
