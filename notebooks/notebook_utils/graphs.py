@@ -6,6 +6,7 @@ Within notebook controls the plotting or saving of that figure
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
+from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 import seaborn as sns
 import numpy as np
@@ -75,36 +76,6 @@ def plot_error_distribution(error_data):
     figure.tight_layout()
     return figure
 
-
-def plot_low_state_double_weight_scaling(double_weight_data):
-    """Plot exact S1, T1, and T2 double-excitation weights across active spaces."""
-    states = ["s1", "t1", "t2"]
-    labels = {"s1": "S1", "t1": "T1", "t2": "T2"}
-    colors = {"s1": "#E15759", "t1": "#4E79A7", "t2": "#59A14F"}
-    active_spaces = list(double_weight_data)
-    positions = np.arange(len(active_spaces))
-    figure, axis = plt.subplots(figsize=(10, 5.5))
-
-    for state in states:
-        values = [np.asarray(double_weight_data[active_space].get(state, []), dtype=float)
-                  for active_space in active_spaces]
-        medians = [np.median(value) if len(value) else np.nan for value in values]
-        lower = [np.percentile(value, 25) if len(value) else np.nan for value in values]
-        upper = [np.percentile(value, 75) if len(value) else np.nan for value in values]
-
-        axis.fill_between(positions, lower, upper, color=colors[state], alpha=0.16)
-        axis.plot(positions, medians, marker="o", linewidth=2.1,
-                  color=colors[state], label=labels[state])
-
-    axis.set_xticks(positions, active_spaces, rotation=40, ha="right")
-    axis.set_ylim(bottom=0)
-    axis.set_xlabel("Active space")
-    axis.set_ylabel("Double-excitation weight (%)")
-    axis.set_title("CASCI double-excitation character across active space")
-    axis.grid(axis="y", alpha=0.2)
-    axis.legend(title="Exact state", frameon=False)
-    figure.tight_layout()
-    return figure
 
 
 def plot_projection_error(projection_error_data):
@@ -203,6 +174,93 @@ def plot_active_space_error_iqr(error_data):
 
     axes[0, 0].invert_yaxis()
     figure.suptitle("UCCSD Error Scaling Across Active Spaces")
+    figure.tight_layout()
+    return figure
+
+
+def plot_tiered_error_ridgelines(error_data):
+    """Plot UCCSD low-state error distributions with scientific error tiers."""
+    states = ["s0", "s1", "t1", "t2"]
+    active_spaces = list(error_data)
+    positions = np.arange(len(active_spaces))[::-1]
+    log_limits = (-12, 2.5)
+    bin_edges = np.linspace(*log_limits, 90)
+    bin_centres = 0.5 * (bin_edges[:-1] + bin_edges[1:])
+    smoothing_kernel = np.array([1, 4, 6, 4, 1]) / 16
+    chemical_accuracy_mha = 1000 * CHEMICAL_ACCURACY
+    tier_bounds = np.log10([chemical_accuracy_mha, 10, 50])
+    tier_colors = ["#59A14F", "#EDC948", "#F28E2B", "#E15759"]
+    tier_labels = [
+        f"$\\leq$ chemical accuracy ({chemical_accuracy_mha:.2f} mHa)",
+        "1.6-10 mHa",
+        "10-50 mHa",
+        "> 50 mHa",
+    ]
+    figure, axes = plt.subplots(2, 2, figsize=(13, 9), sharex=True)
+
+    for axis, state in zip(axes.flat, states):
+        for position, active_space in zip(positions, active_spaces):
+            errors = np.asarray(error_data[active_space][state], dtype=float)
+            if not len(errors):
+                continue
+
+            log_errors = np.log10(np.maximum(errors, 1e-12))
+            density, _ = np.histogram(log_errors, bins=bin_edges, density=True)
+            density = np.convolve(density, smoothing_kernel, mode="same")
+            density = 0.72 * density / density.max()
+            tier_masks = [
+                bin_centres <= tier_bounds[0],
+                (bin_centres > tier_bounds[0]) & (bin_centres < tier_bounds[1]),
+                (bin_centres >= tier_bounds[1]) & (bin_centres <= tier_bounds[2]),
+                bin_centres > tier_bounds[2],
+            ]
+
+            for mask, color in zip(tier_masks, tier_colors):
+                axis.fill_between(
+                    bin_centres, position, position + density, where=mask,
+                    interpolate=True, color=color, alpha=0.82,
+                )
+
+            axis.plot(bin_centres, position + density, color="white", linewidth=0.6)
+            axis.scatter(np.median(log_errors), position + 0.04, color="black", s=13, zorder=3)
+
+        axis.axvline(tier_bounds[0], color="black", linestyle=":", linewidth=1.1)
+        axis.set_xlim(*log_limits)
+        axis.set_xticks([-12, -9, -6, -3, 0, 2],
+                        [rf"$10^{{{tick}}}$" for tick in [-12, -9, -6, -3, 0, 2]])
+        axis.set_yticks(positions, active_spaces)
+        axis.set_ylim(-0.5, len(active_spaces) - 0.02)
+        axis.set_title(state.upper())
+        axis.grid(axis="x", alpha=0.2)
+
+    for axis in axes[:, 0]:
+        axis.set_ylabel("Active space")
+
+    handles = [Patch(facecolor=color, label=label) for color, label in zip(tier_colors, tier_labels)]
+    figure.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, 0.035),
+                  ncol=5, frameon=False)
+    figure.supxlabel("Raw errors (mHa)", y=0.09)
+    figure.suptitle(
+        "Low-lying state error distributions across active space (UCCSD)",
+        y=0.98,
+        fontsize=18
+    )
+    figure.subplots_adjust(left=0.09, right=0.99, bottom=0.17, top=0.91, wspace=0.11, hspace=0.20)
+    return figure
+
+
+def plot_low_state_projection_heatmap(projection_data, active_space):
+    """Plot exact low-root projections for one UCCSD active space."""
+    figure, axis = plt.subplots(figsize=(6.8, 10.5))
+    sns.heatmap(
+        projection_data[active_space], cmap="Blues", vmin=0, vmax=1,
+        annot=True, fmt=".3f", annot_kws={"fontsize": 7},
+        linewidths=0.25, linecolor="white", ax=axis,
+        cbar_kws={"label": "Projection onto retained QSE subspace"},
+    )
+    axis.set_xlabel("Exact CASCI root")
+    axis.set_ylabel("Molecule")
+    axis.set_title(f"UCCSD exact-root projection: {active_space}")
     figure.tight_layout()
     return figure
 
@@ -607,3 +665,36 @@ def plot_commuting_group_scaling(commuting_group_data):
     fig.supylabel("Mean number of commuting groups")
     fig.supxlabel("Number of Spatial Orbitals")
     return fig
+
+# ========================================================
+# Notebook 6: Molecular Orbitals
+# ========================================================
+def plot_low_state_double_weight_scaling(double_weight_data):
+    """Plot exact S1, T1, and T2 double-excitation weights across active spaces."""
+    states = ["s1", "t1", "t2"]
+    labels = {"s1": "S1", "t1": "T1", "t2": "T2"}
+    colors = {"s1": "#E15759", "t1": "#4E79A7", "t2": "#59A14F"}
+    active_spaces = list(double_weight_data)
+    positions = np.arange(len(active_spaces))
+    figure, axis = plt.subplots(figsize=(10, 5.5))
+
+    for state in states:
+        values = [np.asarray(double_weight_data[active_space].get(state, []), dtype=float)
+                  for active_space in active_spaces]
+        medians = [np.median(value) if len(value) else np.nan for value in values]
+        lower = [np.percentile(value, 25) if len(value) else np.nan for value in values]
+        upper = [np.percentile(value, 75) if len(value) else np.nan for value in values]
+
+        axis.fill_between(positions, lower, upper, color=colors[state], alpha=0.16)
+        axis.plot(positions, medians, marker="o", linewidth=2.1,
+                  color=colors[state], label=labels[state])
+
+    axis.set_xticks(positions, active_spaces, rotation=40, ha="right")
+    axis.set_ylim(bottom=0)
+    axis.set_xlabel("Active space")
+    axis.set_ylabel("Double-excitation weight (%)")
+    axis.set_title("CASCI double-excitation character across active space")
+    axis.grid(axis="y", alpha=0.2)
+    axis.legend(title="Exact state", frameon=False)
+    figure.tight_layout()
+    return figure
