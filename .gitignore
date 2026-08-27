@@ -66,6 +66,7 @@ data/visualise/
 *.swp
 *.swo
 manuscript/main.bbl-SAVE-ERROR
+notebooks/98_scratch2.ipynb
 notebooks/99_scratch.ipynb
 manuscript/main.bcf-SAVE-ERROR
 manuscript/main.pdf
