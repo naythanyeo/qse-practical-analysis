@@ -6,6 +6,7 @@ Within notebook controls the plotting or saving of that figure
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
+from matplotlib.patches import Patch
 import seaborn as sns
 import numpy as np
 from IPython.display import HTML, display
@@ -71,6 +72,37 @@ def plot_error_distribution(error_data):
         for label in axis.get_xticklabels():
             label.set_horizontalalignment("right")
 
+    figure.tight_layout()
+    return figure
+
+
+def plot_low_state_double_weight_scaling(double_weight_data):
+    """Plot exact S1, T1, and T2 double-excitation weights across active spaces."""
+    states = ["s1", "t1", "t2"]
+    labels = {"s1": "S1", "t1": "T1", "t2": "T2"}
+    colors = {"s1": "#E15759", "t1": "#4E79A7", "t2": "#59A14F"}
+    active_spaces = list(double_weight_data)
+    positions = np.arange(len(active_spaces))
+    figure, axis = plt.subplots(figsize=(10, 5.5))
+
+    for state in states:
+        values = [np.asarray(double_weight_data[active_space].get(state, []), dtype=float)
+                  for active_space in active_spaces]
+        medians = [np.median(value) if len(value) else np.nan for value in values]
+        lower = [np.percentile(value, 25) if len(value) else np.nan for value in values]
+        upper = [np.percentile(value, 75) if len(value) else np.nan for value in values]
+
+        axis.fill_between(positions, lower, upper, color=colors[state], alpha=0.16)
+        axis.plot(positions, medians, marker="o", linewidth=2.1,
+                  color=colors[state], label=labels[state])
+
+    axis.set_xticks(positions, active_spaces, rotation=40, ha="right")
+    axis.set_ylim(bottom=0)
+    axis.set_xlabel("Active space")
+    axis.set_ylabel("Double-excitation weight (%)")
+    axis.set_title("CASCI double-excitation character across active space")
+    axis.grid(axis="y", alpha=0.2)
+    axis.legend(title="Exact state", frameon=False)
     figure.tight_layout()
     return figure
 
