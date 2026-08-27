@@ -2,6 +2,8 @@
 General helper functions related to QSE operators.
 """
 
+from functools import lru_cache
+
 import numpy as np
 
 from qibochem.selected_ci.qse import generate_singlet_singles, generate_triplet_singles
@@ -42,6 +44,69 @@ def get_excitation_percentages(pvec, hf_state):
         percentages[rank] += weight
 
     return tuple((100 * percentages).tolist())
+
+
+@lru_cache(maxsize=None)
+def _get_determinant_transition_labels(hf_state):
+    """Return spatial transition labels in the canonical fixed-electron order."""
+    num_bits = len(hf_state)
+    num_electrons = hf_state.count("1")
+    labels = []
+
+    for index in range(2**num_bits):
+        bitstring = format(index, f"0{num_bits}b")
+        if bitstring.count("1") != num_electrons:
+            continue
+
+        holes = tuple(
+            orbital // 2 + 1
+            for orbital, (bit, hf_bit) in enumerate(zip(bitstring, hf_state))
+            if hf_bit == "1" and bit == "0"
+        )
+        particles = tuple(
+            orbital // 2 + 1
+            for orbital, (bit, hf_bit) in enumerate(zip(bitstring, hf_state))
+            if hf_bit == "0" and bit == "1"
+        )
+        rank = len(holes)
+
+        if rank == 0:
+            labels.append(("HF", "HF"))
+        elif rank == 1:
+            labels.append(("Single", f"{holes[0]} -> {particles[0]}"))
+        elif rank == 2:
+            category = "Paired double" if len(set(holes)) == len(set(particles)) == 1 else "Mixed double"
+            hole_label = ",".join(map(str, holes))
+            particle_label = ",".join(map(str, particles))
+            labels.append((category, f"{hole_label} -> {particle_label}"))
+        else:
+            hole_label = ",".join(map(str, holes))
+            particle_label = ",".join(map(str, particles))
+            labels.append(("Higher", f"{hole_label} -> {particle_label}"))
+
+    return tuple(labels)
+
+
+def get_dominant_exact_transitions(pvecs, hf_state, coverage=0.99):
+    """Return dominant channels after averaging normalized pvec sector weights."""
+    pvecs = np.atleast_2d(np.asarray(pvecs, dtype=complex))
+    labels = _get_determinant_transition_labels(hf_state)
+    weights = np.abs(pvecs) ** 2
+    weights = (weights / weights.sum(axis=1, keepdims=True)).mean(axis=0)
+
+    channel_weights = {}
+    for channel, weight in zip(labels, weights):
+        channel_weights[channel] = channel_weights.get(channel, 0.0) + float(weight)
+
+    transitions = []
+    cumulative_weight = 0.0
+    for (category, label), weight in sorted(channel_weights.items(), key=lambda item: (-item[1], item[0])):
+        transitions.append((category, label, 100 * weight))
+        cumulative_weight += weight
+        if cumulative_weight >= coverage:
+            break
+
+    return transitions
 
 
 def get_operator_labels(operators, active_space):
