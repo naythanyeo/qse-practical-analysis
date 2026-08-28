@@ -522,6 +522,39 @@ def plot_shot_eigenvalue_spread(eigenvalue_data, active_space, n_shots):
     return figure
 
 
+def plot_correlated_error_distribution(error_data):
+    """Plot mean low-state errors after preserving or breaking H-S pairing."""
+    conditions = ["Matched noisy H/S", "Shifted noisy H/S", "Noisy H / statevector S"]
+    labels = ["Matched\nnoisy H/S", "Shifted\nnoisy H/S", "Noisy H /\nstatevector S"]
+    distributions = [
+        error_data.loc[error_data["condition"] == condition, "mean_error_mHa"].to_numpy()
+        for condition in conditions
+    ]
+
+    figure, axis = plt.subplots(figsize=(8.5, 4.5))
+    boxes = axis.boxplot(
+        distributions,
+        vert=False,
+        patch_artist=True,
+        medianprops={"color": "black", "linewidth": 1.2},
+        whiskerprops={"color": "black"},
+        capprops={"color": "black"},
+        flierprops={"marker": "o", "markerfacecolor": "none", "markeredgecolor": "black", "markersize": 3},
+    )
+    for box in boxes["boxes"]:
+        box.set(facecolor="white", edgecolor="black")
+
+    axis.set_xscale("log")
+    axis.set_yticks(range(1, len(labels) + 1), labels)
+    axis.invert_yaxis()
+    axis.set_xlabel("Mean absolute low-state error vs statevector (mHa)")
+    axis.set_title("Effect of Breaking H-S Correlated Errors: UCCSD 6e6o, 100k Shots, 1e-2 Threshold")
+    axis.grid(axis="x", which="both", alpha=0.2)
+    sns.despine()
+    figure.tight_layout()
+    return figure
+
+
 # ========================================================
 # Notebook 4: Scaling and Heatmaps
 # ========================================================
@@ -735,5 +768,43 @@ def plot_s1_casci_composition(composition_data, molecule):
     axis.set_ylabel("Exact CASCI weight (%)")
     axis.set_title(molecule)
     axis.grid(axis="y", alpha=0.18)
+    figure.tight_layout()
+    return figure
+
+
+# ========================================================
+# Notebook 7: Selected Doubles
+# ========================================================
+def plot_ov_doubles_s1_error_scatter(pool_comparison):
+    """Compare 6e6o UCCSD S1 errors before and after adding OV doubles."""
+    chemical_accuracy_mha = 1000 * CHEMICAL_ACCURACY
+    limits = np.array([0.04, 250])
+    label_offsets = {
+        "Pyrrole": (5, -4), "Furan": (6, 0), "Benzene": (3, 3),
+        "Hexatriene": (-2, 4), "Octatetraene": (-5, -5),
+    }
+
+    figure, axis = plt.subplots(figsize=(8, 7))
+    axis.scatter(
+        pool_comparison["singles_only_mHa"], pool_comparison["ov_doubles_mHa"],
+        color="black", edgecolor="white", linewidth=0.75, s=58, alpha=0.92, zorder=3,
+    )
+    axis.plot(limits, limits, color="black", linestyle=":", linewidth=1.25, zorder=2)
+    axis.axvline(chemical_accuracy_mha, color="black", linestyle="--", linewidth=0.9)
+    axis.axhline(chemical_accuracy_mha, color="black", linestyle="--", linewidth=0.9)
+    axis.set(xscale="log", yscale="log", xlim=limits, ylim=limits)
+    axis.set_xlabel("Singles-only S1 error (mHa)")
+    axis.set_ylabel("OV-double S1 error (mHa)")
+    axis.set_title("Effect of adding OV-Doubles Excitation Operators")
+    axis.grid(which="both", alpha=0.17)
+
+    for molecule, offset in label_offsets.items():
+        row = pool_comparison.loc[pool_comparison["molecule"] == molecule].iloc[0]
+        axis.annotate(
+            molecule, (row["singles_only_mHa"], row["ov_doubles_mHa"]),
+            xytext=offset, textcoords="offset points", fontsize=8,
+            ha="right" if offset[0] < 0 else "left",
+        )
+
     figure.tight_layout()
     return figure
