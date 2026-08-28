@@ -125,6 +125,49 @@ def plot_tiered_error_ridgelines(error_data):
     return figure
 
 
+def plot_projection_error_scatter(projection_error_data):
+    """Plot low-lying UCCSD errors against exact-state representability deficit."""
+    states = ["s0", "s1", "t1", "t2"]
+    active_spaces = projection_error_data["active_space"].drop_duplicates().tolist()
+    colors = plt.colormaps["viridis"](np.linspace(0.08, 0.92, len(active_spaces)))
+    chemical_accuracy_mha = 1000 * CHEMICAL_ACCURACY
+    figure, axes = plt.subplots(2, 2, figsize=(12, 8), sharex=True, sharey=True)
+
+    for state, axis in zip(states, axes.flat):
+        state_data = projection_error_data[projection_error_data["state"] == state]
+        for active_space, color in zip(active_spaces, colors):
+            active_data = state_data[state_data["active_space"] == active_space]
+            axis.scatter(
+                np.maximum(active_data["deficit_percent"], 1e-7), active_data["error_mHa"],
+                color=color, s=30, edgecolor="white", linewidth=0.35, alpha=0.82,
+            )
+
+        axis.axvline(1, color="#B24C4C", linestyle=":", linewidth=1.0)
+        axis.axhline(chemical_accuracy_mha, color="black", linestyle=":", linewidth=1.0)
+        axis.set_xscale("log")
+        axis.set_yscale("log")
+        axis.set_title(state)
+        axis.grid(which="both", alpha=0.14)
+
+    handles = [
+        Line2D([0], [0], marker="o", color="none", markerfacecolor=color,
+               markeredgecolor="white", label=active_space)
+        for active_space, color in zip(active_spaces, colors)
+    ]
+    handles.extend([
+        Line2D([0], [0], color="#B24C4C", linestyle=":", label="Projection P = 0.99"),
+        Line2D([0], [0], color="black", linestyle=":", label="Chemical accuracy"),
+    ])
+    figure.supxlabel("Exact-state representability deficit, 100(1 - P) (%)", y=0.19)
+    figure.supylabel("Absolute index-matched energy error (mHa)")
+    figure.suptitle("Large energy errors need not imply low exact-state projection", y=0.98)
+    figure.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, 0.01),
+                  ncol=5, frameon=False)
+    figure.subplots_adjust(left=0.08, right=0.99, bottom=0.27, top=0.86,
+                           wspace=0.08, hspace=0.14)
+    return figure
+
+
 def plot_s1_active_space_error(error_data, molecule):
     """Plot one molecule's indexed UCCSD S1 error across active spaces."""
     case = error_data[error_data["molecule"] == molecule]
@@ -694,4 +737,3 @@ def plot_s1_casci_composition(composition_data, molecule):
     axis.grid(axis="y", alpha=0.18)
     figure.tight_layout()
     return figure
-
