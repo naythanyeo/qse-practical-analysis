@@ -5,7 +5,7 @@ Within notebook controls the plotting or saving of that figure
 """
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
+from matplotlib.colors import LogNorm, to_rgb
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 import seaborn as sns
@@ -49,137 +49,13 @@ def show_scrollable_figs(figs, max_height=750, max_width="100%", dpi=150):
 # ========================================================
 # Notebook 1: Representability and Spectral Accuracy
 # ========================================================
-def plot_error_distribution(error_data):
-    """
-    Fig S1: Plot error distribution of the SV calculations
-    INPUT: error_data dictionary containing relevant info
-    PLOTS: 4 panel boxplot showing the error distributions
-    """
-    states = ["s0", "s1", "t1", "t2"]
-    ansatzes = list(error_data)
-    figure, axes = plt.subplots(2, 2, figsize=(14, 10))
-
-    for state, axis in zip(states, axes.flat):
-        state_errors = [error_data[ansatz][state] for ansatz in ansatzes]
-        axis.boxplot(
-            state_errors, tick_labels=ansatzes,
-            boxprops={"color": "black"}, medianprops={"color": "black"},
-            whiskerprops={"color": "black"}, capprops={"color": "black"},
-            flierprops={"markeredgecolor": "black"},
-        )
-        axis.set_title(state)
-        axis.set_ylabel("Absolute energy error (mHa)")
-        axis.tick_params(axis="x", rotation=45)
-        for label in axis.get_xticklabels():
-            label.set_horizontalalignment("right")
-
-    figure.tight_layout()
-    return figure
-
-
-
-def plot_projection_error(projection_error_data):
-    """
-    Fig 2?
-    Plot exact-state projection against QSE energy error
-    Input: Dictionary of (projection, error) for each root type
-    Plots: 4 Panel scatter plot 
-    """
-    states = ["s0", "s1", "t1", "t2"]
-    projection_ticks = np.round(np.arange(0.90, 1.001, 0.01), 2)
-    tick_labels = ["<0.9", *[f"{value:.2f}" for value in projection_ticks[1:-1]], "1.0"]
-    figure, axes = plt.subplots(2, 2, figsize=(12, 9), sharex=True, sharey=True)
-
-    for state, axis in zip(states, axes.flat):
-        projections, errors = zip(*projection_error_data[state])
-        axis.scatter(projections, errors, color="black", alpha=0.65)
-        axis.axhline(1000 * CHEMICAL_ACCURACY, color="black", linestyle=":")
-        axis.set_yscale("log")
-        axis.set_xlim(0.895, 1.005)
-        axis.set_xticks(projection_ticks, tick_labels, rotation=45)
-        axis.set_title(state)
-        axis.set_xlabel("Exact-state projection")
-        axis.set_ylabel("Absolute energy error (mHa)")
-
-    figure.suptitle("UCCSD 6e6o Error and Projection Spread")
-    figure.tight_layout()
-    return figure
-
-
-def plot_bad_spin_roots(bad_spin_roots, active_space, threshold=0.01):
-    """
-    Fig SI 1
-    Input: Bad spin roots count in a dictionary, active space 
-    Plot bad-spin root counts for one active space, separated by expansion
-    Active space and threshold for title label
-    """
-    ansatzes = list(bad_spin_roots)
-    colors = sns.color_palette("colorblind", len(ansatzes))
-    figure, axes = plt.subplots(1, 2, figsize=(16, 5.5), sharey=True)
-
-    for axis, expansion in zip(axes, ("singlet", "triplet")):
-        root_labels = list(bad_spin_roots[ansatzes[0]][expansion])
-        positions = np.arange(len(root_labels))
-        bottom = np.zeros(len(root_labels))
-
-        for ansatz, color in zip(ansatzes, colors):
-            counts = [len(bad_spin_roots[ansatz][expansion][root]) for root in root_labels]
-            axis.bar(positions, counts, bottom=bottom, width=0.85, color=color, label=ansatz)
-            bottom += counts
-
-        tick_step = max(1, len(root_labels) // 12)
-        tick_positions = positions[::tick_step]
-        axis.set_xticks(tick_positions, [root_labels[index] for index in tick_positions])
-        axis.set_title(expansion.title())
-        axis.set_xlabel("QSE root")
-        axis.grid(axis="y", alpha=0.2)
-
-    axes[0].set_ylabel("Total bad roots")
-    handles, labels = axes[0].get_legend_handles_labels()
-    figure.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 0.98),
-                  ncol=3, frameon=False)
-    figure.suptitle(
-        rf"{active_space}: spin-contaminated roots ($|\Delta S^2| > {threshold}$)", y=1.04
-    )
-    sns.despine()
-    figure.tight_layout(rect=(0, 0, 1, 0.86))
-    return figure
-
-def plot_active_space_error_iqr(error_data):
-    """
-    Fig 3??
-    Plot median UCCSD errors and their interquartile ranges by active space.
-    Input: Dictionary of dictionaries  with spread of errors
-    Plots: IQR range only 
-    """
-    states = ["s0", "s1", "t1", "t2"]
-    active_spaces = list(error_data)
-    positions = np.arange(len(active_spaces))
-    figure, axes = plt.subplots(2, 2, figsize=(12, 9), sharex=True, sharey=True)
-
-    for state, axis in zip(states, axes.flat):
-        state_errors = [error_data[active_space][state] for active_space in active_spaces]
-        medians = np.asarray([np.median(values) for values in state_errors])
-        quartiles = np.asarray([np.percentile(values, [25, 75]) for values in state_errors])
-        iqr = np.vstack((medians - quartiles[:, 0], quartiles[:, 1] - medians))
-
-        axis.errorbar(medians, positions, xerr=iqr, fmt="o", color="black", capsize=4)
-        axis.axvline(1000 * CHEMICAL_ACCURACY, color="black", linestyle=":")
-        axis.set_xscale("log")
-        axis.set_yticks(positions, active_spaces)
-        axis.tick_params(axis="y", labelleft=True)
-        axis.set_title(state)
-        axis.set_xlabel("Absolute energy error (mHa)")
-        axis.grid(axis="x", alpha=0.2)
-
-    axes[0, 0].invert_yaxis()
-    figure.suptitle("UCCSD Error Scaling Across Active Spaces")
-    figure.tight_layout()
-    return figure
-
 
 def plot_tiered_error_ridgelines(error_data):
-    """Plot UCCSD low-state error distributions with scientific error tiers."""
+    """
+    Main Fig 1
+    Plot UCCSD low-state error distributions as a ridgeline plot 
+    Show the error distributions acros active spaces 
+    """
     states = ["s0", "s1", "t1", "t2"]
     active_spaces = list(error_data)
     positions = np.arange(len(active_spaces))[::-1]
@@ -249,21 +125,111 @@ def plot_tiered_error_ridgelines(error_data):
     return figure
 
 
-def plot_low_state_projection_heatmap(projection_data, active_space):
-    """Plot exact low-root projections for one UCCSD active space."""
-    figure, axis = plt.subplots(figsize=(6.8, 10.5))
-    sns.heatmap(
-        projection_data[active_space], cmap="Blues", vmin=0, vmax=1,
-        annot=True, fmt=".3f", annot_kws={"fontsize": 7},
-        linewidths=0.25, linecolor="white", ax=axis,
-        cbar_kws={"label": "Projection onto retained QSE subspace"},
-    )
-    axis.set_xlabel("Exact CASCI root")
-    axis.set_ylabel("Molecule")
-    axis.set_title(f"UCCSD exact-root projection: {active_space}")
+def plot_s1_active_space_error(error_data, molecule):
+    """Plot one molecule's indexed UCCSD S1 error across active spaces."""
+    case = error_data[error_data["molecule"] == molecule]
+    active_spaces = case["active_space"].tolist()
+    errors = case["error_mHa"].to_numpy(dtype=float)
+    positions = np.arange(len(active_spaces))
+    chemical_accuracy_mha = 1000 * CHEMICAL_ACCURACY
+
+    figure, axis = plt.subplots(figsize=(5.2, 3.7))
+    axis.plot(positions, np.maximum(errors, 1e-4), color="#D1495B", marker="o", linewidth=2.2)
+    axis.axhline(chemical_accuracy_mha, color="black", linestyle=":", linewidth=1.0)
+    axis.set_yscale("log")
+    axis.set_ylim(1e-4, 220)
+    axis.set_xticks(positions, active_spaces, rotation=45, ha="right")
+    axis.set_xlabel("Active space")
+    axis.set_ylabel("Indexed S1 error (mHa)")
+    axis.set_title(molecule)
+    axis.grid(axis="y", which="both", alpha=0.18)
     figure.tight_layout()
     return figure
 
+
+
+def plot_q1_best_root_transition_map(overlap_data):
+    """
+    Plot q1's closest exact-singlet root across molecules and active spaces.
+    """
+    molecules = overlap_data["molecule"].drop_duplicates().tolist()
+    active_spaces = overlap_data["active_space"].drop_duplicates().tolist()
+    root_colors = {"s1": "#4E79A7", "s2": "#F28E2B", "other": "#59A14F"}
+    cell_colors = np.empty((len(molecules), len(active_spaces), 3))
+
+    figure, axis = plt.subplots(figsize=(13, 11.5))
+    for row_index, molecule in enumerate(molecules):
+        molecule_data = overlap_data[overlap_data["molecule"] == molecule].set_index("active_space")
+        for column_index, active_space in enumerate(active_spaces):
+            record = molecule_data.loc[active_space]
+            color_key = record["best_exact_root"] if record["best_exact_root"] in root_colors else "other"
+            strength = 0.15 + 0.85 * record["overlap_percent"] / 100
+            cell_colors[row_index, column_index] = 1 - strength * (1 - np.array(to_rgb(root_colors[color_key])))
+
+    axis.imshow(cell_colors, aspect="auto")
+    axis.set_xticks(np.arange(len(active_spaces)), active_spaces, rotation=35, ha="right")
+    axis.set_yticks(np.arange(len(molecules)), molecules)
+    axis.set_xlabel("Active space")
+    axis.set_ylabel("Molecule")
+    axis.set_title("Direct q1 best-match root across active space")
+
+    for row_index, molecule in enumerate(molecules):
+        molecule_data = overlap_data[overlap_data["molecule"] == molecule].set_index("active_space")
+        for column_index, active_space in enumerate(active_spaces):
+            record = molecule_data.loc[active_space]
+            text_color = "white" if record["overlap_percent"] > 55 else "black"
+            axis.text(
+                column_index,
+                row_index,
+                f"{record['best_exact_root']}\n{record['overlap_percent']:.1f}%",
+                ha="center",
+                va="center",
+                color=text_color,
+                fontsize=8,
+            )
+
+    figure.tight_layout()
+    return figure
+
+
+def plot_bad_spin_roots(bad_spin_roots, active_space, threshold=0.01):
+    """
+    Fig SI 1
+    Input: Bad spin roots count in a dictionary, active space 
+    Plot bad-spin root counts for one active space, separated by expansion
+    Active space and threshold for title label
+    """
+    ansatzes = list(bad_spin_roots)
+    colors = sns.color_palette("colorblind", len(ansatzes))
+    figure, axes = plt.subplots(1, 2, figsize=(16, 5.5), sharey=True)
+
+    for axis, expansion in zip(axes, ("singlet", "triplet")):
+        root_labels = list(bad_spin_roots[ansatzes[0]][expansion])
+        positions = np.arange(len(root_labels))
+        bottom = np.zeros(len(root_labels))
+
+        for ansatz, color in zip(ansatzes, colors):
+            counts = [len(bad_spin_roots[ansatz][expansion][root]) for root in root_labels]
+            axis.bar(positions, counts, bottom=bottom, width=0.85, color=color, label=ansatz)
+            bottom += counts
+
+        tick_step = max(1, len(root_labels) // 12)
+        tick_positions = positions[::tick_step]
+        axis.set_xticks(tick_positions, [root_labels[index] for index in tick_positions])
+        axis.set_title(expansion.title())
+        axis.set_xlabel("QSE root")
+        axis.grid(axis="y", alpha=0.2)
+
+    axes[0].set_ylabel("Total bad roots")
+    handles, labels = axes[0].get_legend_handles_labels()
+    figure.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 0.98),
+                  ncol=3, frameon=False)
+    figure.suptitle(
+        rf"{active_space}: spin-contaminated roots ($|\Delta S^2| > {threshold}$)", y=1.04
+    )
+    sns.despine()
+    figure.tight_layout(rect=(0, 0, 1, 0.86))
+    return figure
 
 # ========================================================
 # Notebook 2: Dimensions of QSE Subspace
@@ -698,3 +664,34 @@ def plot_low_state_double_weight_scaling(double_weight_data):
     axis.legend(title="Exact state", frameon=False)
     figure.tight_layout()
     return figure
+
+
+def plot_s1_casci_composition(composition_data, molecule):
+    """Plot one molecule's exact-CASCI S1 excitation composition by active space."""
+    categories = ("singles", "paired_doubles", "mixed_doubles", "higher")
+    colors = {
+        "singles": "#4E79A7",
+        "paired_doubles": "#E15759",
+        "mixed_doubles": "#F28E2B",
+        "higher": "#B07AA1",
+    }
+    case = composition_data[composition_data["molecule"] == molecule]
+    active_spaces = case["active_space"].tolist()
+    positions = np.arange(len(active_spaces))
+
+    figure, axis = plt.subplots(figsize=(5.2, 3.7))
+    bottom = np.zeros(len(case))
+    for category in categories:
+        values = case[category].to_numpy(dtype=float)
+        axis.bar(positions, values, bottom=bottom, color=colors[category], width=0.72)
+        bottom += values
+
+    axis.set_ylim(0, 100)
+    axis.set_xticks(positions, active_spaces, rotation=45, ha="right")
+    axis.set_xlabel("Active space")
+    axis.set_ylabel("Exact CASCI weight (%)")
+    axis.set_title(molecule)
+    axis.grid(axis="y", alpha=0.18)
+    figure.tight_layout()
+    return figure
+
