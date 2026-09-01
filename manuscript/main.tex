@@ -1,41 +1,8 @@
 \documentclass[letterpaper]{article}
 
-\usepackage[T1]{fontenc}
-\usepackage{geometry}
-\geometry{margin = 1in}
-\usepackage{setspace}
+\input{preamble}
 
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{bm}
-
-\usepackage[style = chem-acs]{biblatex}
-\addbibresource{references.bib}
-
-\usepackage{graphicx}
-\usepackage{subcaption}
-\usepackage{float}
-\newfloat{scheme}{htbp}{los}
-\floatname{scheme}{Scheme}
-\newfloat{chart}{htbp}{loc}
-\floatname{chart}{Chart}
-\newfloat{graph}{htbp}{loh}
-
-\usepackage{booktabs}
-\usepackage{siunitx}
-\usepackage{pgfplotstable}
-\pgfplotsset{compat=1.18}
-\usepackage{chemformula}
-\usepackage[version = 4]{mhchem}
-
-\usepackage{hyperref}
-\usepackage{cleveref}
-\crefname{figure}{Fig.}{Figs.}
-\Crefname{figure}{Fig.}{Figs.}
-
-\setcounter{secnumdepth}{-1}
-
-\usepackage{authblk}
+\setcounter{secnumdepth}{2}
 
 \title{Is Quantum Subspace Expansion practical?}
 \author[1]{Naythan Yeo}
@@ -43,7 +10,6 @@
 \affil[1]{Institute of Advanced Intelligence and Computing}
 \date{*Email: naythan.yeo@gmail.com}
 
-\input{macros}
 \begin{document}
 
 \maketitle
@@ -79,10 +45,6 @@ interaction.
 Thank you A*Star whoohoooooo
 
 \section*{Data Availability}
-
-\clearpage
-\section*{Supporting Information}
-\input{sections/05_SI}
 
 \clearpage
 \printbibliography
