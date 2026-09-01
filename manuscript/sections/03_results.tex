@@ -2,6 +2,21 @@
 In this section, we study the spectral accuracy and representability of low-lying roots generated with QSE using statevector simulations. The QSE excitation energies are compared against exact CASCI energies within the same active space. Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2, to characterise QSE performance in the low-energy region of the spectrum.
 
 \subsubsection{General Trends in QSE Spectral Accuracy}
+
+
+For the smallest active spaces, $2e2o$, $2e3o$, and $4e3o$, the recovered spectra are nearly exact. Beyond these cases, the errors generally increase as the active space is enlarged.
+
+The near-exact recovery in the smallest active spaces is consistent with the relative dimensionality of the QSE subspace. In these cases, the one-body operator pool generates more basis states than there are physically accessible determinants within the relevant spin sector.
+The QSE subspace can therefore span most of the relevant Hilbert space, leaving little room for representability error.
+
+This favourable dimensionality does not persist as the active space grows. The number of one-body QSE operators scales polynomially, approximately as $n^2$, whereas the dimension of the full configuration-interaction (FCI) space grows combinatorially with the number of electrons and orbitals. 
+Therefore, the fraction of the many-electron space accessible to the generated QSE subspace decreases with system size. 
+
+At the largest active spaces considered in this study, the low-lying excited states are still not recovered to chemical accuracy. 
+This suggests that one-body expansion operators alone may be insufficient for chemically accurate excited-state calculations, and that a larger operator manifold consisting of two-body excitation operators may instead be required.
+Consequently, determining how the choice and size of the operator pool affect representability and spectral accuracy as active space grows will be essential for assessing the practical applicability of QSE beyond the relatively small active spaces considered in this work.
+
+
 \input{tables/results/table1_ansatz_errors}
 
 A clear dependence on the choice of reference ansatz is observed, with more expressive ansätze generally producing more accurate QSE spectra. The paired k-UpCCGSDSinglet ansatz restricts excitations heavily to only singles and paired doubles. Consequently, this ansatz exhibits the largest errors in the predicted spectrum. While increasing the number of layers from k=1 to k=3 systematically improves their performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restrictions of its excitation manifold.
@@ -13,21 +28,7 @@ Furthermore, we note that the influence of the reference ansatz is considerably 
 This behaviour can be understood from the construction of QSE. Although the projected Hamiltonian variationally refines all states within the QSE subspace, the ground-state solution remains strongly dominated by the original VQE reference. 
 Consequently, deficiencies in the reference wavefunction can only be partially corrected through the QSE expansion, making the accuracy of the ground-state energy more sensitive to the quality of the underlying VQE reference.
 In contrast, the excited states contain more substantial contributions from the other operator-generated basis states, which provide greater flexibility beyond the original reference. These contributions can partially compensate for imperfections in the VQE wavefunction, thereby reducing the sensitivity of the excited-state energies to the choice of ansatz.
- 
-Beyond the dependence on the reference ansatz, the excited states are generally recovered with appreciably larger errors than the ground state. 
-Among the low-lying excited states considered, S1 is consistently the least accurately reproduced, while T1 and T2 perform better but generally remain outside chemical accuracy. 
-The errors are also distributed unevenly across the molecular benchmark, with a broad spread and a small number of large-error outliers forming pronounced tails in the distribution (\cref{fig:si-error-distribution}). This skewness motivates the use of the median as a more representative measure of typical performance than the mean. 
 
-\subsubsection{Root assignment}
-We next examine the large-error cases in greater detail. We observe that in several instances, the target exact state is not recovered as a distinct state within the QSE spectrum. 
-Pyrrole (UCCSD) provides a clear example of this. The first excited singlet obtained from QSE has an energy of -205.883672 Ha, whereas the exact S1 and S2 energies are -205.988082 Ha and -205.883871 Ha respectively. 
-The QSE root also has negligible overlap with the exact S1 state, $4.14\times10^{-6}$, but an overlap of 0.997 with S2. 
-The recovered state is therefore an accurate approximation to S2 rather than S1, while no corresponding QSE root is recovered for S1. 
-This corresponds to a different failure mode compared to an exact state that is simply poorly represented.
-
-To better quantify the effect of these index-based root assignment errors, we additionally performed an overlap-based Hungarian matching that maximises the total wavefunction overlap between QSE and exact CASCI states. This removes the effects of missing or wrongly assigned roots on the raw errors, and instead presents them as unrecovered states.
-For UCCSD at 6e6o, S0 and T1 retain complete matching with no change in their errors. For S1 and T2, the fractions of recovered states decrease to $75\%$ and $93\%$, respectively, while the median errors decrease from 23.7 to 18.2 mHa for S1 and from 3.2 to 2.6 mHa for T2.
-Therefore, while this additional failure mode can also affect the low-lying states, it does not appear to be the dominant source of the observed errors.
 
 \subsubsection{Spin purity}
 We next examine the spin purity of the recovered QSE spectrum. Although the QSE operator pools used in this study are spin adapted, this does not by itself guarantee spin-pure Ritz states because the underlying VQE reference is not perfectly spin pure. 
@@ -44,53 +45,7 @@ The greater variational flexibility of UCCSD may therefore make it less sensitiv
 Taken together with the spectral-error analysis above, these results highlight UCCSD as a favourable compromise among the ansätze considered. 
 It maintains relatively low spectral errors while exhibiting substantially less spin contamination than the more expressive UCCGSD ansatz. UCCSD therefore provides a useful balance between spectral accuracy, spin purity, and ansatz complexity within the present implementation.
 
-\subsubsection{Geometric representability of exact states}
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=0.9\linewidth]{figures/projection_error/projection_error_6e6o_UCCSD.png}
-    \caption{Absolute QSE energy errors as a function of the projection of exact states onto the QSE subspace for UCCSD in the $6e6o$ active space. Results are shown for the lowest singlet and triplet states, with the dotted line indicating the chemical-accuracy threshold.}
-    \label{fig:projection-error}
-\end{figure}
 
-Beyond the failure modes discussed above, we next examine the geometric representability of the target states within the QSE subspace. 
-To quantify this, we define a projection metric for each exact state as the squared norm of its projection onto the full one-body-generated QSE subspace. 
-This directly measures how much of the exact wavefunction is captured by the QSE subspace.
-
-\Cref{fig:projection-error} compares the exact-state projection with the corresponding QSE energy error for S0, S1, T1 and T2. 
-For S0, the projections are strongly concentrated near unity, consistent with the ground state being well represented within the QSE subspace. 
-On the other hand, the excited states show reduced projections and larger energy errors, most significantly observed for S1. 
-
-As expected, low projection is generally associated with large energy errors, since a substantial component of the exact state lies outside the QSE subspace and cannot be represented by any linear combination of its basis states. 
-However, the converse is not necessarily true: projections exceeding 0.99 do not consistently yield energies within chemical accuracy, and a considerable spread in error remains even among these highly projected states. 
-
-This distinction is important in the context of the original QSE construction, which was motivated by the expectation that low-lying molecular excited states are dominated by single-electron promotions, such that a one-body-generated subspace captures a significant fraction of their wavefunction support \cite{mcclean2017qse}. 
-However, the projection results show that capturing the dominant support is not sufficient to guarantee spectral accuracy. 
-Even when an exact state lies almost entirely within the QSE subspace, the remaining missing component can contain energetically important directions that are absent from the projected problem. 
-Moreover, even a small component missing from the QSE subspace can change the orientation of the best Ritz approximation, effectively rotating the recovered state away from the exact target.
-Thus, a one-body-generated QSE subspace may capture most of the wavefunction while remaining incomplete in the directions required for accurate spectral recovery.
-
-\subsubsection{Active-space dependence of representability and accuracy}
-\begin{figure}[!ht]
-    \centering
-    \includegraphics[width=\linewidth]{figures/active_space_scaling/uccsd_low_lying_error_iqr.png}
-    \caption{Dependence of UCCSD QSE energy errors on active-space size. Results are shown for the lowest singlet and triplet states across the $2e2o$, $2e3o$, $4e3o$, $4e4o$, $4e5o$, $6e5o$, and $6e6o$ active spaces. Markers and horizontal error bars summarize the central error and spread across the molecular benchmark, while the dotted line denotes chemical accuracy.}
-    \label{fig:active-space-scaling}
-\end{figure}
-
-Lastly, we consider the effects of active space scaling on the accuracy of the recovered QSE spectra (\cref{fig:active-space-scaling}). 
-For the smallest active spaces, $2e2o$, $2e3o$, and $4e3o$, the recovered spectra are nearly exact. Beyond these cases, the errors generally increase as the active space is enlarged.
-
-The near-exact recovery in the smallest active spaces is consistent with the relative dimensionality of the QSE subspace. In these cases, the one-body operator pool generates more basis states than there are physically accessible determinants within the relevant spin sector.
-The QSE subspace can therefore span most of the relevant Hilbert space, leaving little room for representability error.
-
-This favourable dimensionality does not persist as the active space grows. The number of one-body QSE operators scales polynomially, approximately as $n^2$, whereas the dimension of the full configuration-interaction (FCI) space grows combinatorially with the number of electrons and orbitals. 
-Therefore, the fraction of the many-electron space accessible to the generated QSE subspace decreases with system size. 
-
-At the largest active spaces considered in this study, the low-lying excited states are still not recovered to chemical accuracy. 
-This suggests that one-body expansion operators alone may be insufficient for chemically accurate excited-state calculations, and that a larger operator manifold consisting of two-body excitation operators may instead be required.
-Consequently, determining how the choice and size of the operator pool affect representability and spectral accuracy as active space grows will be essential for assessing the practical applicability of QSE beyond the relatively small active spaces considered in this work.
-
-* TBC 6e7o, 8e7o and 8e8o data will include here later
 
 \clearpage
 \subsection{Stable Dimensions of QSE}
