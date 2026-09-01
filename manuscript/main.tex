@@ -1,14 +1,20 @@
 \documentclass[letterpaper]{article}
 
 \input{preamble}
+\input{metadata}
+\usepackage{xr-hyper}
+
+\IfFileExists{build/si/si.aux}{
+    \externaldocument{build/si/si}
+}{}
 
 \setcounter{secnumdepth}{2}
 
-\title{Is Quantum Subspace Expansion practical?}
-\author[1]{Naythan Yeo}
-\author[1]{Ang Shi Jun}
-\affil[1]{Institute of Advanced Intelligence and Computing}
-\date{*Email: naythan.yeo@gmail.com}
+\title{\ManuscriptTitle}
+\author[\ManuscriptAffiliationIndex]{\ManuscriptAuthorOne}
+\author[\ManuscriptAffiliationIndex]{\ManuscriptAuthorTwo}
+\affil[\ManuscriptAffiliationIndex]{\ManuscriptAffiliationOne}
+\date{Corresponding author: \CorrespondingAuthorEmail}
 
 \begin{document}
 

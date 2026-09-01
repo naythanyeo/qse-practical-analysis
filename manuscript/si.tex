@@ -1,13 +1,48 @@
 \documentclass[letterpaper]{article}
 
 \input{preamble}
+\input{metadata}
 
-\setcounter{secnumdepth}{-1}
+\setcounter{secnumdepth}{2}
 
 \begin{document}
 
-\section*{Supporting Information}
-\input{sections/s01_figures}
+\begin{center}
+    {\LARGE\bfseries Supporting Information\par}
+    \vspace{1.5em}
+    {\large\bfseries \ManuscriptTitle\par}
+    \vspace{1em}
+    {\normalsize \ManuscriptAuthorNames\par}
+    {\normalsize \textsuperscript{\ManuscriptAffiliationIndex}\ManuscriptAffiliationOne\par}
+    \vspace{0.5em}
+    {\normalsize *Corresponding author: \CorrespondingAuthorEmail\par}
+\end{center}
+
+\vspace{1.5em}
+
+% Re label SI sections figures tables and equations
+
+\setcounter{section}{0}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\theHsection}{SI.\arabic{section}}
+\renewcommand{\theHsubsection}{SI.\arabic{section}.\arabic{subsection}}
+
+\setcounter{figure}{0}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\theHfigure}{SI.\arabic{figure}}
+
+\setcounter{table}{0}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\theHtable}{SI.\arabic{table}}
+
+\setcounter{equation}{0}
+\renewcommand{\theequation}{S\arabic{equation}}
+\renewcommand{\theHequation}{SI.\arabic{equation}}
+
+\input{sections/s01_additional_computational_details}
+\input{sections/s02_reference_state_ansatz}
+\input{sections/s03_additional_results}
 
 \clearpage
 \printbibliography

@@ -3,6 +3,13 @@ In this section, we study the spectral accuracy and representability of low-lyin
 
 \subsubsection{General Trends in QSE Spectral Accuracy}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[
+        width=\linewidth
+    ]{figures/active_space_representability/uccsd_tiered_error_ridgelines.png}
+    \caption{Distribution of QSE energy errors across the molecular benchmark for the low-lying singlet and triplet states.}
+\end{figure}
 
 For the smallest active spaces, $2e2o$, $2e3o$, and $4e3o$, the recovered spectra are nearly exact. Beyond these cases, the errors generally increase as the active space is enlarged.
 
@@ -54,7 +61,7 @@ It maintains relatively low spectral errors while exhibiting substantially less 
     \centering
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/overlap_eigenvalue_spread/uccsd_6e6o.png}
+        \includegraphics[width=\linewidth]{figures/dimension_analysis/overlap_eigenvalue_spread/uccsd_6e6o.png}
         \caption{Overlap-eigenvalue spectrum.}
         \label{fig:eigenvalue-spectrum}
     \end{subfigure}
@@ -63,13 +70,14 @@ It maintains relatively low spectral errors while exhibiting substantially less 
 
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/overlap_eigenvector_composition/uccsd_6e6o.png}
+        \includegraphics[width=\linewidth]{figures/dimension_analysis/overlap_eigenvector_composition/uccsd_6e6o.png}
         \caption{Overlap-eigenvector composition.}
         \label{fig:eigenvector-composition}
     \end{subfigure}
     \caption{Structure of the UCCSD overlap matrix in the $6e6o$ active space. The upper panel shows the overlap-eigenvalue spectrum for the singlet and triplet sectors across the molecular benchmark. The lower panel decomposes the corresponding overlap eigenvectors into contributions from occupied-number operators, occupied-to-virtual operators, and other operators.}
     \label{fig:eigenvalue-distribution}
 \end{figure}
+
 Having examined the representability and spectral accuracy of the QSE subspace, we next turn to its numerical stability. 
 As discussed in the Introduction, very small eigenvalues of the overlap matrix $\mathbf{S}$ can strongly amplify noise, making the generalised eigenvalue problem highly sensitive to perturbations.
 Here, we examine the full eigenvalue spectrum of $\mathbf{S}$ (\cref{fig:eigenvalue-spectrum}) to understand why these near-null directions arise in the first place. 
@@ -207,7 +215,7 @@ Regardless of the degree of sparsity, the QSE matrix elements exhibit clear stru
 \subsubsection{Effects of Noise on Structure}
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/matrix_heatmaps/uccsd_6e6o_shot_overlap.png}
+    \includegraphics[width=\linewidth]{figures/scaling_future_work/matrix_heatmaps/uccsd_6e6o_shot_overlap.png}
     \caption{Effect of finite-shot noise on the structure of UCCSD overlap matrices in the $6e6o$ singlet sector. The statevector matrix is compared with matrices reconstructed using shot counts from $1\,\mathrm{k}$ to $1\,\mathrm{M}$, illustrating the progressive disruption of the underlying matrix structure by sampling noise.}
     \label{fig:shot-overlap-structure}
 \end{figure}
