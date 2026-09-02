@@ -1,3 +1,29 @@
-% Main-text computational methods will be migrated here incrementally from
-% sections/05_SI_methods.tex. The complete protocol is retained in the
-% Supporting Information during the migration.
+% ============================
+% Molecular Benchmark
+% ============================
+% Diagram, cite and show that molecule set is diverse, what its meant to represent 
+% How we benchmark QSE. Start by saying QSE must be truncated, so we define an active space of the frontier orbitals. 
+% We compare QSE against the exact solutions within each active space with CASCI. 
+
+% ============================
+% Quantum calculations
+% ============================
+% Qibo and Qibochem in one sentence 
+% We use all noiseless simulation on classical hardware etc
+% Hamiltonian construction 
+% JW mapping 
+
+% ============================
+% Workflow 
+% ============================
+% Ground state prepartion with VQE and ansatz (documented in S2)
+% Show equation of UCC ansatz, state that we use trotter 1
+% Apply QSE operators to the ground state reference
+% Show the QSE operator pool for singlet and triplet equations
+% For statistical noise simulations, we grouped pauli strings globally with QWC, then sampled the statevectors based on the number of shots 
+
+% ============================
+% Thresholding
+% ============================
+% Equations for thresholding, what each mean
+% Explicitly define thresholds used, for the noisy data 
