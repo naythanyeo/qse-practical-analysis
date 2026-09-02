@@ -1,32 +1,8 @@
 \subsubsection{Molecular Geometries and Active Space Preparation}
 The dataset used comprised 28 closed-shell organic molecules from Thiel's excited-state benchmark set \cite{thiels2008benchmark}. The published Cartesian nuclear coordinates were referenced directly and used without further optimisation. 
-For each molecule, Restricted Hartree-Fock calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set. This set of canonical molecular orbitals was optimised once and used consistently throughout all subsequent CASCI, VQE and QSE calculations in the study. 
-
-Active spaces (denoted $n_e e\, n_{\mathrm{o}} o$) comprised the $n_e / 2$ occupied molecular spatial orbitals closest to the HOMO and the $n_{\mathrm{o}} - n_e / 2$ virtual molecular spatial orbitals closest to the LUMO. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
-
-\subsubsection{Exact Reference}
-Within each active space, the exact reference energies and wavefunctions were obtained from complete active-space configuration interaction (CASCI) calculations performed using PySCF. 
-Calculations were separated by spin-projection sector $M_S$ by setting the number of active $\alpha$ and $\beta$ spin electrons to be 
-
-$n_\alpha = \frac{n_e}{2} + M_S, n_\beta = \frac{n_e}{2} - M_S$
-
-Singlet states were obtained from the $M_S=0$ sector, while triplet states were calculated in the $M_S=0, +1, -1$ sectors. For each active-space spin projection sector, the determinant-space dimension, and therefore the maximum number of available roots, was $\binom{n_{\mathrm{o}}}{n_\alpha} \binom{n_{\mathrm{o}}}{n_\beta}$. 
-
-Where available, the lowest 11 singlet states (ground state + 10 excited states), and the lowest 10 triplet states (within each spin projection sector) were calculated. To ensure that the target number of states was obtained, three times the required number of CASCI roots were initially requested from the FCI solver, subject to the maximum dimension of the corresponding determinant space. 
-The resulting roots were then filtered according to their $\Ssq$ expectation values, retaining only roots that satisfy $\left| \Ssq - S(S+1) \right| < 10^{-5}$ with $S=0$ for singlets and $S=1$ for triplets. 
-
-Throughout this study, wavefunctions were represented in a common active spin-orbital determinant basis by a state vector of length $\binom{2 n_{\mathrm{o}}}{n_{\mathrm{e}}}$. 
-This vector includes all determinants with $n_e$ electrons distributed among the $2n_{\mathrm{o}}$ active spin-orbitals (irrespective of their spin projections).
-Determinants were ordered lexicographically using an interleaved spin-orbital convention $(1\alpha, 1\beta, 2\alpha, 2\beta, \ldots)$.
-
-PySCF represented each wavefunction as a two-dimensional CI coefficient matrix with dimensions $\binom{n_{\mathrm{o}}}{n_{\mathrm{\alpha}}}$ by $\binom{n_{\mathrm{o}}}{n_{\mathrm{\beta}}}$, corresponding to the $\alpha$ and $\beta$ electron occupation strings. These coefficients were embedded into the corresponding entries of the common state-vector representation.  During this conversion, the fermionic phase arising from the permutation between PySCF's separated $\alpha$ and $\beta$ electron ordering and the interleaved spin-orbital convention was included explicitly.
 
 
-\subsubsection{Quantum Computing Framework}
-All quantum-circuit calculations in this study were performed using classical simulations implemented with the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. These frameworks were used to construct, represent and simulate the quantum circuits employed.
-A research fork of Qibochem was developed to support the computational workflow used in the study. The fork introduced configurable ansatz classes, optimised circuit evaluation routines, support for measuring spin observables, and dedicated functionality for constructing and sampling the projected matrices required for Quantum Subspace Expansion calculations. 
 
-All calculations in this work used ideal noiseless circuit simulations without modelling any hardware. Only finite-sampling noise arising from a limited number of measurement shots was considered in the relevant sections.
 
 \paragraph{Hamiltonian and Spin Operators.}
 For each active space, the electronic Hamiltonian was constructed in second quantisation as follows:
@@ -83,39 +59,7 @@ Parameters associated with excitation generators shared with the preceding ansat
 
 Following optimisation, the resulting VQE parameters were stored as a fixed ground-state reference wavefunction. This fixed reference set was used consistently for all subsequent statevector and finite-shot QSE calculations.
 
-\paragraph{QSE Operator Pools and Projected Matrices.}
-As discussed in the introduction, separate one-body operator pools were used to construct the singlet and triplet-targeting QSE subspaces. The singlet operator pool, $\mathcal{O}^{S}$, was defined as
 
-\QSESingletOperatorPoolEquation
-where $i$ and $j$ denote active spatial orbitals.
-
-The triplet operator pool, $\mathcal{O}^{T}$, was constructed from all three spin-projection components, which were collected into a single operator pool.
-\QSETripletOperatorPoolEquation
-
-The singlet operator pool therefore contains $n_{\mathrm{o}}^2$
-operators, while the triplet pool contains
-$3n_{\mathrm{o}}^2$ operators. Individual pool elements were enumerated as
-$\{\hat{O}_\mu\}$, with $\mu$ and $\nu$ indexing arbitrary operators within the given pool.
-
-Projected observable matrices were constructed for the overlap, Hamiltonian, and spin-squared matrices. Observable matrix elements were defined as follows: 
-\QSEProjectedObservablesEquation
-where the corresponding target observables were $\hat I, \hat H,$ and $\hat S^{2}$, respectively.
-
-The fermionic QSE expansion operators and each target observable were mapped separately to Pauli operators using the Jordan-Wigner transformation. The projected observables were then constructed by multiplication in the Pauli representation. Terms with coefficients of magnitude smaller than $10^{-12}$ were discarded after the final product construction. 
-The resulting Pauli-string expectation values were then evaluated with respect to the optimised VQE states, $\left|\Psi_{\mathrm{VQE}}\right\rangle$.
-For all calculations performed, only the diagonal and upper-triangular matrix elements, $\mu \leq \nu$ were constructed and evaluated. Lower-triangular matrix terms were then reconstructed using Hermitian symmetry.
-
-
-\paragraph{Finite-Shot Sampling.}
-Finite-shot sampling was used to model the effects of statistical measurement noise on the projected Hamiltonian and overlap matrices. 
-For each calculation, all unique Pauli strings in the projected Hamiltonian and overlap observable matrices were first collected into a global measurement pool. Then, a largest-first greedy qubit-wise-commuting (QWC) grouping algorithm was used to partition the global measurement pool. 
-Grouping was performed globally across elements from both matrices, which reduced the total number of commuting groups required. Preliminary data also showed that this method of global grouping, as opposed to grouping terms for each matrix element, resulted in much better agreement with the statevector results. 
-
-For each commuting group, a separate measurement circuit was constructed by appending basis-rotation gates to the optimized VQE circuit, such that all Pauli strings in the group could be measured in the computational $Z$ basis. Hadamard gates were applied to qubits measured in the $X$ basis, while $S^{\dagger}$ followed by a Hadamard gate was applied to qubits measured in the $Y$ basis. This produced a distinct rotated statevector for each commuting group.
-
-Measurement outcomes were generated for each rotated statevector using NumPy's multinomial sampler. The expectation values of all Pauli strings within a commuting group were estimated from the resulting sampled frequencies. These expectation values were then used to reconstruct the Hamiltonian and overlap matrices.
-
-At each specified shot count, the finite-shot calculation was repeated using ten statistically independent sampling iterations. The resulting Hamiltonian and overlap matrices were solved independently, and the reported energy errors were calculated from the mean of the ten independently obtained energies.
 
 \subsubsection{Numerical Analysis and Evaluation Metrics}
 \paragraph{Generalised Eigenvalue Problem.}
@@ -135,21 +79,7 @@ Therefore in practice, the following reduced eigenvalue equation is solved
 \ReducedEigenvalueEquation
 where $\tilde{\mathbf{V}}$ and $\tilde{\mathbf{V}}^{\dagger}$ denote a reduced form of $\mathbf{V}$ and $\mathbf{V}^{\dagger}$, retaining only a selected subset of its columns. This gives the wavefunction in the QSE operator basis as $\mathbf{c}_k=\tilde{\mathbf{V}}\mathbf{y}_k$.
 
-For all statevector calculations used in this work, the retained subset was chosen from a fixed maximum dimension determined by the active space and spin sector as follows. 
 
-\MaxDimensionsEquation
-
-The first term in each expression gives the maximum number of physically distinct singlet or triplet roots available within the corresponding active space. These values were obtained from differences between the dimensions of adjacent fixed-$M_S$ determinant sectors, such that
-
-$N_S=D_{M_S=S}-D_{M_S=S+1}$
-
-This subtraction isolates the number of spin-($S$) multiplets because the ($M_S=S$) sector contains one component from every state with total spin ($S$) or greater, whereas the ($M_S=S+1$) sector contains only components with total spin greater than ($S$).
-
-For the $2e2o$, $2e3o$, and $4e3o$ active spaces, the number of physically available roots was smaller than the nominal number of QSE expansion operators. The retained dimension was therefore capped by the corresponding physical root count. This cap was in place because it was noted empirically that additional operator directions beyond the physically available space produced near-null eigenvalues. More generally, this restriction applies to active spaces that do not include orbitals extending from HOMO-1 through LUMO+1. 
-
-For the triplet subspace, the retained dimension was further limited to ($3n_\mathrm{o}(n_\mathrm{o}-1)$). The triplet number operators were extremely weakly supported by the paired reference states and generated overlap eigenvalues that could not be resolved reliably above numerical precision. For consistency across ansatz families, these directions were therefore excluded for all triplet statevector calculations. 
-
-For finite-shot calculations, a threshold $\tau$ was used to define the retained subspace. Only eigenvectors with eigenvalues satisfying $\lambda_i > \tau$ were retained. The thresholds $\tau$ were drawn from a fixed logarithmic grid from $10^{-4}$ to $10^{0}$ in increments of 0.1 in the exponent. 
 
 \paragraph{Spin-expectation Evaluation.}
 

@@ -1,3 +1,6 @@
+% ================================
+% Section 1: Representability
+% ================================
 \subsection{Accuracy and Representability of the QSE Subspace}
 In this section, we study the spectral accuracy and representability of low-lying roots generated with QSE using statevector simulations. The QSE excitation energies are compared against exact CASCI energies within the same active space. Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2, to characterise QSE performance in the low-energy region of the spectrum.
 
@@ -23,7 +26,7 @@ At the largest active spaces considered in this study, the low-lying excited sta
 This suggests that one-body expansion operators alone may be insufficient for chemically accurate excited-state calculations, and that a larger operator manifold consisting of two-body excitation operators may instead be required.
 Consequently, determining how the choice and size of the operator pool affect representability and spectral accuracy as active space grows will be essential for assessing the practical applicability of QSE beyond the relatively small active spaces considered in this work.
 
-
+% Ansatz dependence
 \input{tables/results/table1_ansatz_errors}
 
 A clear dependence on the choice of reference ansatz is observed, with more expressive ansätze generally producing more accurate QSE spectra. The paired k-UpCCGSDSinglet ansatz restricts excitations heavily to only singles and paired doubles. Consequently, this ansatz exhibits the largest errors in the predicted spectrum. While increasing the number of layers from k=1 to k=3 systematically improves their performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restrictions of its excitation manifold.
@@ -53,7 +56,9 @@ Taken together with the spectral-error analysis above, these results highlight U
 It maintains relatively low spectral errors while exhibiting substantially less spin contamination than the more expressive UCCGSD ansatz. UCCSD therefore provides a useful balance between spectral accuracy, spin purity, and ansatz complexity within the present implementation.
 
 
-
+% ================================
+% Section 2: Dimension Analysis
+% ================================
 \clearpage
 \subsection{Stable Dimensions of QSE}
 \subsubsection{Eigenvalue Distribution}
@@ -196,7 +201,18 @@ For example, including two-body excitation operators would increase the operator
 If the observed dependence of finite-shot error on projected-matrix dimension persists, maintaining constant accuracy would then require approximately $\mathcal{O}\!\left(n_{\mathrm{orb}}^{8}\right)$ shots per commuting group. 
 The number of required measurement groups would also increase with the enlarged projected problem, leading to an even steeper scaling of the total measurement cost.
 
-\subsection{Structure of the Projected QSE Matrices}
+\subsection{Scaling and Future Work}
+\subsubsection{Addition of Doubles Operators}
+% Doubles error
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/scaling_future_work/ov_doubles_s1_error_comparison.png}
+    \caption{Comparison of $S_1$ QSE energy errors obtained with occupied-to-virtual singles and with an expanded operator pool including double excitations.}
+    \label{fig:si-ov-doubles-s1-error-comparison}
+\end{figure}
+
+% Talk about the effect of adding doubles operators 
+
 While the preceding analysis indicates steep measurement overhead, we find that the projected matrices themselves exhibit substantial structure that may provide opportunities for more efficient reconstruction. 
 In this section, we examine the recurring patterns and correlations within the projected $\mathbf{H}$ and $\mathbf{S}$ matrices, and how these features are affected by finite-shot sampling.
 
