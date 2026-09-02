@@ -10,7 +10,7 @@ In this section, we study the spectral accuracy and representability of low-lyin
     \centering
     \includegraphics[
         width=\linewidth
-    ]{figures/active_space_representability/uccsd_tiered_error_ridgelines.png}
+    ]{figures/active_space_representability/uccsd_tiered_error_ridgelines.pdf}
     \caption{Distribution of QSE energy errors across the molecular benchmark for the low-lying singlet and triplet states.}
 \end{figure}
 
@@ -66,7 +66,7 @@ It maintains relatively low spectral errors while exhibiting substantially less 
     \centering
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/dimension_analysis/overlap_eigenvalue_spread/uccsd_6e6o.png}
+        \includegraphics[width=\linewidth]{figures/dimension_analysis/overlap_eigenvalue_spread/uccsd_6e6o.pdf}
         \caption{Overlap-eigenvalue spectrum.}
         \label{fig:eigenvalue-spectrum}
     \end{subfigure}
@@ -75,7 +75,7 @@ It maintains relatively low spectral errors while exhibiting substantially less 
 
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/dimension_analysis/overlap_eigenvector_composition/uccsd_6e6o.png}
+        \includegraphics[width=\linewidth]{figures/dimension_analysis/overlap_eigenvector_composition/uccsd_6e6o.pdf}
         \caption{Overlap-eigenvector composition.}
         \label{fig:eigenvector-composition}
     \end{subfigure}
@@ -135,7 +135,7 @@ Unless otherwise stated, $N_{\mathrm{shots}}$ denotes the number of shots alloca
 \subsubsection{Effects of Thresholding to mitigate Sampling Noise}
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/shots/threshold_shot_error_6e6o.png}
+    \includegraphics[width=\linewidth]{figures/shots/threshold_shot_error_6e6o.pdf}
     \caption{Mean absolute QSE energy error as a function of the overlap-eigenvalue threshold for the $6e6o$ active space at different shot counts. The dotted line indicates chemical accuracy, and the curves show the trade-off between suppressing sampling-noise amplification and discarding physically relevant subspace directions.}
     \label{fig:threshold-shot-error}
 \end{figure}
@@ -154,13 +154,13 @@ Increasing the shot count improves the precision of the projected matrix element
     \centering
     \begin{subfigure}[t]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/shots/active_space_shot_scaling_regression.png}
+        \includegraphics[width=\linewidth]{figures/shots/active_space_shot_scaling_regression.pdf}
         \caption{Minimum mean QSE energy error and regression.}
         \label{fig:shot-error-scaling}
     \end{subfigure}\hfill
     \begin{subfigure}[t]{0.48\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/shots/best_threshold_heatmap.png}
+        \includegraphics[width=\linewidth]{figures/shots/best_threshold_heatmap.pdf}
         \caption{Optimal threshold across active spaces and shot counts.}
         \label{fig:optimal-threshold}
     \end{subfigure}
@@ -206,7 +206,7 @@ The number of required measurement groups would also increase with the enlarged 
 % Doubles error
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth]{figures/scaling_future_work/ov_doubles_s1_error_comparison.png}
+    \includegraphics[width=\linewidth]{figures/scaling_future_work/ov_doubles_s1_error_comparison.pdf}
     \caption{Comparison of $S_1$ QSE energy errors obtained with occupied-to-virtual singles and with an expanded operator pool including double excitations.}
     \label{fig:si-ov-doubles-s1-error-comparison}
 \end{figure}
@@ -231,7 +231,7 @@ Regardless of the degree of sparsity, the QSE matrix elements exhibit clear stru
 \subsubsection{Effects of Noise on Structure}
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/scaling_future_work/matrix_heatmaps/uccsd_6e6o_shot_overlap.png}
+    \includegraphics[width=\linewidth]{figures/scaling_future_work/matrix_heatmaps/uccsd_6e6o_shot_overlap.pdf}
     \caption{Effect of finite-shot noise on the structure of UCCSD overlap matrices in the $6e6o$ singlet sector. The statevector matrix is compared with matrices reconstructed using shot counts from $1\,\mathrm{k}$ to $1\,\mathrm{M}$, illustrating the progressive disruption of the underlying matrix structure by sampling noise.}
     \label{fig:shot-overlap-structure}
 \end{figure}

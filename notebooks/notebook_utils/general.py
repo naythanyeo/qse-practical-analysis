@@ -34,10 +34,10 @@ def save_table(df, subfolder, title):
     return output_path
 
 
-def save_figure(fig, subfolder, title, dpi=300):
-    output_path = output_figures_dir / subfolder / f"{title}.png"
+def save_figure(fig, subfolder, title):
+    output_path = output_figures_dir / subfolder / f"{title}.pdf"
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_path, dpi=dpi, bbox_inches="tight")
+    fig.savefig(output_path, bbox_inches="tight")
     return output_path
 
 
