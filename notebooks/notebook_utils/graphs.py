@@ -751,6 +751,12 @@ def plot_s1_casci_composition(composition_data, molecule):
         "mixed_doubles": "#F28E2B",
         "higher": "#B07AA1",
     }
+    labels = {
+        "singles": "Singles",
+        "paired_doubles": "Paired doubles",
+        "mixed_doubles": "Mixed doubles",
+        "higher": "Higher",
+    }
     case = composition_data[composition_data["molecule"] == molecule]
     active_spaces = case["active_space"].tolist()
     positions = np.arange(len(active_spaces))
@@ -759,7 +765,7 @@ def plot_s1_casci_composition(composition_data, molecule):
     bottom = np.zeros(len(case))
     for category in categories:
         values = case[category].to_numpy(dtype=float)
-        axis.bar(positions, values, bottom=bottom, color=colors[category], width=0.72)
+        axis.bar(positions, values, bottom=bottom, color=colors[category], label=labels[category], width=0.72)
         bottom += values
 
     axis.set_ylim(0, 100)
@@ -768,7 +774,9 @@ def plot_s1_casci_composition(composition_data, molecule):
     axis.set_ylabel("Exact CASCI weight (%)")
     axis.set_title(molecule)
     axis.grid(axis="y", alpha=0.18)
-    figure.tight_layout()
+    handles, legend_labels = axis.get_legend_handles_labels()
+    figure.legend(handles, legend_labels, loc="lower center", ncol=2, frameon=False, bbox_to_anchor=(0.5, 0.01))
+    figure.tight_layout(rect=(0, 0.12, 1, 1))
     return figure
 
 
