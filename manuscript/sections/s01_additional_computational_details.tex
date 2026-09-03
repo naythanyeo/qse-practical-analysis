@@ -1,6 +1,10 @@
 \section{Additional Computational Details}
 \label{sec:si-methods}
 
+% ============================
+% CASCI Root requesting
+% ============================
+
 \subsection{CASCI Root Computation}
 For each molecule, Restricted Hartree-Fock calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set. This set of canonical molecular orbitals was optimised once and used consistently throughout all subsequent CASCI, VQE and QSE calculations in the study. 
 
@@ -22,33 +26,20 @@ Determinants were ordered lexicographically using an interleaved spin-orbital co
 
 PySCF represented each wavefunction as a two-dimensional CI coefficient matrix with dimensions $\binom{n_{\mathrm{o}}}{n_{\mathrm{\alpha}}}$ by $\binom{n_{\mathrm{o}}}{n_{\mathrm{\beta}}}$, corresponding to the $\alpha$ and $\beta$ electron occupation strings. These coefficients were embedded into the corresponding entries of the common state-vector representation.  During this conversion, the fermionic phase arising from the permutation between PySCF's separated $\alpha$ and $\beta$ electron ordering and the interleaved spin-orbital convention was included explicitly.
 
-\subsection{Quantum Simulation Framework}
-All quantum-circuit calculations in this study were performed using classical simulations implemented with the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. These frameworks were used to construct, represent and simulate the quantum circuits employed.
-A research fork of Qibochem was developed to support the computational workflow used in the study. The fork introduced configurable ansatz classes, optimised circuit evaluation routines, support for measuring spin observables, and dedicated functionality for constructing and sampling the projected matrices required for Quantum Subspace Expansion calculations. 
-
-All calculations in this work used ideal noiseless circuit simulations without modelling any hardware. Only finite-sampling noise arising from a limited number of measurement shots was considered in the relevant sections.
+% ============================
+% QSE Details
+% ============================
 
 \subsection{Projected Hamiltonian and Overlap Matrix Evaluation}
-Separate one-body operator pools were used to construct the singlet and triplet-targeting QSE subspaces. The singlet operator pool, $\mathcal{O}^{S}$, was defined as
 
-\QSESingletOperatorPoolEquation
-where $i$ and $j$ denote active spatial orbitals.
-
-The triplet operator pool, $\mathcal{O}^{T}$, was constructed from all three spin-projection components, which were collected into a single operator pool.
-\QSETripletOperatorPoolEquation
-
-The singlet operator pool therefore contains $n_{\mathrm{o}}^2$
-operators, while the triplet pool contains
-$3n_{\mathrm{o}}^2$ operators. Individual pool elements were enumerated as
-$\{\hat{O}_\mu\}$, with $\mu$ and $\nu$ indexing arbitrary operators within the given pool.
-
-Projected observable matrices were constructed for the overlap, Hamiltonian, and spin-squared matrices. Observable matrix elements were defined as follows: 
-\QSEProjectedObservablesEquation
-where the corresponding target observables were $\hat I, \hat H,$ and $\hat S^{2}$, respectively.
 
 The fermionic QSE expansion operators and each target observable were mapped separately to Pauli operators using the Jordan-Wigner transformation. The projected observables were then constructed by multiplication in the Pauli representation. Terms with coefficients of magnitude smaller than $10^{-12}$ were discarded after the final product construction. 
 The resulting Pauli-string expectation values were then evaluated with respect to the optimised VQE states, $\left|\Psi_{\mathrm{VQE}}\right\rangle$.
 For all calculations performed, only the diagonal and upper-triangular matrix elements, $\mu \leq \nu$ were constructed and evaluated. Lower-triangular matrix terms were then reconstructed using Hermitian symmetry.
+
+% ============================
+% Sampling?
+% ============================
 
 \subsection{Finite-Shot Sampling}
 Finite-shot sampling was used to model the effects of statistical measurement noise on the projected Hamiltonian and overlap matrices. 
@@ -61,6 +52,9 @@ Measurement outcomes were generated for each rotated statevector using NumPy's m
 
 At each specified shot count, the finite-shot calculation was repeated using ten statistically independent sampling iterations. The resulting Hamiltonian and overlap matrices were solved independently, and the reported energy errors were calculated from the mean of the ten independently obtained energies.
 
+% ============================
+% SV Truncation, Stable ranks
+% ============================
 
 \subsection{Statevector Subspace Rank Truncation}
 For all statevector calculations used in this work, the retained subset was chosen from a fixed maximum dimension determined by the active space and spin sector as follows. 

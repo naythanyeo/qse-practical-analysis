@@ -1,36 +1,91 @@
 % ============================
 % Molecular Benchmark
 % ============================
+\subsection{Molecular Benchmark and Electronic-Structure Calculations}
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/keynote_figures/28_molecules.pdf}
-    \caption{Molecules included in the 28-molecule excited-state benchmark.}
+    \caption{Molecules included in the 28-molecule excited-state benchmark, grouped by their chemical classes.}
     \label{fig:benchmark-molecules}
 \end{figure}
 
-% Diagram, cite and show that molecule set is diverse, what its meant to represent 
-% How we benchmark QSE. Start by saying QSE must be truncated, so we define an active space of the frontier orbitals. 
-% We compare QSE against the exact solutions within each active space with CASCI. 
+The dataset used in this study comprised 28 closed-shell organic molecules from Thiel's excited-state benchmark set \cite{thiels2008benchmark}. 
+These molecules were selected to cover the most important chromophores in organic photochemistry, and comprise hydrocarbons, heterocycles, carbonyls, amides and nucleobases (Figure~\ref{fig:benchmark-molecules}).
+The published Cartesian nuclear coordinates were referenced directly and used without further optimisation. 
+
+For each molecule, Restricted Hartree-Fock calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set, forming a set of canonical molecular orbitals there were optimised once and used consistently throughout the study.
+Active spaces (denoted $n_e e\, n_{\mathrm{o}} o$) comprised the $n_e / 2$ occupied molecular spatial orbitals closest to the HOMO and the $n_{\mathrm{o}} - n_e / 2$ virtual molecular spatial orbitals closest to the LUMO. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
+
+For each active space, the electronic Hamiltonian was constructed in second quantisation as follows:
+\ElectronicHamiltonianEquation
+where $E_{\mathrm{nuc}}$ is the core nuclear repulsion energy and $p, q, r, s$ index the active spin-orbitals. $h_{pq}$ and $g_{pqrs}$ are the one- and two-electron integral coefficients evaluated in the fixed canonical Hartree-Fock MO basis.
+
+Exact reference energies and wavefunctions were obtained from complete active-space configuration interaction (CASCI) diagonalisation of the active-space Hamiltonian in PySCF. 
+These reference states were subsequently used to assess the accuracy of the ground- and excited-state energies obtained from QSE.
 
 % ============================
 % Quantum calculations
 % ============================
-% Qibo and Qibochem in one sentence 
-% We use all noiseless simulation on classical hardware etc
-% Hamiltonian construction 
-% JW mapping 
+\subsection{Quantum Workflow}
+In this study, all quantum-circuit calculations were performed using classical simulations implemented with the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. 
+Ideal noiseless simulations were employed throughout, with finite-sampling noise introduced only in the sections involving a limited number of measurement shots.
+The same electronic hamiltonian (\cref{eq:electronic-hamiltonian}) was used for all quantum calculations, and all fermionic operators were mapped to qubit operators via the Jordan-Wigner (JW) transformation.
 
 % ============================
 % Workflow 
 % ============================
-% Ground state prepartion with VQE and ansatz (documented in S2)
-% Show equation of UCC ansatz, state that we use trotter 1
-% Apply QSE operators to the ground state reference
-% Show the QSE operator pool for singlet and triplet equations
+\subsection{QSE Workflow}
+The QSE workflow begins with the preparation of a ground-state reference wavefunction using the Variational Quantum Eigensolver (VQE). 
+We used a Unitary Coupled-Cluster (UCC) ansatz to parameterise the ground state wavefunction. 
+\UCCReferenceStateEquation
+where $\left|\Phi_{\mathrm{HF}}\right\rangle$ is the Hartree-Fock reference determinant and $\hat{T}(\boldsymbol{\theta})$ denotes the coupled cluster excitation operator, defined explicitly in Section S2.
+The variational parameters $\boldsymbol{\theta}$ were optimised with the L-BFGS-B optimiser to minimise the exact statevector expectation value of the Hamiltonian (\cref{eq:electronic-hamiltonian}).
+Unless otherwise stated, all UCC operators were implemented using the first-order Suzuki Trotter product approximation.
+
+This optimised ground-state reference was then used to construct the projected Hamiltonian and overlap matrices for the QSE calculations. 
+Following the original QSE formulation \cite{mcclean2017qse}, we restricted the expansion operator pool to one-body excitation operators. 
+To enable a spin-resolved analysis of the excited-state spectrum, these operators were further spin adapted to construct separate singlet and triplet operator pools. This allows low-lying singlet and triplet states to be targeted and analysed independently. 
+
+The singlet operator pool, $\mathcal{O}^{S}$, was defined as
+
+\QSESingletOperatorPoolEquation
+where $i$ and $j$ denote active spatial orbitals.
+
+The triplet operator pool, $\mathcal{O}^{T}$, was constructed from all three spin-projection components, which were collected into a single operator pool.
+\QSETripletOperatorPoolEquation
+
+
+
+The singlet operator pool therefore contains $n_{\mathrm{o}}^2$
+operators, while the triplet pool contains
+$3n_{\mathrm{o}}^2$ operators. Individual pool elements were enumerated as
+$\{\hat{O}_\mu\}$, with $\mu$ and $\nu$ indexing arbitrary operators within the given pool.
+
+Projected observable matrices were constructed for the overlap, Hamiltonian, and spin-squared matrices. Observable matrix elements were defined as follows: 
+\QSEProjectedObservablesEquation
+where the corresponding target observables were $\hat I, \hat H,$ and $\hat S^{2}$, respectively.
+
+
 % For statistical noise simulations, we grouped pauli strings globally with QWC, then sampled the statevectors based on the number of shots 
 
 % ============================
 % Thresholding
 % ============================
-% Equations for thresholding, what each mean
-% Explicitly define thresholds used, for the noisy data 
+\subsection{Post-processing and Thresholding}
+As introduced in \cref{eq:generalised-eigenvalue-problem-k}
+
+Due to the non-orthogonality of the QSE basis states, solving for the energy eigenvalues and wavefunctions involves solving a generalised eigenvalue problem $\mathbf{H}\mathbf{c} = E\mathbf{S}\mathbf{c}$. This was done by first diagonalising the Hermitian overlap matrix $\mathbf{S}$. 
+
+\DiagonaliseSEquation
+where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\Lambda$ is a diagonal matrix containing the eigenvalues of $\mathbf{S}$. Then, we define the whitening factor
+
+\WhitenSEquation
+
+Using $c=Vy$, we get
+
+\TransformToOrdinaryEigenvalueEquation
+
+Numerical instabilities arise when the eigenvalues used are tiny or near-null, because noise perturbations will be greatly amplified by a factor $\frac{1}{\sqrt{\lambda}}$. 
+Therefore in practice, the following reduced eigenvalue equation is solved
+\ReducedEigenvalueEquation
+where $\tilde{\mathbf{V}}$ and $\tilde{\mathbf{V}}^{\dagger}$ denote a reduced form of $\mathbf{V}$ and $\mathbf{V}^{\dagger}$, retaining only a selected subset of its columns. This gives the wavefunction in the QSE operator basis as $\mathbf{c}_k=\tilde{\mathbf{V}}\mathbf{y}_k$.

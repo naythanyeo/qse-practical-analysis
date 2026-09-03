@@ -1,13 +1,6 @@
-\subsubsection{Molecular Geometries and Active Space Preparation}
-The dataset used comprised 28 closed-shell organic molecules from Thiel's excited-state benchmark set \cite{thiels2008benchmark}. The published Cartesian nuclear coordinates were referenced directly and used without further optimisation. 
-
-
-
 
 \paragraph{Hamiltonian and Spin Operators.}
-For each active space, the electronic Hamiltonian was constructed in second quantisation as follows:
-\ElectronicHamiltonianEquation
-where $E_{\mathrm{nuc}}$ is the core nuclear repulsion energy and $p, q, r, s$ index the active spin-orbitals. $h_{pq}$ and $g_{pqrs}$ are the one- and two-electron integral coefficients evaluated in the fixed canonical Hartree-Fock MO basis.
+
 
 Spin operators were constructed in the same second quantisation basis as follows.
 
@@ -15,7 +8,7 @@ Spin operators were constructed in the same second quantisation basis as follows
 \SpinLadderOperatorsEquation
 \SpinSquaredEquation
 
-All fermionic Hamiltonian, spin and excitation operators were mapped to qubit operators using the Jordan-Wigner (JW) transformation.
+
 
 \paragraph{Ground State Reference.}
 As introduced above, approximate ground-state reference wavefunctions were prepared using parameterised Unitary Coupled-Cluster (UCC) ansatz. 
@@ -59,25 +52,6 @@ Parameters associated with excitation generators shared with the preceding ansat
 
 Following optimisation, the resulting VQE parameters were stored as a fixed ground-state reference wavefunction. This fixed reference set was used consistently for all subsequent statevector and finite-shot QSE calculations.
 
-
-
-\subsubsection{Numerical Analysis and Evaluation Metrics}
-\paragraph{Generalised Eigenvalue Problem.}
-Due to the non-orthogonality of the QSE basis states, solving for the energy eigenvalues and wavefunctions involves solving a generalised eigenvalue problem $\mathbf{H}\mathbf{c} = E\mathbf{S}\mathbf{c}$. This was done by first diagonalising the Hermitian overlap matrix $\mathbf{S}$. 
-
-\DiagonaliseSEquation
-where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\Lambda$ is a diagonal matrix containing the eigenvalues of $\mathbf{S}$. Then, we define the whitening factor
-
-\WhitenSEquation
-
-Using $c=Vy$, we get
-
-\TransformToOrdinaryEigenvalueEquation
-
-Numerical instabilities arise when the eigenvalues used are tiny or near-null, because noise perturbations will be greatly amplified by a factor $\frac{1}{\sqrt{\lambda}}$. 
-Therefore in practice, the following reduced eigenvalue equation is solved
-\ReducedEigenvalueEquation
-where $\tilde{\mathbf{V}}$ and $\tilde{\mathbf{V}}^{\dagger}$ denote a reduced form of $\mathbf{V}$ and $\mathbf{V}^{\dagger}$, retaining only a selected subset of its columns. This gives the wavefunction in the QSE operator basis as $\mathbf{c}_k=\tilde{\mathbf{V}}\mathbf{y}_k$.
 
 
 

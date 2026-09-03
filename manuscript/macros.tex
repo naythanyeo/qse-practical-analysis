@@ -8,41 +8,6 @@
 % Introduction
 % =================================
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-% UCC OPERATORS
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-\newcommand{\UCCUnitaryEquation}{%
-    \begin{equation}
-        \hat{U}_{\mathrm{UCC}}(\boldsymbol{\theta})
-        =
-        \exp\!\left(
-            \hat{T}(\boldsymbol{\theta})
-            -
-            \hat{T}^{\dagger}(\boldsymbol{\theta})
-        \right)
-        =
-        \exp\!\left[
-            \sum_{\lambda}
-            \theta_{\lambda}
-            \left(
-                \hat{T}_{\lambda}
-                -
-                \hat{T}_{\lambda}^{\dagger}
-            \right)
-        \right].
-        \label{eq:ucc-unitary}
-    \end{equation}%
-}
-% UCC Reference State Equation
-\newcommand{\UCCReferenceStateEquation}{%
-    \begin{equation}
-        \left|\Psi_{\mathrm{UCC}}(\boldsymbol{\theta})\right\rangle
-        =
-        \hat{U}_{\mathrm{UCC}}(\boldsymbol{\theta})
-        \left|\Phi_{\mathrm{HF}}\right\rangle .
-        \label{eq:ucc-reference-state}
-    \end{equation}%
-}
-% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 % QSE Introduction
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 % Projected Hamiltonian and Overlap Matrices
@@ -163,6 +128,21 @@
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 % UCC
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% UCC Reference State Equation
+\newcommand{\UCCReferenceStateEquation}{%
+    \begin{equation}
+        \left|\Psi_{\mathrm{VQE}}(\boldsymbol{\theta})\right\rangle
+        =
+        \exp\!\left[
+            \hat{T}(\boldsymbol{\theta})
+            -
+            \hat{T}^{\dagger}(\boldsymbol{\theta})
+        \right]
+        \left|\Phi_{\mathrm{HF}}\right\rangle.
+        \label{eq:ucc-reference-state}
+    \end{equation}%
+}
+
 % Suzuki Trotter First-Order Approximation
 \newcommand{\SuzukiTrotterFirstOrderEquation}{%
     \begin{equation}
