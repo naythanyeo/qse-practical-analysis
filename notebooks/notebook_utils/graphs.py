@@ -16,6 +16,7 @@ from scipy.stats import linregress
 import base64
 
 from notebook_utils.chem import CHEMICAL_ACCURACY
+from notebook_utils.general import parse_active_space
 
 
 def show_scrollable_figs(figs, max_height=750, max_width="100%", dpi=150):
@@ -465,27 +466,43 @@ def plot_best_threshold_heatmap(best_threshold_data):
     return figure
 
 
-def plot_error_scaling_regression(scaling_points):
-    """
-    Plot mean shot errors against the orbital and shot-count scaling coordinate
-    Input list of coordinates
-    Plot and do linear regression
-    """
-    x, y = np.asarray(scaling_points, dtype=float).T
+def plot_error_scaling_regression(error_data):
+    """Plot mean minimum low-state errors, coloured by active space."""
+    active_spaces = sorted(error_data, key=parse_active_space)
+    active_space_colors = plt.get_cmap("tab10")(np.arange(len(active_spaces)))
+    x_values = []
+    y_values = []
+
+    figure, axis = plt.subplots(figsize=(11, 6))
+    for active_space, color in zip(active_spaces, active_space_colors):
+        shot_errors = error_data[active_space]
+        n_shots = np.asarray(sorted(shot_errors), dtype=float)
+        mean_errors = np.asarray([shot_errors[int(shots)] for shots in n_shots], dtype=float)
+        _, num_orbitals = parse_active_space(active_space)
+        scaling_coordinate = num_orbitals**2 / np.sqrt(n_shots)
+
+        axis.scatter(
+            scaling_coordinate, mean_errors, color=color, edgecolors="black", linewidths=0.35,
+            s=52, label=active_space, zorder=3,
+        )
+        x_values.append(scaling_coordinate)
+        y_values.append(mean_errors)
+
+    x = np.concatenate(x_values)
+    y = np.concatenate(y_values)
     regression = linregress(x, y)
     x_fit = np.linspace(x.min(), x.max(), 200)
 
-    figure, axis = plt.subplots(figsize=(8, 6))
-    axis.scatter(x, y, color="black", alpha=0.65)
-    axis.plot(x_fit, regression.intercept + regression.slope * x_fit, color="black")
+    axis.plot(x_fit, regression.intercept + regression.slope * x_fit, color="black", zorder=2)
     axis.text(0.04, 0.95, rf"$R^2 = {regression.rvalue**2:.3f}$",
               transform=axis.transAxes, va="top")
-    axis.set_xlabel(r"$N_{\mathrm{orb}}^2 / \sqrt{N_{\mathrm{shots}}}$")
-    axis.set_ylabel("Mean minimum energy error (mHa)")
-    axis.set_title("Shot-Noise Scaling of Minimum QSE Error")
+    axis.set_xlabel(r"$n_{\mathrm{orb}}^2 / \sqrt{N_{\mathrm{shots}}}$")
+    axis.set_ylabel("Mean minimum low-state error (mHa)")
+    axis.set_title("Shot-Noise Scaling of Minimum QSE Error by Active Space")
     axis.grid(alpha=0.2)
+    axis.legend(ncol=7, frameon=False, loc="lower center", bbox_to_anchor=(0.5, -0.31))
     sns.despine()
-    figure.tight_layout()
+    figure.tight_layout(rect=(0, 0.16, 1, 1))
     return figure
 
 
