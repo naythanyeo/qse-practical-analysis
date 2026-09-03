@@ -42,8 +42,9 @@ where $\left|\Phi_{\mathrm{HF}}\right\rangle$ is the Hartree-Fock reference dete
 The variational parameters $\boldsymbol{\theta}$ were optimised with the L-BFGS-B optimiser to minimise the exact statevector expectation value of the Hamiltonian (\cref{eq:electronic-hamiltonian}).
 Unless otherwise stated, all UCC operators were implemented using the first-order Suzuki Trotter product approximation.
 
-This optimised ground-state reference was then used to construct the projected Hamiltonian and overlap matrices for the QSE calculations. 
-Following the original QSE formulation \cite{mcclean2017qse}, we restricted the expansion operator pool to one-body excitation operators. 
+This optimised VQE ground-state wavefunction was then used as the reference state for QSE calculations. 
+As introduced above, QSE constructs a trial subspace by applying a set of expansion operators to the reference state. 
+Following the original QSE formulation \cite{mcclean2017qse}, we restricted the expansion operator pool to one-body fermionic operators. 
 To enable a spin-resolved analysis of the excited-state spectrum, these operators were further spin adapted to construct separate singlet and triplet operator pools. This allows low-lying singlet and triplet states to be targeted and analysed independently. 
 
 The singlet operator pool, $\mathcal{O}^{S}$, was defined as
@@ -54,19 +55,15 @@ where $i$ and $j$ denote active spatial orbitals.
 The triplet operator pool, $\mathcal{O}^{T}$, was constructed from all three spin-projection components, which were collected into a single operator pool.
 \QSETripletOperatorPoolEquation
 
+The projected Hamiltonian and overlap matrices were then constructed as 
+\QSEProjectedMatricesEquation
+where $\mu$ and $\nu$ index the expansion operators within the corresponding QSE operator pool. 
 
-
-The singlet operator pool therefore contains $n_{\mathrm{o}}^2$
-operators, while the triplet pool contains
-$3n_{\mathrm{o}}^2$ operators. Individual pool elements were enumerated as
-$\{\hat{O}_\mu\}$, with $\mu$ and $\nu$ indexing arbitrary operators within the given pool.
-
-Projected observable matrices were constructed for the overlap, Hamiltonian, and spin-squared matrices. Observable matrix elements were defined as follows: 
-\QSEProjectedObservablesEquation
-where the corresponding target observables were $\hat I, \hat H,$ and $\hat S^{2}$, respectively.
-
-
-% For statistical noise simulations, we grouped pauli strings globally with QWC, then sampled the statevectors based on the number of shots 
+In the absence of finite-shot sampling, the optimized VQE circuit was simulated to obtain the corresponding statevector, from which the required expectation values and projected matrix elements were evaluated exactly. 
+For finite-shot calculations, the Pauli terms contributing to the projected matrices were first grouped globally (across $\mathbf{H}$ and $\mathbf{S}$) into qubit-wise commuting (QWC) measurement sets. 
+For each group, the corresponding basis-rotation gates were first appended to the optimized VQE circuit. 
+The resulting rotated statevector was then sampled multinomially in the computational ($Z$) basis for the prescribed number of shots.
+These samples were used to estimate the expectation values for the projected matrices.
 
 % ============================
 % Thresholding

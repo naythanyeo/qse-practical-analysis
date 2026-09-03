@@ -11,23 +11,6 @@
 % QSE Introduction
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 % Projected Hamiltonian and Overlap Matrices
-\newcommand{\QSEProjectedMatricesEquation}{%
-    \begin{equation}
-        \begin{aligned}
-            H_{\mu\nu}
-            &=
-            \left\langle\Psi_{\mathrm{ref}}\right|
-            \hat{O}_\mu^\dagger \hat{H} \hat{O}_\nu
-            \left|\Psi_{\mathrm{ref}}\right\rangle, \\
-            S_{\mu\nu}
-            &=
-            \left\langle\Psi_{\mathrm{ref}}\right|
-            \hat{O}_\mu^\dagger \hat{O}_\nu
-            \left|\Psi_{\mathrm{ref}}\right\rangle.
-        \end{aligned}
-        \label{eq:qse-projected-matrices}
-    \end{equation}%
-}
 
 \newcommand{\KthReferenceStateEquation}{%
     \begin{equation}
@@ -177,24 +160,25 @@
 }
 % QSE Triplet Operator Pool
 \newcommand{\QSETripletOperatorPoolEquation}{%
-    \begin{align}
+    \begin{gather}
         \hat{O}^{T,0}_{ij}
-        &=
+        =
         \frac{1}{\sqrt{2}}
         \left(
             \hat{a}^{\dagger}_{i\alpha}\hat{a}_{j\alpha}
             -
             \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\beta}
-        \right), \\
+        \right),
+        \qquad
         \hat{O}^{T,+1}_{ij}
-        &=
+        =
         \hat{a}^{\dagger}_{i\alpha}\hat{a}_{j\beta},
         \qquad
         \hat{O}^{T,-1}_{ij}
         =
         \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\alpha}, \\
         \mathcal{O}^{T}
-        &=
+        =
         \left\{
             \hat{O}^{T,m}_{ij}
             \mathrel{\big|}
@@ -202,24 +186,23 @@
             \ m \in \{-1, 0, +1\}
         \right\}.
         \label{eq:qse-triplet-operator-pool}
-    \end{align}%
+    \end{gather}%
 }
-% QSE Projected Observables (Observables only not on states)
-\newcommand{\QSEProjectedObservablesEquation}{%
-    \begin{equation}
-        \bar{s}_{\mu\nu}
+
+\newcommand{\QSEProjectedMatricesEquation}{%
+    \begin{gather}
+        H_{\mu\nu}
         =
-        \hat{O}_\mu^\dagger \hat{O}_\nu,
-        \qquad
-        \bar{h}_{\mu\nu}
+        \left\langle\Psi_{\mathrm{ref}}\right|
+        \hat{O}_\mu^\dagger \hat{H} \hat{O}_\nu
+        \left|\Psi_{\mathrm{ref}}\right\rangle, \\
+        S_{\mu\nu}
         =
-        \hat{O}_\mu^\dagger \hat{H} \hat{O}_\nu,
-        \qquad
-        \bar{z}_{\mu\nu}
-        =
-        \hat{O}_\mu^\dagger \hat{S}^2 \hat{O}_\nu.
-        \label{eq:qse-projected-observables}
-    \end{equation}%
+        \left\langle\Psi_{\mathrm{ref}}\right|
+        \hat{O}_\mu^\dagger \hat{O}_\nu
+        \left|\Psi_{\mathrm{ref}}\right\rangle.
+        \label{eq:qse-projected-matrices}
+    \end{gather}%
 }
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
