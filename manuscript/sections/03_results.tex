@@ -172,27 +172,16 @@ Increasing the shot count improves the precision of the projected matrix element
 \subsubsection{Active Space Dependence of Shot Noise}
 \begin{figure}[!ht]
     \centering
-    \begin{subfigure}[t]{0.48\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/shots/active_space_shot_scaling_regression.pdf}
-        \caption{Minimum mean QSE energy error and regression.}
-        \label{fig:shot-error-scaling}
-    \end{subfigure}\hfill
-    \begin{subfigure}[t]{0.48\linewidth}
-        \centering
-        \includegraphics[width=\linewidth]{figures/shots/best_threshold_heatmap.pdf}
-        \caption{Optimal threshold across active spaces and shot counts.}
-        \label{fig:optimal-threshold}
-    \end{subfigure}
-    \caption{Finite-shot scaling and threshold selection across active spaces. (a) Minimum mean QSE energy error as a function of the active-space scaling variable $N_{\mathrm{orb}}^2/\sqrt{N_{\mathrm{shots}}}$, with the linear regression and coefficient of determination shown. (b) Mean optimal overlap-eigenvalue threshold-ladder index as a function of active space and shot count, where index $0$ corresponds to $10^{-4}$ and index $40$ to $1$.}
-    \label{fig:shot-scaling}
+    \includegraphics[width=\linewidth]{figures/shots/active_space_shot_scaling_regression.pdf}
+    \caption{Threshold-optimised mean low-state QSE energy error as a function of the active-space scaling variable $N_{\mathrm{orb}}^2/\sqrt{N_{\mathrm{shots}}}$. Colours identify the active space, while the black line and annotation show the global linear regression and coefficient of determination.}
+    \label{fig:shot-error-scaling}
 \end{figure}
 
 We further find that finite-shot errors depend systematically on the size of the QSE projected matrices. 
 Empirically, the minimum error after threshold optimisation scales approximately as 
 \ErrorScalingEquation
 where $n_{\mathrm{orb}}$ is the number of active spatial orbitals (\cref{fig:shot-error-scaling}). 
-Consistent with this trend, the optimal overlap threshold generally increases with the active-space size and decreases with shot count (\cref{fig:optimal-threshold}). 
+Consistent with this trend, the optimal overlap threshold generally increases with the active-space size and decreases with shot count (\cref{fig:si-optimal-threshold}).
 This indicates that progressively stronger regularisation is required as the projected problem grows or as the sampling precision is reduced. 
 
 This behaviour can be rationalised from the accumulation of finite-sampling errors across the projected matrices. 
