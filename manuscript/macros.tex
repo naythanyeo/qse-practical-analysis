@@ -222,25 +222,19 @@
 % Whitening Equation
 \newcommand{\WhitenSEquation}{%
     \begin{equation}
-        \mathbf{V}
+        \tilde{\mathbf{V}}
         =
-        \mathbf{U}\boldsymbol{\Lambda}^{-1/2},
+        \tilde{\mathbf{U}}\tilde{\boldsymbol{\Lambda}}^{-1/2},
         \qquad
-        \mathbf{V}^{\dagger}\mathbf{S}\mathbf{V} = \mathbf{I}.
+        \tilde{\mathbf{V}}^{\dagger}
+        \mathbf{S}
+        \tilde{\mathbf{V}}
+        =
+        \mathbf{I}.
         \label{eq:whiten-s}
     \end{equation}%
 }
-% Ordinary Eigenvalue Equation
-\newcommand{\TransformToOrdinaryEigenvalueEquation}{%
-    \begin{equation}
-        \mathbf{V}^{\dagger}\mathbf{H}\mathbf{V}\mathbf{y}
-        =
-        E\mathbf{V}^{\dagger}\mathbf{S}\mathbf{V}\mathbf{y}
-        =
-        E\mathbf{y}.
-        \label{eq:transform-to-ordinary-eigenvalue}
-    \end{equation}%
-}
+
 % Reduced Eigenvalue Equation
 \newcommand{\ReducedEigenvalueEquation}{%
     \begin{equation}

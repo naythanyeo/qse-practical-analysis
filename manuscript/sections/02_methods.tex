@@ -68,21 +68,19 @@ These samples were used to estimate the expectation values for the projected mat
 % ============================
 % Thresholding
 % ============================
-\subsection{Post-processing and Thresholding}
-As introduced in \cref{eq:generalised-eigenvalue-problem-k}
-
-Due to the non-orthogonality of the QSE basis states, solving for the energy eigenvalues and wavefunctions involves solving a generalised eigenvalue problem $\mathbf{H}\mathbf{c} = E\mathbf{S}\mathbf{c}$. This was done by first diagonalising the Hermitian overlap matrix $\mathbf{S}$. 
-
+\subsection{Generalised Eigenvalue Problem and Thresholding}
+In this work, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} was regularised by restricting the solution to a truncated eigenspace of the overlap matrix $\mathbf{S}$.
+The matrix was first diagonalised as
 \DiagonaliseSEquation
-where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\Lambda$ is a diagonal matrix containing the eigenvalues of $\mathbf{S}$. Then, we define the whitening factor
+where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\Lambda$ is a diagonal matrix containing the eigenvalues of $\mathbf{S}$. Then, we define the reduced whitening transformation
 
 \WhitenSEquation
+where $\tilde{\mathbf{U}}$ and $\tilde{\boldsymbol{\Lambda}}$ contain only the retained overlap eigendirections. 
+For finite-shot calculations, eigendirections were retained when $\lambda_i > \tau$, where $\tau$ denotes the specified overlap-eigenvalue threshold. 
+For statevector calculations, no finite threshold was applied. Instead, only numerically null directions were removed according to the stable numerical rank at machine precision (\cref{sec:si-methods}).
 
-Using $c=Vy$, we get
+Using $c=Vy$, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} is thereby reduced to 
 
-\TransformToOrdinaryEigenvalueEquation
-
-Numerical instabilities arise when the eigenvalues used are tiny or near-null, because noise perturbations will be greatly amplified by a factor $\frac{1}{\sqrt{\lambda}}$. 
-Therefore in practice, the following reduced eigenvalue equation is solved
 \ReducedEigenvalueEquation
-where $\tilde{\mathbf{V}}$ and $\tilde{\mathbf{V}}^{\dagger}$ denote a reduced form of $\mathbf{V}$ and $\mathbf{V}^{\dagger}$, retaining only a selected subset of its columns. This gives the wavefunction in the QSE operator basis as $\mathbf{c}_k=\tilde{\mathbf{V}}\mathbf{y}_k$.
+
+This gives the wavefunction in the QSE operator basis as $\mathbf{c}_k=\tilde{\mathbf{V}}\mathbf{y}_k$.
