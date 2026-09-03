@@ -9,15 +9,16 @@ These limitations have motivated hybrid quantum-classical algorithms that use qu
 Quantum Subspace Methods (QSM) build on this idea by projecting the full eigenvalue problem onto a compact trial subspace. If the chosen subspace accurately captures the low-energy manifold, the target ground and excited state solutions can be recovered without diagonalising the full many-body Hamiltonian \cite{Motta2024QSMReview}. 
 
 % PARA 4: Formalisation of QSE
-Quantum Subspace Expansion (QSE), introduced by McClean et al. \cite{mcclean2017qse}, is a prominent operator-generated realisation of this framework. QSE constructs a trial subspace by applying a selected set of operators ${\hat{O}_{\mu}}$ to a reference state $\left|\Psi_{\mathrm{ref}}\right\rangle$, often the VQE ground state. The full many-body Hamiltonian is represented within this subspace through the projected Hamiltonian and overlap matrices,
-\QSEProjectedMatricesEquation
-The $k$-th approximate state is then written as
+Quantum Subspace Expansion (QSE), introduced by McClean et al. \cite{mcclean2017qse}, is a prominent operator-generated realisation of this framework. 
+QSE constructs a trial subspace by applying a selected set of operators ${\hat{O}_{\mu}}$ to a reference state $\left|\Psi_{\mathrm{ref}}\right\rangle$, often the VQE ground state. 
+Within this subspace, the $k$-th approximate state is represented as a linear combination of the resulting operator-generated states,
 \KthReferenceStateEquation
-where $\mathbf{c}_k$ is the corresponding vector of expansion coefficients. Applying the Rayleigh-Ritz variational procedure within this trial subspace yields the coefficients and Ritz energies through the generalised eigenvalue problem.
+where $\mathbf{c}_k$ contains the coefficients determining the contribution of each basis state.
+These coefficients and the associated energies are obtained by contructing the projected Hamiltonian and overlap matrices, $\mathbf{H}$ and $\mathbf{S}$, and solving the generalised eigenvalue problem
 \GeneralisedEigenvalueProblemKEquation
 
 % PARA 5: Limitations of QSE
-In general, the operator-generated basis states are not orthogonal, such that $\mathbf{S} \neq \mathbf{I}$. Solving this generalised eigenvalue problem typically requires a whitening transformation containing factors proportional to $\frac{1}{\sqrt{\lambda_i}}$, whereby $\lambda_i$ are the eigenvalues of $\mathbf{S}$. 
+In general, the operator-generated basis states are not orthogonal, such that $\mathbf{S} \neq \mathbf{I}$. As such, solving this generalised eigenvalue problem requires a whitening transformation containing factors proportional to $\frac{1}{\sqrt{\lambda_i}}$, whereby $\lambda_i$ are the eigenvalues of $\mathbf{S}$. 
 If the generated basis states are nearly linearly-dependent,  $\mathbf{S}$ develops very small or even near-null eigenvalues. 
 Consequently, measurement errors in the matrix elements are strongly amplified, rendering the projected problem numerically unstable. This ill-conditioning of $\mathbf{S}$ is a well-known limitation of QSE, and particularly consequential because statistical shot noise is inherent to real quantum hardware measurements. 
 
@@ -33,4 +34,5 @@ Furthermore, QSE does not require its expansion operators to satisfy the vacuum-
 Much of the existing QSE literature has evaluated the method using selected molecular systems, often at distorted geometries chosen to probe strongly correlated or numerically challenging regimes. Although these studies have established important limitations in subspace representability and numerical stability, it remains unclear how frequently such limitations arise across chemically diverse molecules under more routine equilibrium conditions. Recent work has also shown that overlap-matrix thresholding can suppress instabilities in the generalized eigenvalue problem. However, the appropriate regularization generally depends on both the underlying system and the level of measurement noise, while overly aggressive thresholding may remove physically relevant subspace directions. A broader characterization is therefore needed to determine how QSE accuracy, representability, and numerical recoverability behave across molecular systems, and how regularization should be applied in practice.
 * TBC will add more citations here
 % PARA 8: Contributions of work
+
 In this work, we address these questions through a systematic benchmark of spin-resolved QSE across 28 chemically varied molecules \cite{thiels2008benchmark}. Statevector simulations are first used to isolate the intrinsic representability and accuracy of the operator-generated subspace. We compare several reference ansatz classes, ranging from restricted to more expressive constructions, to determine how the prepared reference influences the recoverable spectrum. We then analyse the origins and practical consequences of overlap-matrix ill-conditioning under finite-shot sampling, including its dependence on the overlap spectrum and regularization threshold. Finally, we quantify the associated scaling and measurement requirements, provide practical guidance for threshold selection, and identify directions for improving the construction and numerical treatment of QSE subspaces. The principal contribution of this work is therefore a systematic assessment of when molecular QSE remains both sufficiently expressive and numerically recoverable for practical excited-state calculations.
