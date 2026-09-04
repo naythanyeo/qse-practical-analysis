@@ -7,6 +7,7 @@ The following subsections detail the spin-resolved CASCI root-selection procedur
 % ============================
 
 \subsection{CASCI Root Computation}
+\label{sec:si-casci-root-computation}
 All CASCI calculations were separated by spin-projection sector $M_S$ by setting the number of active $\alpha$ and $\beta$ spin electrons to be 
 
 $n_\alpha = \frac{n_e}{2} + M_S, n_\beta = \frac{n_e}{2} - M_S$
@@ -21,6 +22,7 @@ The resulting roots were then filtered according to their $\Ssq$ expectation val
 % ============================
 
 \subsection{Wavefunction Representation}
+\label{sec:si-wavefunction-representation}
 Throughout this study, wavefunctions were represented in a common active spin-orbital determinant basis by a state vector of length $\binom{2 n_{\mathrm{o}}}{n_{\mathrm{e}}}$. 
 This vector includes all determinants with $n_e$ electrons distributed among the $2n_{\mathrm{o}}$ active spin-orbitals (irrespective of their spin projections).
 Determinants were ordered lexicographically using an interleaved spin-orbital convention $(1\alpha, 1\beta, 2\alpha, 2\beta, \ldots)$.
@@ -32,6 +34,7 @@ PySCF represented each wavefunction as a two-dimensional CI coefficient matrix w
 % ============================
 
 \subsection{Projected Hamiltonian and Overlap Matrix Evaluation}
+\label{sec:si-projected-matrices}
 To construct the projected QSE matrix elements, the fermionic QSE expansion operators and each target observable were mapped separately to Pauli operators using the Jordan-Wigner transformation. 
 The projected observables were then constructed by multiplication in the Pauli representation. 
 Terms with coefficients of magnitude smaller than $10^{-12}$ were discarded after the final product construction. 
@@ -43,6 +46,7 @@ For all calculations performed, only the diagonal and upper-triangular matrix el
 % ============================
 
 \subsection{Finite-Shot Sampling}
+\label{sec:si-finite-shot-sampling}
 For each finite-shot calculation, all unique Pauli strings contributing to the projected Hamiltonian and overlap matrices were collected into a single global measurement pool and partitioned using a largest-first greedy qubit-wise-commuting (QWC) grouping algorithm. 
 For each group, basis-rotation gates were appended to the optimized VQE circuit so that all Pauli strings could be measured in the computational $Z$ basis. 
 Hadamard gates were applied for $X$-basis measurements, while $S^{\dagger}$ followed by a Hadamard gate was used for $Y$-basis measurements.
@@ -59,6 +63,7 @@ The projected matrices were solved independently for each run, and reported ener
 % ============================
 
 \subsection{Statevector Subspace Rank Truncation}
+\label{sec:si-statevector-rank-truncation}
 For all statevector calculations used in this work, the retained subset was chosen from a fixed maximum dimension determined by the active space and spin sector as follows. 
 
 \MaxDimensionsEquation
