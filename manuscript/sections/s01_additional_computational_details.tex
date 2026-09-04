@@ -42,6 +42,27 @@ The resulting Pauli-string expectation values were then evaluated either exactly
 For all calculations performed, only the diagonal and upper-triangular matrix elements, $\mu \leq \nu$ were constructed and evaluated. Lower-triangular matrix terms were then reconstructed using Hermitian symmetry.
 
 % ============================
+% Spin
+% ============================
+\subsection{Spin}
+\label{sec:si-spin-expectation}
+Spin operators were constructed in the same second quantisation basis as follows.
+
+\SpinZEquation
+\SpinLadderOperatorsEquation
+\SpinSquaredEquation
+
+For the $k^\mathrm{th}$ recovered state, the spin expectation value was calculated as follows:
+
+\SpinExpectationQSEBasisEquation
+
+Using $\mathbf{c}_k=\tilde{\mathbf{V}}\mathbf{y}_k$ and
+$\tilde{\mathbf{V}}^{\dagger}\mathbf{S}\tilde{\mathbf{V}}=\mathbf{I}$, this
+expression becomes
+
+\SpinExpectationShortenedBasisEquation
+
+% ============================
 % Sampling
 % ============================
 

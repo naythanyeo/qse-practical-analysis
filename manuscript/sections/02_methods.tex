@@ -57,7 +57,7 @@ The triplet operator pool, $\mathcal{O}^{T}$, was constructed from all three spi
 
 The projected Hamiltonian and overlap matrices were then constructed as 
 \QSEProjectedMatricesEquation
-where $\mu$ and $\nu$ index the expansion operators within the corresponding QSE operator pool. 
+where $\mu$ and $\nu$ index the expansion operators within the corresponding QSE operator pool. The spin character of each resulting QSE eigenstate was additionally evaluated using a projected spin-squared matrix (\cref{sec:si-spin-expectation}).
 
 In the absence of finite-shot sampling, the optimized VQE circuit was simulated to obtain the corresponding statevector, from which the required expectation values and projected matrix elements were evaluated exactly. 
 For finite-shot calculations, the Pauli terms contributing to the projected matrices were first grouped globally (across $\mathbf{H}$ and $\mathbf{S}$) into qubit-wise commuting (QWC) measurement sets. 
@@ -77,7 +77,7 @@ where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\Lambda$ is a
 \WhitenSEquation
 where $\tilde{\mathbf{U}}$ and $\tilde{\boldsymbol{\Lambda}}$ contain only the retained overlap eigendirections. 
 For finite-shot calculations, eigendirections were retained when $\lambda_i > \tau$, where $\tau$ denotes the specified overlap-eigenvalue threshold. 
-For statevector calculations, no finite threshold was applied. Instead, only numerically null directions were removed according to the stable numerical rank at machine precision (\cref{sec:si-methods}).
+For statevector calculations, no finite threshold was applied. Instead, only numerically null directions were removed according to the stable numerical rank at machine precision (\cref{sec:si-statevector-rank-truncation}).
 
 Using $c=Vy$, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} is thereby reduced to 
 
