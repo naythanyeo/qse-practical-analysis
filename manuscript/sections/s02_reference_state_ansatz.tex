@@ -2,7 +2,7 @@
 \label{sec:si-ansatz}
 This section provides additional details on the UCC ansätze used in this work. 
 We first define the different ansatz classes and describe the VQE optimization procedure used to determine their parameters. 
-We then present the spin diagnostics and supplementary spin-purity results obtained for the different reference ansätze.
+We then characterize the spin properties of each ansatz and present supplementary analysis of the corresponding spin contamination.
 
 % ========================
 % Ansatz Definition
@@ -49,20 +49,12 @@ Before optimisation, ansatz parameters were initialised based on the following h
 \mathrm{UCCGSD}.
 \]
 
-Parameters associated with excitation generators shared with the preceding ansatz were initialised with the previously optimised amplitudes, while newly introduced generators were initialised to zero. The initial occupied-to-virtual double-excitation parameters were estimated using second-order Moller-Plesset perturbation theory (MP2). For parameter transfer from a \(k\)-UpCCGSDSinglet ansatz to a subsequent ansatz, the optimized amplitudes associated with each generator were summed across the \(k\) layers and used as the initial amplitude for the corresponding generator
-
-% ========================
-% Spin Definition 
-% ========================
-\subsection{Spin Operators and Expectation Values}
-\label{sec:si-spin-operators}
-To evaluate the spin expectation values 
-
+Parameters associated with excitation generators shared with the preceding ansatz were initialised with the previously optimised amplitudes, while newly introduced generators were initialised to zero. The initial occupied-to-virtual double-excitation parameters were estimated using second-order Moller-Plesset perturbation theory (MP2). For parameter transfer from a \(k\)-UpCCGSDSinglet ansatz to a subsequent ansatz, the optimized amplitudes associated with each generator were summed across the \(k\) layers and used as the initial amplitude for the corresponding generator.
 
 % ========================
 % Spin Analysis
 % ========================
-\subsection{Spin Purity Discussions}
+\subsection{Ansatz-Dependent Spin Purity}
 \label{sec:si-spin-purity}
 
 \begin{figure}[htbp]
@@ -72,6 +64,26 @@ To evaluate the spin expectation values
     \label{fig:si-spin-contaminated-roots}
 \end{figure}
 
+As discussed in the main text, the extent of spin contamination in the recovered QSE spectrum depends on the choice of reference ansatz. 
+This dependence arises because the variational reference itself may not be perfectly spin pure. 
+When the QSE expansion operators are applied to this state and the resulting basis states are combined, residual components belonging to other spin sectors can be carried into the recovered QSE states, even when spin-adapted operator pools are used. 
+The spin purity of the reference can therefore influence that of the resulting QSE spectrum, which we analyse in greater detail here. 
+
+We first examine how these spin-contaminated states are distributed across the recovered spectrum (\cref{fig:si-spin-contaminated-roots}).
+We observe that spin contamination is relatively uncommon among the lower-lying roots, but becomes increasingly prevalent at higher energies. 
+Its extent also depends strongly on the reference ansatz: the paired ansätze produce almost entirely spin-pure spectra, whereas the more expressive UCCGSD ansatz exhibits the most severe spin contamination among the ansätze considered.
+This trend is consistent with the different restrictions imposed by the ansätze. 
+The paired ansätze permit only paired double excitations, strongly constraining the variational manifold and largely preserving the paired-electron character of the reference state. 
+By contrast, UCCGSD employs a generalized excitation manifold in which excitations are not restricted by the occupied–virtual partition and may involve arbitrary active orbitals. 
+This greater flexibility introduces substantially more unpaired excitation pathways and therefore a greater opportunity for spin mixing, consistent with the larger spin contamination observed for UCCGSD.
+
 \input{tables/results/table_S1_spin_contamination}
 
+Interestingly, the spin-adapted UCCSDSinglet ansatz, which ties parameters associated with equivalent spatial-orbital transitions, exhibits greater spin contamination than the more flexible UCCSD ansatz, both in the number of contaminated roots (\cref{fig:si-spin-contaminated-roots}) and in the mean spin deviation (\cref{tab:si-low-lying-spin-contamination}). 
+
 \input{tables/results/table_s2_spin_mean_trotter}
+To examine whether this behaviour arises from the finite-order Trotter approximation, we repeated the UCCSD and UCCSDSinglet calculations with increasing numbers of Trotter steps. 
+The spin contamination of UCCSDSinglet decreases systematically with increasing Trotter order, whereas that of UCCSD remains approximately unchanged (\cref{tab:s2-spin-mean-trotter}). 
+In the present calculations, the spin-purity advantage associated with parameter tying becomes apparent only beyond 16 Trotter steps. 
+This dependence indicates that the unexpectedly larger spin contamination of UCCSDSinglet at low Trotter order is primarily associated with the finite-product approximation. 
+The greater variational flexibility of UCCSD may therefore make it less sensitive to these Trotterisation errors at low Trotter order, partially offsetting the loss of explicit spin adaptation.

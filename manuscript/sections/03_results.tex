@@ -30,18 +30,19 @@ Consequently, determining how the choice and size of the operator pool affect re
 % Discussion on the fact that ansatz contains doubles, but wrong percentage 
 
 % Case studies 
-
-% CS1: 2 double bond molecules 
-
-% CS2: delayed active space errors, eg benzene 
-
-% CS3: imidazole, generally with no double bonds molecules 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{figures/keynote_figures/case_study_imidazole_benzene.pdf}
     \caption{Active-space dependence of the representative Benzene and Imidazole case studies.}
     \label{fig:benzene-imidazole-case-studies}
 \end{figure}
+
+% CS1: 2 double bond molecules 
+
+% CS2: delayed active space errors, eg benzene 
+
+% CS3: imidazole, generally with no double bonds molecules 
+
 
 % Conclusion for this section 
 
@@ -61,16 +62,7 @@ In contrast, the excited states contain more substantial contributions from the 
 
 
 \subsubsection{Spin purity}
-We next examine the spin purity of the recovered QSE spectrum. Although the QSE operator pools used in this study are spin adapted, this does not by itself guarantee spin-pure Ritz states because the underlying VQE reference is not perfectly spin pure. 
-Consequently, small spin-contaminated components of the reference state can be carried into the QSE subspace by the excitation operators.
-We therefore first examine how these spin-contaminated states are distributed across the recovered spectrum (\cref{fig:si-spin-contaminated-roots}).
-
-We observe that spin contamination is relatively uncommon among the lower-lying roots, but becomes increasingly prevalent at higher energies. 
-Its extent also depends strongly on the reference ansatz: the paired ansätze produce almost entirely spin-pure spectra, whereas the more expressive UCCGSD ansatz exhibits the most severe spin contamination among the ansätze considered.
-
-Interestingly, the spin-adapted UCCSDSinglet ansatz, which ties parameters associated with equivalent spatial-orbital transitions, exhibits greater spin contamination than the more flexible UCCSD ansatz, both in the number of contaminated roots (\cref{fig:si-spin-contaminated-roots}) and in the mean spin deviation (Table S1). 
-We attribute this behaviour to errors introduced by the Trotter approximation. As the number of Trotter steps is increased, the spin contamination of UCCSDSinglet decreases systematically, whereas that of UCCSD remains approximately unchanged. In our calculations, the benefit of parameter tying becomes apparent only beyond 16 Trotter steps (Table S2). 
-The greater variational flexibility of UCCSD may therefore make it less sensitive to these Trotterisation errors at low Trotter order, partially offsetting the loss of explicit spin adaptation.
+We next examine the spin purity of the recovered QSE spectrum. 
 
 Taken together with the spectral-error analysis above, these results highlight UCCSD as a favourable compromise among the ansätze considered. 
 It maintains relatively low spectral errors while exhibiting substantially less spin contamination than the more expressive UCCGSD ansatz. UCCSD therefore provides a useful balance between spectral accuracy, spin purity, and ansatz complexity within the present implementation.
