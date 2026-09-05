@@ -57,7 +57,6 @@ def dimension_solve(H, S, dim):
     # Solve the regular eigenvalue problem
     solved_energies, wavefunctions = la.eigh(H_transformed)
     return solved_energies, wavefunctions
-    
 
 
 def get_Vr_th(S, threshold):
@@ -68,6 +67,7 @@ def get_Vr_th(S, threshold):
     V_r = V[:, mask]
     return V_r
 
+
 def get_Vr_dim(S, dim):
     sigma, U = la.eigh(S)
     scale = np.diag(1 / np.sqrt(sigma))
@@ -75,12 +75,14 @@ def get_Vr_dim(S, dim):
     V_r = V[:, -min(dim, len(V)):]
     return V_r
 
-# Solve the eigenvalue problem and get spin values for roots
-def solve_energy_spin_dim(H, S, Z, dim):
+
+# Solve the eigenvalue problem with threshold and get spin values for roots
+def solve_energy_spin_th(H, S, Z, threshold):
     sigma, U = la.eigh(S)
     scale = np.diag(1/np.sqrt(sigma))
     V = U @ scale
-    V_r = V[:, -min(dim, len(V)):]
+    mask = sigma > threshold
+    V_r = V[:, mask]
     V_r_adj = V_r.conj().T
     H_transformed = V_r_adj @ H @ V_r 
     energies, orth_vectors = la.eigh(H_transformed)
@@ -97,6 +99,7 @@ def solve_energy_spin_dim(H, S, Z, dim):
     return energies, qse_wavefunctions, spins
 
 
+# Returns condition number of overlap matrix based on filtered dimensions
 def condition_number_dim(S, dimension):
     eigenvalues = np.sort(la.eigvalsh(np.asarray(S, dtype=complex)).real)[::-1]
     eigenvalues = eigenvalues[:dimension]
