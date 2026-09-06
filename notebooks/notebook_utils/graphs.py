@@ -239,37 +239,40 @@ def plot_q1_best_root_transition_map(overlap_data):
 def plot_bad_spin_roots(bad_spin_roots, active_space, threshold=0.01):
     """
     Fig SI 1
-    Input: Bad spin roots count in a dictionary, active space 
-    Plot bad-spin root counts for one active space, separated by expansion
-    Active space and threshold for title label
+    Input: Contamination arrays keyed by ansatz, expansion, and one-based raw index.
+    Count contaminated retained eigenvectors in energy order, separated by expansion.
+    Missing eigenvectors contribute no observations; counts are not rates.
     """
     ansatzes = list(bad_spin_roots)
     colors = sns.color_palette("colorblind", len(ansatzes))
     figure, axes = plt.subplots(1, 2, figsize=(16, 5.5), sharey=True)
 
     for axis, expansion in zip(axes, ("singlet", "triplet")):
-        root_labels = list(bad_spin_roots[ansatzes[0]][expansion])
+        root_labels = sorted({
+            root for ansatz in ansatzes
+            for root in bad_spin_roots[ansatz][expansion]
+        })
         positions = np.arange(len(root_labels))
         bottom = np.zeros(len(root_labels))
 
         for ansatz, color in zip(ansatzes, colors):
-            counts = [len(bad_spin_roots[ansatz][expansion][root]) for root in root_labels]
+            counts = [len(bad_spin_roots[ansatz][expansion].get(root, [])) for root in root_labels]
             axis.bar(positions, counts, bottom=bottom, width=0.85, color=color, label=ansatz)
             bottom += counts
 
         tick_step = max(1, len(root_labels) // 12)
         tick_positions = positions[::tick_step]
         axis.set_xticks(tick_positions, [root_labels[index] for index in tick_positions])
-        axis.set_title(expansion.title())
-        axis.set_xlabel("QSE root")
+        axis.set_title(f"{expansion.title()} expansion")
+        axis.set_xlabel("Energy-ordered QSE eigenvector index")
         axis.grid(axis="y", alpha=0.2)
 
-    axes[0].set_ylabel("Total bad roots")
+    axes[0].set_ylabel("Number of spin-contaminated eigenvectors")
     handles, labels = axes[0].get_legend_handles_labels()
     figure.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 0.98),
                   ncol=3, frameon=False)
     figure.suptitle(
-        rf"{active_space}: spin-contaminated roots ($|\Delta S^2| > {threshold}$)", y=1.04
+        rf"{active_space}: raw QSE spin contamination ($|\Delta S^2| > {threshold}$)", y=1.04
     )
     sns.despine()
     figure.tight_layout(rect=(0, 0, 1, 0.86))
@@ -367,14 +370,14 @@ def plot_eigenvector_composition(composition_data, active_space):
 
 def plot_dimension_error_distribution(dimension_errors):
     """
-    Compare maximum and stable QSE-dimension errors by low-lying state.
+    Compare thresholded and stable-dimension QSE errors by low-lying state.
     Input: Dictionary containing all the errors
-    Plots max vs stable states box plot, coloured 
+    Plots threshold vs stable dimensions box plot, coloured
     """
     states = ("s0", "s1", "t1", "t2")
     methods = {
-        "max_states": ("Max states", "tab:blue"),
-        "stable_states": ("Stable states", "tab:orange"),
+        "threshold": ("Threshold = 1e-8", "tab:blue"),
+        "stable_states": ("Stable dimensions", "tab:orange"),
     }
     positions = np.arange(len(states))
     figure, axis = plt.subplots(figsize=(9, 6))
@@ -395,7 +398,7 @@ def plot_dimension_error_distribution(dimension_errors):
 
     axis.set_xticks(positions, states)
     axis.set_ylabel("Absolute energy error (mHa)")
-    axis.set_title("UCCSD 6e6o: Maximum and Stable QSE Dimensions")
+    axis.set_title("UCCSD 6e6o: Threshold vs Stable QSE Dimensions")
     axis.grid(axis="y", alpha=0.2)
     axis.legend(frameon=False)
     sns.despine()
@@ -424,6 +427,7 @@ def plot_threshold_shot_errors(error_data, thresholds):
                  label="Chemical accuracy")
     axis.set_xscale("log")
     axis.set_ylim(0, 20)
+    axis.set_xlim(1e-3, 1)
     axis.set_xlabel("Overlap eigenvalue threshold")
     axis.set_ylabel("Mean absolute energy error (mHa)")
     axis.set_title("Mean Error Against Threshold and Shot Count")
