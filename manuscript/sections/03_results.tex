@@ -2,11 +2,13 @@
 % Section 1: Representability
 % ================================
 \subsection{Accuracy and Representability of the QSE Subspace}
-In this section, we study the spectral accuracy and representability of low-lying roots generated with QSE using statevector simulations. The QSE excitation energies are compared against exact CASCI energies within the same active space. Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2, to characterise QSE performance in the low-energy region of the spectrum.
+In this section, we study the spectral accuracy and representability of low-lying roots generated with QSE using statevector simulations. 
+The QSE excitation energies are compared against exact CASCI energies within the same active space. 
+Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2, to characterise QSE performance in the low-energy region of the spectrum.
 
-\subsubsection{General Trends in QSE Spectral Accuracy}
+\subsubsection{Overview of statevector QSE performance}
 
-\begin{figure}[htbp]
+\begin{figure}[!ht]
     \centering
     \includegraphics[
         width=\linewidth
@@ -14,28 +16,45 @@ In this section, we study the spectral accuracy and representability of low-lyin
     \caption{Distribution of QSE energy errors across the molecular benchmark for the low-lying singlet and triplet states.}
 \end{figure}
 
-For the smallest active spaces, $2e2o$, $2e3o$, and $4e3o$, the recovered spectra are nearly exact. Beyond these cases, the errors generally increase as the active space is enlarged.
+Across the low-lying states, QSE performance tends to deteriorate as the active space is enlarged. 
+For the smallest active spaces, $2e2o$, $2e3o$, and $4e3o$, the recovered spectra are nearly exact. 
+Beyond these cases, substantially larger errors are observed across the benchmark. 
 
-The near-exact recovery in the smallest active spaces is consistent with the relative dimensionality of the QSE subspace. In these cases, the one-body operator pool generates more basis states than there are physically accessible determinants within the relevant spin sector.
+The near-exact recovery in the smallest active spaces is consistent with the relative dimensionality of the QSE subspace. 
+In these cases, the one-body operator pool generates more basis states than there are physically accessible determinants within the relevant spin sector.
 The QSE subspace can therefore span most of the relevant Hilbert space, leaving little room for representability error.
-
 This favourable dimensionality does not persist as the active space grows. The number of one-body QSE operators scales polynomially, approximately as $n^2$, whereas the dimension of the full configuration-interaction (FCI) space grows combinatorially with the number of electrons and orbitals. 
-Therefore, the fraction of the many-electron space accessible to the generated QSE subspace decreases with system size. 
+Therefore, the fraction of the many-electron space accessible to the generated QSE subspace decreases with system size, providing a natural explanation for the overall deterioration in accuracy.
 
-At the largest active spaces considered in this study, the low-lying excited states are still not recovered to chemical accuracy. 
-This suggests that one-body expansion operators alone may be insufficient for chemically accurate excited-state calculations, and that a larger operator manifold consisting of two-body excitation operators may instead be required.
-Consequently, determining how the choice and size of the operator pool affect representability and spectral accuracy as active space grows will be essential for assessing the practical applicability of QSE beyond the relatively small active spaces considered in this work.
+However, active-space size alone does not fully account for the observed error trends. 
+The deterioration in performance is nonuniform, with a particularly pronounced increase in errors between four and five orbital active spaces. 
+Furthermore, active spaces with the same number of orbitals can exhibit markedly different performance even when the relative dimensionality of the QSE and exact spaces is unchanged, as seen most clearly for 4e5o and 6e5o.
 
+Beyond active-space dependent trends, the QSE errors also vary substantially between electronic states. The ground state $S_0$ is generally recovered within chemical accuracy, whereas the lowest lying singlet state $S_1$ exhibits the largest errors. 
+The low-lying triplet states $T_1$ and $T_2$ are recovered more accurately than $S_1$, although not consistently within chemical accuracy. 
+
+To further quantify the representability of these states, we define a projection metric
+\QSEProjectionEquation
+which measures the fraction of the $k$-th exact CASCI state contained within the span of the operator-generated QSE basis states. 
+Importantly, this projection is evaluated directly from the operator-generated QSE basis states, before solving the generalised eigenvalue problem. 
+It therefore isolates the representability of the target state from subsequent effects associated with overlap-matrix thresholding, numerical conditioning, or the ordering of the recovered Ritz roots.
+As shown in \cref{fig:si-error-vs-projection-deficit}, large energy errors are strongly associated with missing projection $1-P_k$. 
+This confirms that the observed errors predominantly arise from incomplete representation of the target states within the operator-generated QSE subspace.
+We next examine the state and molecular features associated with these failures.
+
+\subsubsection{State-Dependent Representability}
 % Explaining singlet trends 
 % Discussion on the fact that ansatz contains doubles, but wrong percentage 
 
 % Case studies 
-\begin{figure}[htbp]
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{figures/keynote_figures/case_study_imidazole_benzene.pdf}
     \caption{Active-space dependence of the representative Benzene and Imidazole case studies.}
     \label{fig:benzene-imidazole-case-studies}
 \end{figure}
+
+\subsubsection{Orbital Character and Molecule-Specific Representability}
 
 % CS1: 2 double bond molecules 
 
@@ -48,6 +67,7 @@ Consequently, determining how the choice and size of the operator pool affect re
 
 
 % Ansatz dependence
+\subsubsection{Reference Ansatz Dependence of QSE Performance}
 \input{tables/results/table1_ansatz_errors}
 
 A clear dependence on the choice of reference ansatz is observed, with more expressive ansätze generally producing more accurate QSE spectra. The paired k-UpCCGSDSinglet ansatz restricts excitations heavily to only singles and paired doubles. Consequently, this ansatz exhibits the largest errors in the predicted spectrum. While increasing the number of layers from k=1 to k=3 systematically improves their performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restrictions of its excitation manifold.
@@ -60,8 +80,6 @@ This behaviour can be understood from the construction of QSE. Although the proj
 Consequently, deficiencies in the reference wavefunction can only be partially corrected through the QSE expansion, making the accuracy of the ground-state energy more sensitive to the quality of the underlying VQE reference.
 In contrast, the excited states contain more substantial contributions from the other operator-generated basis states, which provide greater flexibility beyond the original reference. These contributions can partially compensate for imperfections in the VQE wavefunction, thereby reducing the sensitivity of the excited-state energies to the choice of ansatz.
 
-
-\subsubsection{Spin purity}
 We next examine the spin purity of the recovered QSE spectrum. 
 
 Taken together with the spectral-error analysis above, these results highlight UCCSD as a favourable compromise among the ansätze considered. 

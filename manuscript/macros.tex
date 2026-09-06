@@ -32,6 +32,26 @@
     \end{equation}%
 }
 
+\newcommand{\QSEProjectionEquation}{%
+    \begin{equation}
+        \begin{aligned}
+            \mathcal{Q}
+            &=
+            \operatorname{span}\!\left\{
+                \hat{O}_{\mu}
+                \left|\Psi_{\mathrm{VQE}}(\boldsymbol{\theta})\right\rangle
+            \right\}_{\mu=1}^{d_{\mathrm{QSE}}}, \\
+            P_k
+            &=
+            \left\|
+                \operatorname{Proj}_{\mathcal{Q}}
+                \left|\Psi_k^{\mathrm{CASCI}}\right\rangle
+            \right\|^2 .
+        \end{aligned}
+        \label{eq:qse-exact-state-projection}
+    \end{equation}%
+}
+
 % =================================
 % COMPUTATIONAL METHODS
 % =================================
