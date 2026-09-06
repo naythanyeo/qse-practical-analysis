@@ -278,6 +278,63 @@ def plot_bad_spin_roots(bad_spin_roots, active_space, threshold=0.01):
     figure.tight_layout(rect=(0, 0, 1, 0.86))
     return figure
 
+def plot_severe_spin_root_diagnostic(severe_roots, first_roots, ansatz_order):
+    """Show severe raw-root spin expectations and their first appearance at 6e6o.
+
+    first_roots includes unaffected molecules and their num_retained eigenvectors.
+    Indices are one-based energy ranks, not grouped physical-state labels.
+    """
+    colors = dict(zip(ansatz_order, sns.color_palette("colorblind", len(ansatz_order))))
+    figure, axes = plt.subplots(2, 2, figsize=(16, 9), sharex="col")
+    rng = np.random.default_rng(0)
+
+    for column, expansion in enumerate(("singlet", "triplet")):
+        spin_axis, onset_axis = axes[:, column]
+        severe = severe_roots[severe_roots["expansion"] == expansion]
+        first = first_roots[first_roots["expansion"] == expansion]
+        ansatz_labels = []
+
+        for position, ansatz in enumerate(ansatz_order):
+            roots = severe[severe["ansatz"] == ansatz]
+            spin_axis.scatter(roots["raw_index"], roots["spin_squared"], s=24,
+                              color=colors[ansatz], alpha=0.65, edgecolors="none", zorder=3)
+            molecules = first[first["ansatz"] == ansatz].sort_values("molecule")
+            affected = molecules.dropna(subset=["raw_index"])
+            jitter = rng.uniform(-0.18, 0.18, len(affected))
+            onset_axis.scatter(affected["raw_index"], position + jitter, s=28,
+                               color=colors[ansatz], alpha=0.8, edgecolors="white", linewidths=0.4)
+            ansatz_labels.append(f"{ansatz} ({len(affected)}/{len(molecules)})")
+
+        for spin, label in ((0, "Singlet"), (2, "Triplet"), (6, "Quintet"), (12, "Septet")):
+            spin_axis.axhline(spin, color="0.8", linestyle=":", linewidth=0.8, zorder=0)
+            spin_axis.text(0.99, spin + 0.15, label, transform=spin_axis.get_yaxis_transform(),
+                           ha="right", va="bottom", fontsize=9, color="0.4")
+        spin_axis.set_title(f"{expansion.title()} expansion: severe eigenvectors")
+        spin_axis.set_ylim(-0.4, 12.9)
+        spin_axis.set_yticks([0, 2, 4, 6, 8, 10, 12])
+        onset_axis.set_title("First severe eigenvector per affected molecule", fontsize=11)
+        onset_axis.set_yticks(range(len(ansatz_order)), ansatz_labels)
+        onset_axis.tick_params(axis="y", labelleft=True)
+        onset_axis.set_ylim(len(ansatz_order) - 0.5, -0.5)
+        onset_axis.set_xlim(0, first["num_retained"].max() + 1)
+        onset_axis.set_xlabel("Energy-ordered QSE eigenvector index")
+        for axis in (spin_axis, onset_axis):
+            axis.grid(axis="x", alpha=0.15)
+
+    axes[0, 0].set_ylabel(r"Spin expectation $\langle S^2\rangle$")
+    axes[1, 0].set_ylabel("Ansatz (affected / total molecules)")
+    handles = [Line2D([], [], color=colors[name], marker="o", linestyle="none", label=name)
+               for name in ansatz_order]
+    figure.legend(handles=handles, loc="lower center", ncol=3, frameon=False,
+                  bbox_to_anchor=(0.5, 0.005), columnspacing=2)
+    figure.suptitle("Severe QSE spin contamination: 6e6o, overlap cutoff = 1e-8", fontsize=16)
+    figure.text(0.5, 0.93, r"Severe: $|\langle S^2\rangle - S_{\rm target}(S_{\rm target}+1)| \geq 1$",
+                ha="center", fontsize=11)
+    sns.despine(fig=figure)
+    figure.tight_layout(rect=(0, 0.085, 1, 0.92), h_pad=2.0, w_pad=2.5)
+    return figure
+
+
 # ========================================================
 # Notebook 2: Dimensions of QSE Subspace
 # ========================================================
@@ -733,10 +790,10 @@ def plot_commuting_group_scaling(commuting_group_data):
 # Notebook 6: Molecular Orbitals
 # ========================================================
 def plot_low_state_double_weight_scaling(double_weight_data):
-    """Plot exact S1, T1, and T2 double-excitation weights across active spaces."""
-    states = ["s1", "t1", "t2"]
-    labels = {"s1": "S1", "t1": "T1", "t2": "T2"}
-    colors = {"s1": "#E15759", "t1": "#4E79A7", "t2": "#59A14F"}
+    """Plot exact S0, S1, T1, and T2 double-excitation weights across active spaces."""
+    states = ["s0", "s1", "t1", "t2"]
+    labels = {"s0": "S0", "s1": "S1", "t1": "T1", "t2": "T2"}
+    colors = {"s0": "#777777", "s1": "#E15759", "t1": "#4E79A7", "t2": "#59A14F"}
     active_spaces = list(double_weight_data)
     positions = np.arange(len(active_spaces))
     figure, axis = plt.subplots(figsize=(10, 5.5))
