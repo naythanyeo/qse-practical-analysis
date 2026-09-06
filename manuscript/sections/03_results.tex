@@ -40,13 +40,36 @@ Importantly, this projection is evaluated directly from the operator-generated Q
 It therefore isolates the representability of the target state from subsequent effects associated with overlap-matrix thresholding, numerical conditioning, or the ordering of the recovered Ritz roots.
 As shown in \cref{fig:si-error-vs-projection-deficit}, large energy errors are strongly associated with missing projection $1-P_k$. 
 This confirms that the observed errors predominantly arise from incomplete representation of the target states within the operator-generated QSE subspace.
-We next examine the state and molecular features associated with these failures.
 
-\subsubsection{State-Dependent Representability}
-% Explaining singlet trends 
-% Discussion on the fact that ansatz contains doubles, but wrong percentage 
+\subsubsection{State Dependence of QSE Representability}
+Next, we seek to better characterise the state-dependent errors observed above by examining the electronic structure of the exact CASCI states. 
+Each CASCI wavefunction is decomposed according to the excitation rank of its constituent Slater determinants relative to the Hartree–Fock (HF) reference. 
+We focus in particular on the double-excitation weight, defined as the fraction of the total CI weight arising from determinants that differ from the HF reference by two orbital excitations. 
+Doubles are of particular interest because they are the lowest excitation rank not independently represented by the present one-body QSE operator pool. 
 
-% Case studies 
+The decomposition reveals clear differences between the low-lying states (\cref{fig:si-casci-double-excitation-weight}). 
+The $S_1$ states generally exhibit substantial double-excitation weight, whereas the corresponding $T_1$ and $T_2$ states contain markedly smaller contributions. 
+This difference is consistent with the closed-shell character of the molecular benchmark. 
+Within the double-excitation sector, singlet states can contain both paired and non-pair doubles. 
+Triplet states, by contrast, can only obtain double-excitation character from the latter class, since a paired double excitation of a closed-shell HF reference produces another closed-shell singlet determinant. 
+The available double-excitaiton manifold is thererfore more restricted for triplet states, consistent with the smaller double-excitation weights observed.
+
+Howeve, it is important to note that double-excitation weight alone does not determine QSE accuracy: $S_0$ contains an even larger doubles contribution while remaining more accurately recovered than the low-lying triplet states. 
+This is consistent with the fact that the correlated structure of $S_0$ is already largely encoded in the optimized UCCSD VQE reference, which itself contains double-excitation amplitudes. 
+
+Excited states, however, can require a balance of single and double excitation character that can differ substantially from that of the VQE reference. 
+While the one-body operator pool provides independent access to singly excited directions, it does not introduce independent double-excitation directions. 
+The corresponding double-excitation amplitudes therefore cannot be tuned independently and remain largely constrained by the VQE reference. 
+This reduced flexibility makes excited states with greater double-excitation character generally more difficult to represent accurately within the QSE subspace.
+
+\subsubsection{Molecular Case Studies and Active-Space Effects}
+
+Beyond the broad state-dependent trends, substantial variation in QSE performance is also observed between molecules and across different active spaces for the same molecule. 
+These variations indicate that the magnitude of the representability error is not determined by state character alone. 
+We therefore examine several representative molecular cases to identify the electronic-structure features associated with these deviations.
+% CS1: 2 double bond molecules 
+Firstly, we observe 
+
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{figures/keynote_figures/case_study_imidazole_benzene.pdf}
@@ -54,9 +77,6 @@ We next examine the state and molecular features associated with these failures.
     \label{fig:benzene-imidazole-case-studies}
 \end{figure}
 
-\subsubsection{Orbital Character and Molecule-Specific Representability}
-
-% CS1: 2 double bond molecules 
 
 % CS2: delayed active space errors, eg benzene 
 
