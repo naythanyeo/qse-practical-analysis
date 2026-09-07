@@ -220,8 +220,10 @@ This establishes a central trade-off: removing weak directions improves numerica
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
 This trade-off becomes particularly important under finite-shot sampling, where the near-null region of the overlap spectrum is most strongly perturbed, resulting in the smallest eigenvalues even becoming negative (\cref{fig:si-eigenvalue-lifting}). 
 This motivates the use of overlap-eigenvalue thresholding to remove poorly resolved directions.
-In this section, we therefore examine how thresholding can be used appropriately to regularise QSE under finite-shot noise, with sampling-induced errors quantified relative to the corresponding statevector QSE energies.
-Unless otherwise stated, $N_{\mathrm{shots}}$ denotes the number of shots allocated to each commuting measurement group.
+In this section, we therefore examine how thresholding can be used appropriately to regularise QSE under finite-shot noise.
+Sampling-induced errors are reported as the mean absolute deviation of the four low-lying states $S_0$, $S_1$, $T_1$, and $T_2$, from their corresponding statevector QSE energies. 
+Unless otherwise stated, $n_{\mathrm{shots}}$ denotes the number of shots allocated to each commuting measurement group.
+
 \subsubsection{Effects of Thresholding to mitigate Sampling Noise}
 \begin{figure}[!ht]
     \centering
@@ -232,10 +234,11 @@ Unless otherwise stated, $N_{\mathrm{shots}}$ denotes the number of shots alloca
 \Cref{fig:threshold-shot-error} shows a clear minimum in the QSE error as a function of the overlap-eigenvalue threshold, indicating that an optimal degree of regularisation exists for each noise level. 
 As the number of shots increases and the sampling noise decreases, this minimum shifts towards lower thresholds and lower overall errors.
 
-This behaviour reflects the competing effects of thresholding. Directions associated with very small overlap eigenvalues are particularly susceptible to noise amplification, such that their contribution to the recovered spectrum can become dominated by statistical error rather than useful physical information. 
+This behaviour reflects the competing effects of thresholding. 
+Directions associated with very small overlap eigenvalues are particularly susceptible to noise amplification, such that their contribution to the recovered spectrum can become dominated by statistical error rather than useful physical information. 
 Increasing the threshold initially removes these poorly resolved directions and therefore reduces the QSE error. 
 However, beyond the optimum, further increasing the threshold begins to remove directions that still contain physically important contributions to the QSE subspace, causing the error to increase again. 
-The resulting minimum therefore represents a balance between suppressing noise-amplified directions and retaining sufficient information for accurate spectral recovery.
+The resulting minimum therefore represents a balance between suppressing noise-amplified directions and retaining sufficient information for accurate spectral recovery \cref{fig:si-optimal-threshold}.
 
 Increasing the shot count improves the precision of the projected matrix elements and therefore allows progressively smaller overlap eigenvalues to be resolved reliably. Consequently, fewer directions need to be removed, shifting the optimal threshold towards smaller values as the shot count increases.
 
@@ -260,7 +263,10 @@ This scaling characterises the errors of each individual matrix element.
 However, as the active spaces grow, the number of matrix elements also increases. For a $d \times d$ projected matrix, the Frobenius norm of the accumulated finite-shot perturbation scales approximately as $\frac{d}{\sqrt{N_{\mathrm{shots}}}}$. 
 Perturbation bounds for generalised Hermitian eigenvalue problems relate the generalised-eigenvalue errors to the spectral norms of the perturbations in $\mathbf{H}$ and $\mathbf{S}$ \cite{Nakatsukasa2010ErrorBounds}. 
 Since the spectral norm is bounded above by the Frobenius norm, the growth of the accumulated matrix perturbation sets a natural upper scale for the resulting QSE energy errors. 
-For the singles-only operator pool used here, the projected-matrix dimension scales as $d \propto n_{\mathrm{orb}}^2$. The empirical dependence presented in \cref{eq:error-scaling} therefore follows the same scaling of the accumulated matrix perturbation.
+For the singles-only operator pool used here, the projected-matrix dimension scales as $d \propto n_{\mathrm{orb}}^2$. 
+Tthe empirical dependence in \cref{eq:error-scaling} is therefore consistent with the accumulation of finite-shot perturbations as the projected problems grow.
+This correspondence should not be interpreted as a direct derivation of the energy-error scaling, but rather as a consistency between the observed empirical trend and the expected growth of matrix perturbations. 
+Nevertheless, the averaged low-energy errors are well described by this empirical relationship over the active spaces studied.
 
 \subsubsection{Shot Budget Scaling}
 The empirical scaling in \cref{eq:error-scaling} can be used to estimate the measurement requirements for maintaining a fixed QSE accuracy as the active space grows. To maintain a constant error relative to the statevector, this would require approximately $N_{\mathrm{shots}} \propto n_{\mathrm{orb}}^4$. 
