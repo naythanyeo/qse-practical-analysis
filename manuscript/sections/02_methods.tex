@@ -71,15 +71,15 @@ These samples were used to estimate the expectation values for the projected mat
 % Thresholding
 % ============================
 \subsection{Generalised Eigenvalue Problem and Thresholding}
-In this work, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} was regularised by restricting the solution to a truncated eigenspace of the overlap matrix $\mathbf{S}$.
+In this work, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} was regularised by applying thresholding to the overlap matrix $\mathbf{S}$.
 The matrix was first diagonalised as
 \DiagonaliseSEquation
 where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\Lambda$ is a diagonal matrix containing the eigenvalues of $\mathbf{S}$. Then, we define the reduced whitening transformation
 
 \WhitenSEquation
 where $\tilde{\mathbf{U}}$ and $\tilde{\boldsymbol{\Lambda}}$ contain only the retained overlap eigendirections. 
-For finite-shot calculations, eigendirections were retained when $\lambda_i > \tau$, where $\tau$ denotes the specified overlap-eigenvalue threshold. 
-For statevector calculations, no finite threshold was applied. Instead, only numerically null directions were removed according to the stable numerical rank at machine precision (\cref{sec:si-statevector-rank-truncation}).
+Eigendirections were retained when $\lambda_i > \tau$, where $\tau$ denotes the specified overlap-eigenvalue threshold. 
+For statevector calculations, a fixed threshold of $1e-8$ was used consistently. For finite-shot sampling calculations, the thresholds used were specificed with all results. 
 
 Using $c=Vy$, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} is thereby reduced to 
 

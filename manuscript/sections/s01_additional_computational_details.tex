@@ -77,24 +77,3 @@ The resulting sampled frequencies were used to estimate all Pauli-string expecta
 
 At each shot count, ten statistically independent sampling runs were performed. 
 The projected matrices were solved independently for each run, and reported energy errors were computed from the mean of the ten resulting energies.
-
-
-% ============================
-% SV Truncation, Stable ranks
-% ============================
-
-\subsection{Statevector Subspace Rank Truncation}
-\label{sec:si-statevector-rank-truncation}
-For all statevector calculations used in this work, the retained subset was chosen from a fixed maximum dimension determined by the active space and spin sector as follows. 
-
-\MaxDimensionsEquation
-
-The first term in each expression gives the maximum number of physically distinct singlet or triplet roots available within the corresponding active space. These values were obtained from differences between the dimensions of adjacent fixed-$M_S$ determinant sectors, such that
-
-$N_S=D_{M_S=S}-D_{M_S=S+1}$
-
-This subtraction isolates the number of spin-($S$) multiplets because the ($M_S=S$) sector contains one component from every state with total spin ($S$) or greater, whereas the ($M_S=S+1$) sector contains only components with total spin greater than ($S$).
-
-For the $2e2o$, $2e3o$, and $4e3o$ active spaces, the number of physically available roots was smaller than the nominal number of QSE expansion operators. The retained dimension was therefore capped by the corresponding physical root count. This cap was in place because it was noted empirically that additional operator directions beyond the physically available space produced near-null eigenvalues. More generally, this restriction applies to active spaces that do not include orbitals extending from HOMO-1 through LUMO+1. 
-
-For the triplet subspace, the retained dimension was further limited to ($3n_\mathrm{o}(n_\mathrm{o}-1)$). The triplet number operators were extremely weakly supported by the paired reference states and generated overlap eigenvalues that could not be resolved reliably above numerical precision. For consistency across ansatz families, these directions were therefore excluded for all triplet statevector calculations. 
