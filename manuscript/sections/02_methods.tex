@@ -26,7 +26,7 @@ These reference states were subsequently used to assess the accuracy of the grou
 % ============================
 % Quantum calculations
 % ============================
-\subsection{Quantum Workflow}
+\subsection{Quantum Simulation Framework}
 In this study, all quantum-circuit calculations were performed using classical simulations implemented with the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. 
 Ideal noiseless simulations were employed throughout, with finite-sampling noise introduced only in the sections involving a limited number of measurement shots.
 The same electronic hamiltonian (\cref{eq:electronic-hamiltonian}) was used for all quantum calculations, and all fermionic operators were mapped to qubit operators via the Jordan-Wigner (JW) transformation.
@@ -38,7 +38,9 @@ The same electronic hamiltonian (\cref{eq:electronic-hamiltonian}) was used for 
 The QSE workflow begins with the preparation of a ground-state reference wavefunction using the Variational Quantum Eigensolver (VQE). 
 We used a Unitary Coupled-Cluster (UCC) ansatz to parameterise the ground state wavefunction. 
 \UCCReferenceStateEquation
-where $\left|\Phi_{\mathrm{HF}}\right\rangle$ is the Hartree-Fock reference determinant and $\hat{T}(\boldsymbol{\theta})$ denotes the coupled cluster excitation operator, defined explicitly in Section S2.
+where $\left|\Phi_{\mathrm{HF}}\right\rangle$ is the Hartree-Fock reference determinant and $\hat{T}(\boldsymbol{\theta})$ denotes the coupled cluster excitation operator.
+By default, UCCSD was used as the reference ansatz throughout this study. Additional ansatz classes were considered in \cref{sec:ansatz-dependence}, namely UCCSDSinglet, UCCGSD, and $k$-UpCCGSDSinglet with $k=1,2$ and $3$. 
+The corresponding excitation operators defining each ansatz are provided in \cref{sec:si-ansatz-classes}.
 The variational parameters $\boldsymbol{\theta}$ were optimised with the L-BFGS-B optimiser to minimise the exact statevector expectation value of the Hamiltonian (\cref{eq:electronic-hamiltonian}).
 Unless otherwise stated, all UCC operators were implemented using the first-order Suzuki Trotter product approximation.
 
