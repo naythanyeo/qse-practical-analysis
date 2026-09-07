@@ -145,12 +145,14 @@ It maintains relatively low spectral errors, exhibits substantially less spin co
 % ================================
 \subsection{Stable Dimensions of QSE}
 \subsubsection{Eigenvalue Distribution}
-\begin{figure}[htbp]
+\begin{figure}[!ht]
     \centering
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/dimension_analysis/overlap_eigenvalue_spread/uccsd_6e6o.pdf}
-        \caption{Overlap-eigenvalue spectrum.}
+        \begin{overpic}[width=\linewidth]{figures/dimension_analysis/overlap_eigenvalue_spread/uccsd_6e6o.pdf}
+            \put(2,38){\makebox(0,0)[l]{\scriptsize\bfseries (a)}}
+        \end{overpic}
+        \phantomsubcaption
         \label{fig:eigenvalue-spectrum}
     \end{subfigure}
 
@@ -158,8 +160,10 @@ It maintains relatively low spectral errors, exhibits substantially less spin co
 
     \begin{subfigure}{\linewidth}
         \centering
-        \includegraphics[width=\linewidth]{figures/dimension_analysis/overlap_eigenvector_composition/uccsd_6e6o.pdf}
-        \caption{Overlap-eigenvector composition.}
+        \begin{overpic}[width=\linewidth]{figures/dimension_analysis/overlap_eigenvector_composition/uccsd_6e6o.pdf}
+            \put(2,35){\makebox(0,0)[l]{\scriptsize\bfseries (b)}}
+        \end{overpic}
+        \phantomsubcaption
         \label{fig:eigenvector-composition}
     \end{subfigure}
     \caption{Structure of the UCCSD overlap matrix in the $6e6o$ active space. The upper panel shows the overlap-eigenvalue spectrum for the singlet and triplet sectors across the molecular benchmark. The lower panel decomposes the corresponding overlap eigenvectors into contributions from occupied-number operators, occupied-to-virtual operators, and other operators.}

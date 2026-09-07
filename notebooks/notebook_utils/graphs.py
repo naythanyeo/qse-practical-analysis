@@ -403,11 +403,11 @@ def plot_eigenvector_composition(composition_data, active_space):
 
     axes[0].set_ylabel("Mean composition (%)")
     handles, labels = axes[0].get_legend_handles_labels()
-    figure.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.01),
+    figure.legend(handles, labels, loc="lower center", bbox_to_anchor=(0.5, 0.04),
                   ncol=3, frameon=False)
-    figure.suptitle(f"UCCSD {active_space} Overlap Eigenvector Composition", y=0.98)
+    figure.suptitle(f"UCCSD {active_space} Overlap Eigenvector Composition", y=0.9)
     sns.despine()
-    figure.tight_layout(rect=(0, 0.12, 1, 0.92))
+    figure.tight_layout(rect=(0, 0.10, 1, 0.91))
     return figure
 
 
