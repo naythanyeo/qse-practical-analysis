@@ -103,28 +103,46 @@ This provides a direct explanation for the pronounced changes in representabilit
 
 % Ansatz dependence
 \subsubsection{Reference Ansatz Dependence of QSE Performance}
+We next examine how the choice of variational reference ansatz affects QSE performance. 
+Since the QSE subspace is generated from the optimized VQE state, differences in reference quality and excitation flexibility can influence the states accessible to the expansion. 
+We therefore compare several UCC-based ansätze with varying levels of expressiveness and circuit complexity.
+
+\label{sec:ansatz-dependence}
 \input{tables/results/table1_ansatz_errors}
 
-A clear dependence on the choice of reference ansatz is observed, with more expressive ansätze generally producing more accurate QSE spectra. The paired k-UpCCGSDSinglet ansatz restricts excitations heavily to only singles and paired doubles. Consequently, this ansatz exhibits the largest errors in the predicted spectrum. While increasing the number of layers from k=1 to k=3 systematically improves their performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restrictions of its excitation manifold.
-In comparison, UCCSDSinglet and UCCSD achieve similar accuracies across the low-lying states. Although UCCSDSinglet imposes additional parameter-tying constraints, both ansätze span the same excitation manifold, and therefore yield comparable errors.
+We find that QSE performance varies with the choice of reference ansatz, with more expressive ansätze generally producing more accurate QSE spectra. 
+The paired k-UpCCGSDSinglet ansatz restricts excitations heavily to only singles and paired doubles. 
+Consequently, this ansatz exhibits the largest errors in the predicted spectrum. 
+While increasing the number of layers from k=1 to k=3 systematically improves their performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. 
+This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restrictions of its excitation manifold.
+In comparison, UCCSDSinglet and UCCSD achieve similar accuracies across the low-lying states. 
+Although UCCSDSinglet imposes additional parameter-tying constraints, both ansätze span the same excitation manifold, and yield comparable errors.
 UCCGSD, which provides the most flexible excitation manifold considered here, generally produces the lowest errors, albeit at the cost of considerably greater circuit depth. 
-These results demonstrate the expected trade-off between reference-state expressiveness and circuit complexity.
+These results illustrate the expected trade-off between reference-state expressiveness and circuit complexity.
 
-Furthermore, we note that the influence of the reference ansatz is considerably more pronounced for the ground state than for the excited states. For S0, the difference in median error between the paired and unpaired ansätze exceeds an order of magnitude, whereas the corresponding variation for S1, T1 and T2 is substantially smaller. 
-This behaviour can be understood from the construction of QSE. Although the projected Hamiltonian variationally refines all states within the QSE subspace, the ground-state solution remains strongly dominated by the original VQE reference. 
-Consequently, deficiencies in the reference wavefunction can only be partially corrected through the QSE expansion, making the accuracy of the ground-state energy more sensitive to the quality of the underlying VQE reference.
-In contrast, the excited states contain more substantial contributions from the other operator-generated basis states, which provide greater flexibility beyond the original reference. These contributions can partially compensate for imperfections in the VQE wavefunction, thereby reducing the sensitivity of the excited-state energies to the choice of ansatz.
+Furthermore, the influence of the reference ansatz is considerably more pronounced for the ground state than for the excited states. 
+For S0, the difference in median error between the paired and unpaired ansätze exceeds an order of magnitude, whereas the corresponding variation for S1, T1 and T2 is substantially smaller. 
+This difference can be understood from the composition of the exact CASCI states relative to the VQE reference. 
+At the $6e6o$ active space, the exact $S_0$ state has a mean squared overlap of $95\%$ with the optimized VQE reference across the six ansätze considered
+The ground-state solution therefore depends much more on the quality of the reference wavefunction, and deficiencies in the reference can only be partially corrected by the remaining QSE directions.
+In contrast, the maximum squared overlap between the VQE reference and any of the excited states considered remains below $2\%$.
+These states therefore rely predominantly on the additional operator-generated directions, whose greater flexibility can partially compensate for imperfections in the reference and reduce their sensitivity to the choice of ansatz.
 
-We next examine the spin purity of the recovered QSE spectrum. 
+Beyond spectral accuracy, the choice of reference ansatz also affects the spin purity of the recovered states.
+Spin contamination is observed among the recovered QSE roots, with several higher-energy states exhibiting substantial deviations from the target $S(S+1)$ value, in some cases exceeding 1. 
+These larger deviations are concentrated predominantly at higher energies, whereas the lowest-lying states remain comparatively less affected (\cref{fig:si-severe-spin-roots}).
+Across the ansätze, the more flexible UCCGSD ansatz exhibits the largest degree of spin contamination, whereas the paired ansätze remain nearly spin pure (\cref{fig:si-spin-contaminated-roots}). 
+Importantly, we note that imposing spin adaptation at the ansatz level does not necessarily guarantee improved spin purity in the implemented circuit. 
+In particular, UCCSDSinglet exhibits greater spin contamination than UCCSD at low Trotter order, an effect associated with finite-order Trotter errors (\cref{tab:s2-spin-mean-trotter})
+A more detailed analysis of the spin contamination is provided in \cref{sec:si-spin-purity}.
 
-Taken together with the spectral-error analysis above, these results highlight UCCSD as a favourable compromise among the ansätze considered. 
-It maintains relatively low spectral errors while exhibiting substantially less spin contamination than the more expressive UCCGSD ansatz. UCCSD therefore provides a useful balance between spectral accuracy, spin purity, and ansatz complexity within the present implementation.
+Taken together with the spectral-error analysis above, these results identify UCCSD as a favourable compromise among the ansätze considered. 
+It maintains relatively low spectral errors, exhibits substantially less spin contamination than UCCGSD, and avoids the greater circuit depth associated with the more expressive generalized ansatz.
 
 
 % ================================
 % Section 2: Dimension Analysis
 % ================================
-\clearpage
 \subsection{Stable Dimensions of QSE}
 \subsubsection{Eigenvalue Distribution}
 \begin{figure}[htbp]
@@ -192,6 +210,9 @@ This suggests that while the stable dimensions form a well-conditioned core of t
 The remaining weakly supported directions contribute important correlation effects that cannot be trivially discarded.
 This establishes a central trade-off: removing weak directions improves numerical stability, but can simultaneously degrade the representability and accuracy of the QSE subspace. 
 
+% ================================
+% Section 3: Shots
+% ================================
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
 This trade-off becomes particularly important under finite-shot sampling, where the near-null region of the overlap spectrum is most strongly perturbed, resulting in the smallest eigenvalues even becoming negative (\cref{fig:si-eigenvalue-lifting}). 
 This motivates the use of overlap-eigenvalue thresholding to remove poorly resolved directions.
@@ -255,6 +276,9 @@ For example, including two-body excitation operators would increase the operator
 If the observed dependence of finite-shot error on projected-matrix dimension persists, maintaining constant accuracy would then require approximately $\mathcal{O}\!\left(n_{\mathrm{orb}}^{8}\right)$ shots per commuting group. 
 The number of required measurement groups would also increase with the enlarged projected problem, leading to an even steeper scaling of the total measurement cost.
 
+% ================================
+% Section 4: Future Work
+% ================================
 \subsection{Scaling and Future Work}
 \subsubsection{Addition of Doubles Operators}
 % Doubles error

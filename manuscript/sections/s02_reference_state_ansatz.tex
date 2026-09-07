@@ -54,6 +54,7 @@ Parameters associated with excitation generators shared with the preceding ansat
 % ========================
 % Spin Analysis
 % ========================
+% Might re-write this section
 \subsection{Ansatz-Dependent Spin Purity}
 \label{sec:si-spin-purity}
 
@@ -71,15 +72,27 @@ The spin purity of the reference can therefore influence that of the resulting Q
 
 We first examine how these spin-contaminated states are distributed across the recovered spectrum (\cref{fig:si-spin-contaminated-roots}).
 We observe that spin contamination is relatively uncommon among the lower-lying roots, but becomes increasingly prevalent at higher energies. 
-Its extent also depends strongly on the reference ansatz: the paired ansätze produce almost entirely spin-pure spectra, whereas the more expressive UCCGSD ansatz exhibits the most severe spin contamination among the ansätze considered.
+Its extent also depends strongly on the reference ansatz: the paired ansätze produce almost entirely spin-pure spectra, whereas the more expressive UCCGSD ansatz exhibits more widespread spin contamination.
 This trend is consistent with the different restrictions imposed by the ansätze. 
-The paired ansätze permit only paired double excitations, strongly constraining the variational manifold and largely preserving the paired-electron character of the reference state. 
+The paired ansätze restricts the excitation manifold to generalied singles and paired double excitations, strongly constraining the variational manifold and largely preserving the paired-electron character of the reference state. 
 By contrast, UCCGSD employs a generalized excitation manifold in which excitations are not restricted by the occupied–virtual partition and may involve arbitrary active orbitals. 
 This greater flexibility introduces substantially more unpaired excitation pathways and therefore a greater opportunity for spin mixing, consistent with the larger spin contamination observed for UCCGSD.
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{figures/active_space_representability/spin_contamination/severe_spin_roots_6e6o.pdf}
+    \caption{Severely spin-contaminated QSE eigenvectors in the $6e6o$ active space across all 28 molecules and six reference ansatz families, using an overlap-eigenvalue cutoff of $10^{-8}$. The singlet (left) and triplet (right) panels show eigenvectors satisfying $|\langle \hat S^2\rangle-S_{\mathrm{target}}(S_{\mathrm{target}}+1)|\geq 1$, with $S_{\mathrm{target}}=0$ and $1$, respectively. Indices are one-based retained eigenvectors in energy order, without triplet grouping. Colours identify the reference ansatz; horizontal lines mark pure-spin expectation values, not spin assignments for mixed states.}
+    \label{fig:si-severe-spin-roots}
+\end{figure}
+
+The frequency of spin contamination and the position of severely contaminated eigenvectors are distinct diagnostics (\cref{fig:si-severe-spin-roots}). 
+The first severe deviations in the triplet expansion occur at raw eigenvector indices 13 and 7 for UCCSD and UCCSDSinglet, respectively, compared with index 46 for UCCGSD. 
+Some earlier UCCSD and UCCSDSinglet eigenvectors have $\langle \hat S^2\rangle$ close to the quintet value of 6, interleaved with predominantly triplet states. 
+
+
 \input{tables/results/table_S1_spin_contamination}
 
-Interestingly, the spin-adapted UCCSDSinglet ansatz, which ties parameters associated with equivalent spatial-orbital transitions, exhibits greater spin contamination than the more flexible UCCSD ansatz, both in the number of contaminated roots (\cref{fig:si-spin-contaminated-roots}) and in the mean spin deviation (\cref{tab:si-low-lying-spin-contamination}). 
+Notably, the spin-adapted UCCSDSinglet ansatz, which ties parameters associated with equivalent spatial-orbital transitions, exhibits greater spin contamination than the more flexible UCCSD ansatz, both in the number of contaminated roots (\cref{fig:si-spin-contaminated-roots}) and in the mean spin deviation (\cref{tab:si-low-lying-spin-contamination}). 
 
 \input{tables/results/table_s2_spin_mean_trotter}
 To examine whether this behaviour arises from the finite-order Trotter approximation, we repeated the UCCSD and UCCSDSinglet calculations with increasing numbers of Trotter steps. 
