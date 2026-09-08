@@ -13,26 +13,34 @@ Quantum Subspace Expansion (QSE), introduced by McClean et al. \cite{mcclean2017
 QSE constructs a trial subspace by applying a selected set of operators ${\hat{O}_{\mu}}$ to a reference state $\left|\Psi_{\mathrm{ref}}\right\rangle$, often the VQE ground state. 
 Within this subspace, the $k$-th approximate state is represented as a linear combination of the resulting operator-generated states,
 \KthReferenceStateEquation
-where $\mathbf{c}_k$ contains the coefficients determining the contribution of each basis state.
+where $\mathbf{C}_k$ contains the coefficients determining the contribution of each basis state.
 These coefficients and the associated energies are obtained by constructing the projected Hamiltonian and overlap matrices, $\mathbf{H}$ and $\mathbf{S}$, and solving the generalised eigenvalue problem
 \GeneralisedEigenvalueProblemKEquation
 
 % PARA 5: Limitations of QSE
 In general, the operator-generated basis states are not orthogonal, such that $\mathbf{S} \neq \mathbf{I}$. As such, solving this generalised eigenvalue problem requires a whitening transformation containing factors proportional to $\frac{1}{\sqrt{\lambda_i}}$, whereby $\lambda_i$ are the eigenvalues of $\mathbf{S}$. 
 If the generated basis states are nearly linearly-dependent,  $\mathbf{S}$ develops very small or even near-null eigenvalues. 
-Consequently, measurement errors in the matrix elements are strongly amplified, rendering the projected problem numerically unstable. This ill-conditioning of $\mathbf{S}$ is a well-known limitation of QSE, and particularly consequential because statistical shot noise is inherent to real quantum hardware measurements. 
+Consequently, measurement errors in the matrix elements are strongly amplified, rendering the projected problem numerically unstable. This ill-conditioning of $\mathbf{S}$ is a well-known limitation of QSE, and particularly consequential because statistical shot noise is inherent to real quantum hardware measurements, even in the fault-tolerant regime.
 
 % PARA 6: Then given that, why still bother with QSE
-Alternative QSM formulations like Quantum Self-Consistent Equation-Of-Motion (Q-SC-EOM) methods avoid this source of instability by constructing an orthogonal excitation manifold \cite{Asthana2023QscEOM}. This reduces the overlap matrix to the identity, and consequently the generalised eigenvalue problem to an ordinary one.
+Alternative QSM formulations like Quantum Self-Consistent Equation-Of-Motion (q-SC-EOM) methods avoid this source of instability by constructing an orthogonal excitation manifold \cite{Asthana2023QscEOM}. This reduces the overlap matrix to the identity, and consequently the generalised eigenvalue problem to an ordinary one.
 Doing so has been shown to outperform QSE in spectral accuracy especially when the condition number of $\mathbf{S}$ is large \cite{Kwao2026QSMGeneralisedEigenvalueProblem}. 
 QSE nevertheless remains of practical interest due to its direct and comparatively flexible formulation. 
-While q-sc-EOM is formulated primarily to recover excitation energy differences relative to a reference state, QSE yields Ritz approximations to absolute energies. QSE therefore serves a dual purpose within the same projected calculation: refinement of the approximate ground state through the lowest Ritz solution, and recovery of excited-state approximations through the higher solutions \cite{mcclean2017qse,yoshioka2022GeneralisedQSE}.
+While q-SC-EOM is formulated primarily to recover excitation energy differences relative to a reference state, QSE yields Ritz approximations to absolute energies. 
+QSE therefore serves a dual purpose within the same projected calculation: refinement of the approximate ground state through the lowest Ritz solution, and recovery of excited-state approximations through the higher solutions \cite{mcclean2017qse,yoshioka2022GeneralisedQSE}.
 Furthermore, QSE does not require its expansion operators to satisfy the vacuum-annihilation condition imposed in self-consistent EOM formulations, allowing a wider range of physically motivated operator pools to be considered. This flexibility leaves substantial scope for tailoring the generated subspace and improving the balance between spectral representability and numerical stability.
 
 % PARA 7: Current literature gaps
-% NEED TO CITE
-Much of the existing QSE literature has evaluated the method using selected molecular systems, often at distorted geometries chosen to probe strongly correlated or numerically challenging regimes. Although these studies have established important limitations in subspace representability and numerical stability, it remains unclear how frequently such limitations arise across chemically diverse molecules under more routine equilibrium conditions. Recent work has also shown that overlap-matrix thresholding can suppress instabilities in the generalized eigenvalue problem. However, the appropriate regularization generally depends on both the underlying system and the level of measurement noise, while overly aggressive thresholding may remove physically relevant subspace directions. A broader characterization is therefore needed to determine how QSE accuracy, representability, and numerical recoverability behave across molecular systems, and how regularization should be applied in practice.
-* TBC will add more citations here
-% PARA 8: Contributions of work
+% NEED TO CITE MORE
+Much of the existing QSE literature has evaluated the method using selected molecular systems, often at distorted geometries chosen to probe strongly correlated or numerically challenging regimes \cite{mcclean2017qse,Kwao2026QSMGeneralisedEigenvalueProblem}. 
+Although these studies have established important limitations in subspace representability and numerical stability, it remains unclear how frequently such limitations arise across chemically diverse molecules under more routine equilibrium conditions. 
+Recent work has also shown that overlap-matrix thresholding can suppress instabilities in the generalized eigenvalue problem \cite{Kwao2026QSMGeneralisedEigenvalueProblem}. 
+However, the appropriate regularization generally depends on both the underlying system and the level of measurement noise, while overly aggressive thresholding may remove physically relevant subspace directions. 
+A broader characterization is therefore needed to determine how QSE accuracy, representability, and numerical recoverability behave across molecular systems, and how regularization should be applied in practice.
 
-In this work, we address these questions through a systematic benchmark of spin-resolved QSE across 28 chemically varied molecules \cite{thiels2008benchmark}. Statevector simulations are first used to isolate the intrinsic representability and accuracy of the operator-generated subspace. We compare several reference ansatz classes, ranging from restricted to more expressive constructions, to determine how the prepared reference influences the recoverable spectrum. We then analyse the origins and practical consequences of overlap-matrix ill-conditioning under finite-shot sampling, including its dependence on the overlap spectrum and regularization threshold. Finally, we quantify the associated scaling and measurement requirements, provide practical guidance for threshold selection, and identify directions for improving the construction and numerical treatment of QSE subspaces. The principal contribution of this work is therefore a systematic assessment of when molecular QSE remains both sufficiently expressive and numerically recoverable for practical excited-state calculations.
+% PARA 8: Contributions of work
+In this work, we address these questions through a systematic benchmark of spin-resolved QSE across 28 chemically varied molecules \cite{thiels2008benchmark}. 
+Statevector simulations are first used to isolate the intrinsic representability and accuracy of the operator-generated subspace. We compare several active spaces and reference ansatz classes. 
+We then analyse the origins and practical consequences of overlap-matrix ill-conditioning under finite-shot sampling, including its dependence on the overlap spectrum and regularization threshold. 
+Finally, we quantify the associated scaling and measurement requirements, provide practical guidance for threshold selection, and identify directions for improving the construction and numerical treatment of QSE subspaces. 
+The principal contribution of this work is therefore a systematic assessment of when molecular QSE remains both sufficiently expressive and numerically recoverable for practical excited-state calculations.

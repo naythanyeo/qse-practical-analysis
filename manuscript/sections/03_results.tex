@@ -4,7 +4,9 @@
 \subsection{Accuracy and Representability of the QSE Subspace}
 In this section, we study the spectral accuracy and representability of low-lying roots generated with QSE using statevector simulations. 
 The QSE excitation energies are compared against exact CASCI energies within the same active space. 
-Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2, to characterise QSE performance in the low-energy region of the spectrum.
+Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2.
+We chose to characterise QSE performance in this low-energy region because the lowest excited states commonly govern key photophysical and photochemical processes, including fluorescence, phosphorescence, and excited-state reactions \cite{Fielding2018Spectroscopy}.
+% CITE MORE!!!
 
 \subsubsection{Overview of statevector QSE performance}
 
@@ -203,7 +205,7 @@ The resulting near-null eigenvalues are therefore not caused by weak operator su
 \subsubsection{Significance of Small Eigenvalues}
 Taken together, these trends reveal a recurring block of comparatively large overlap eigenvalues associated with the strongly supported operator classes identified above.
 The corresponding stable dimensions are therefore approximately $1+n_{\mathrm{occ}}n_{\mathrm{vir}}$ for singlets and $3n_{\mathrm{occ}}n_{\mathrm{vir}}$ for triplets, with the remaining directions progressively less well supported. 
-We term these dimensions \textit{stable} because their associated overlap eigenvalues remain consistently of order 1 or larger. Retaining these directions therefore does not introduce any strong noise amplifications.
+We term these dimensions \textit{stable} because their associated overlap eigenvalues remain consistently of magnitude one or larger. Retaining these directions therefore does not introduce any strong noise amplifications.
 
 This naturally raises the question of whether these \textit{stable} dimensions alone are sufficient to recover most of the low-energy QSE spectrum. 
 This is of significant interest because a consistently stable rank would provide a natural basis for thresholding, particularly when shot-sampling noise is introduced.
