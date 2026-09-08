@@ -69,13 +69,13 @@ Since $S_1$ exhibits the largest representability failures across the benchmark,
 
 For each molecule, we first compare the lowest excited QSE root, $q_1$, with the exact CASCI singlet states using wavefunction overlap. 
 This diagnostic reveals a particularly consistent pattern for five molecules - butadiene, cyclopentadiene, furan, norbornadiene, and pyrrole. 
-For all active spaces $4e4o$ and larger, those five molecules $q_1$ overlaps most strongly with $S_2$ rather than $S_1$ \cref{fig:si-q1-best-root-transition-map}. 
-These five molecules all contain 2 C=C double bonds, and their dominant singlet excitation is characterised by a $\pi \rightarrow \pi^{*}$ transition.
+For all active spaces $4e4o$ and larger, $q_1$ overlaps most strongly with $S_2$ rather than $S_1$ \cref{fig:si-q1-best-root-transition-map}. 
+These five molecules all contain two C=C double bonds, and their dominant singlet excitation is characterised by a $\pi \rightarrow \pi^{*}$ transition.
 
 Examination of the corresponding CASCI wavefunctions shows that $S_1$ carries substantially stronger double-excitation character, whereas $S_2$ is more strongly dominated by single excitations. 
 The restricted one-body QSE subspace therefore represents $S_2$ more readily than the lower-energy $S_1$ state. 
 As a result, the poorly represented $S_1$ state is effectively omitted from the recovered spectrum, while the more accessible $S_2$ state appears as the lowest excited QSE root. 
-This root omission accounts for the particularly poor $S_1$ performance of these five molecules, with a mean error of approximately 90mHa. 
+This root omission accounts for the particularly poor $S_1$ performance of these five molecules, with a mean error of approximately 90 mHa. 
 
 \begin{figure}[!ht]
     \centering
@@ -86,14 +86,14 @@ This root omission accounts for the particularly poor $S_1$ performance of these
 
 The molecule-specific variation is also reflected in the sensitivity of QSE performance to the particular orbitals included in the active space. 
 Rather than changing smoothly with active-space size, the error can change abruptly when orbitals important to the character of the target state enter the active space.
-Benzene provides a prominent example \cref{fig:benzene-imidazole-case-studies}. 
+Benzene provides a prominent example (\cref{fig:benzene-imidazole-case-studies}). 
 Its low-lying singlet excitation has predominantly $\pi \rightarrow \pi^{*}$ character.
-In the more restricted $4e4o$ and $6e5o$ spaces, the exact CASCI states comprise of mainly singly excited determinants, and the $S_1$ errors remain relatively small. 
+In the more restricted $4e4o$ and $6e5o$ spaces, the exact CASCI states consist mainly of singly excited determinants, and the $S_1$ errors remain relatively small. 
 Once the $LUMO+2$ orbital enters the active space, however, there is an increase in the double-excitation weight of the exact $S_1$ state. 
 This results in the QSE errors increasing substantially.
 
 Imidazole provides a complementary example of the same active-orbital dependence. 
-Here, the dominant $S_1$ excitation has $n \rightarrow \pi^{*}$ character, involving the $HOMO-2$ nonbonding orbital and the $LUMO$ \cref{fig:benzene-imidazole-case-studies}.
+Here, the dominant $S_1$ excitation has $n \rightarrow \pi^{*}$ character, involving the $HOMO-2$ nonbonding orbital and the $LUMO$ (\cref{fig:benzene-imidazole-case-studies}).
 When $HOMO-2$ is unavailable from the smaller active spaces, this dominant single-excitation is unavailable and the exact state exhibits stronger multiconfigurational character. 
 Once $HOMO-2$ enters the active space, the $n \rightarrow \pi^{*}$ excitation becomes directly accessible, and the double-excitation contribution decreases.
 This results in a substantial reduction in the QSE error, although not to within chemical accuracy.
@@ -111,19 +111,19 @@ We therefore compare several UCC-based ansätze with varying levels of expressiv
 \input{tables/results/table1_ansatz_errors}
 
 We find that QSE performance varies with the choice of reference ansatz, with more expressive ansätze generally producing more accurate QSE spectra. 
-The paired k-UpCCGSDSinglet ansatz restricts excitations heavily to only singles and paired doubles. 
+The paired k-UpCCGSDSinglet ansatz restricts excitations to singles and paired doubles. 
 Consequently, this ansatz exhibits the largest errors in the predicted spectrum. 
-While increasing the number of layers from k=1 to k=3 systematically improves their performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. 
+While increasing the number of layers from k=1 to k=3 systematically improves its performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. 
 This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restrictions of its excitation manifold.
 In comparison, UCCSDSinglet and UCCSD achieve similar accuracies across the low-lying states. 
-Although UCCSDSinglet imposes additional parameter-tying constraints, both ansätze span the same excitation manifold, and yield comparable errors.
+Although UCCSDSinglet imposes additional parameter-tying constraints, both ansätze span the same excitation manifold and yield comparable errors.
 UCCGSD, which provides the most flexible excitation manifold considered here, generally produces the lowest errors, albeit at the cost of considerably greater circuit depth. 
 These results illustrate the expected trade-off between reference-state expressiveness and circuit complexity.
 
 Furthermore, the influence of the reference ansatz is considerably more pronounced for the ground state than for the excited states. 
 For S0, the difference in median error between the paired and unpaired ansätze exceeds an order of magnitude, whereas the corresponding variation for S1, T1 and T2 is substantially smaller. 
 This difference can be understood from the composition of the exact CASCI states relative to the VQE reference. 
-At the $6e6o$ active space, the exact $S_0$ state has a mean squared overlap of $95\%$ with the optimized VQE reference across the six ansätze considered
+At the $6e6o$ active space, the exact $S_0$ state has a mean squared overlap of $95\%$ with the optimized VQE reference across the six ansätze considered.
 The ground-state solution therefore depends much more on the quality of the reference wavefunction, and deficiencies in the reference can only be partially corrected by the remaining QSE directions.
 In contrast, the maximum squared overlap between the VQE reference and any of the excited states considered remains below $2\%$.
 These states therefore rely predominantly on the additional operator-generated directions, whose greater flexibility can partially compensate for imperfections in the reference and reduce their sensitivity to the choice of ansatz.
@@ -133,7 +133,7 @@ Spin contamination is observed among the recovered QSE roots, with several highe
 These larger deviations are concentrated predominantly at higher energies, whereas the lowest-lying states remain comparatively less affected (\cref{fig:si-severe-spin-roots}).
 Across the ansätze, the more flexible UCCGSD ansatz exhibits the largest degree of spin contamination, whereas the paired ansätze remain nearly spin pure (\cref{fig:si-spin-contaminated-roots}). 
 Importantly, we note that imposing spin adaptation at the ansatz level does not necessarily guarantee improved spin purity in the implemented circuit. 
-In particular, UCCSDSinglet exhibits greater spin contamination than UCCSD at low Trotter order, an effect associated with finite-order Trotter errors (\cref{tab:s2-spin-mean-trotter})
+In particular, UCCSDSinglet exhibits greater spin contamination than UCCSD at low Trotter order, an effect associated with finite-order Trotter errors (\cref{tab:s2-spin-mean-trotter}).
 A more detailed analysis of the spin contamination is provided in \cref{sec:si-spin-purity}.
 
 Taken together with the spectral-error analysis above, these results identify UCCSD as a favourable compromise among the ansätze considered. 

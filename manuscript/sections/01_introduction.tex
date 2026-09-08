@@ -1,12 +1,12 @@
 % PARA 1: Why Quantum Computing 
 Computational chemistry has become inseparable from modern chemical research, accelerating the pace at which new compounds, materials, and chemical hypotheses can be evaluated. Electronic-structure calculations underpin much of this progress through molecular-property prediction, high-throughput screening, and atomistic simulation \cite{blum2024ESRoadmap, Marzari2021ESApplications,Burke2012DFTReview}. 
-However, systematically accurate wavefunction-based methods become prohibitively expensive for large systems because the dimension of the exact configuration space grows combinatorially. Practical classical methods like Density Functional Theory (DFT) rely on approximations whose accuracy is not uniformly reliable across different correlation regimes \cite{Burke2012DFTReview}. 
-Quantum computers instead offer an alternative route to modelling nature - which is inherently quantum mechanical - by representing and manipulating quantum states using quantum hardware. Qubits encode and manipulate superpositions of many basis states that would generally require exponentially many amplitudes to represent on a classical machine \cite{Schleich2025QuantumComputingForQuantumChemistry,McArdle2020QuantumComputingChemistryReview}.
+However, systematically accurate wavefunction-based methods become prohibitively expensive for large systems because the dimension of the exact configuration space grows combinatorially. Practical classical methods like Density Functional Theory (DFT) rely on approximations whose accuracy is not uniformly reliable across different correlation regimes and active spaces \cite{Burke2012DFTReview}. 
+Quantum computers instead offer an alternative route to modelling nature - which is inherently quantum mechanical - by representing and manipulating quantum states using quantum hardware. Qubits encode superpositions of many basis states that would generally require exponentially many amplitudes to represent on a classical machine \cite{Schleich2025QuantumComputingForQuantumChemistry,McArdle2020QuantumComputingChemistryReview}.
 
 % PARA 2: Quantum Computing Challenges and Methods
 The current generation of quantum hardware, albeit rapidly advancing, remains constrained by imperfect gate operations and limited coherent circuit depth. 
 These limitations have motivated hybrid quantum-classical algorithms that use quantum processors for state preparation and measurement, while delegating parameter optimisation and post-processing to classical hardware \cite{Sharma2020VQENoiseResilience}. Among the most prominent is the Variational Quantum Eigensolver (VQE), which minimises the expectation value of the Hamiltonian to approximate the lowest-energy state accessible to a chosen ansatz \cite{Kumar2025VQEReview}.
-Quantum Subspace Methods (QSM) build on this idea by projecting the full eigenvalue problem onto a compact trial subspace. If the chosen subspace accurately captures the low-energy manifold, the target ground and excited state solutions can be recovered without diagonalising the full many-body Hamiltonian \cite{Motta2024QSMReview}. 
+Quantum Subspace Methods (QSM) build on this idea by projecting the full eigenvalue problem onto a compact trial subspace. If the chosen subspace accurately captures the low-energy manifold, the target ground and lower excited state solutions can be recovered without diagonalising the full many-body Hamiltonian \cite{Motta2024QSMReview}. 
 
 % PARA 4: Formalisation of QSE
 Quantum Subspace Expansion (QSE), introduced by McClean et al. \cite{mcclean2017qse}, is a prominent operator-generated realisation of this framework. 
@@ -14,7 +14,7 @@ QSE constructs a trial subspace by applying a selected set of operators ${\hat{O
 Within this subspace, the $k$-th approximate state is represented as a linear combination of the resulting operator-generated states,
 \KthReferenceStateEquation
 where $\mathbf{c}_k$ contains the coefficients determining the contribution of each basis state.
-These coefficients and the associated energies are obtained by contructing the projected Hamiltonian and overlap matrices, $\mathbf{H}$ and $\mathbf{S}$, and solving the generalised eigenvalue problem
+These coefficients and the associated energies are obtained by constructing the projected Hamiltonian and overlap matrices, $\mathbf{H}$ and $\mathbf{S}$, and solving the generalised eigenvalue problem
 \GeneralisedEigenvalueProblemKEquation
 
 % PARA 5: Limitations of QSE

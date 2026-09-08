@@ -10,10 +10,10 @@
 \end{figure}
 
 The dataset used in this study comprised 28 closed-shell organic molecules from Thiel's excited-state benchmark set \cite{thiels2008benchmark}. 
-These molecules were selected to cover the most important chromophores in organic photochemistry, and comprise hydrocarbons, heterocycles, carbonyls, amides and nucleobases (Figure~\ref{fig:benchmark-molecules}).
+These molecules were selected to cover the most important chromophores in organic photochemistry, comprising hydrocarbons, heterocycles, carbonyls, amides and nucleobases (Figure~\ref{fig:benchmark-molecules}).
 The published Cartesian nuclear coordinates were referenced directly and used without further optimisation. 
 
-For each molecule, Restricted Hartree-Fock calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set, forming a set of canonical molecular orbitals there were optimised once and used consistently throughout the study.
+For each molecule, Restricted Hartree-Fock calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set, forming a set of canonical molecular orbitals that were optimised once and used consistently throughout the study.
 Active spaces (denoted $n_e e\, n_{\mathrm{o}} o$) comprised the $n_e / 2$ occupied molecular spatial orbitals closest to the HOMO and the $n_{\mathrm{o}} - n_e / 2$ virtual molecular spatial orbitals closest to the LUMO. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
 
 For each active space, the electronic Hamiltonian was constructed in second quantisation as follows:
@@ -29,7 +29,7 @@ These reference states were subsequently used to assess the accuracy of the grou
 \subsection{Quantum Simulation Framework}
 In this study, all quantum-circuit calculations were performed using classical simulations implemented with the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. 
 Ideal noiseless simulations were employed throughout, with finite-sampling noise introduced only in the sections involving a limited number of measurement shots.
-The same electronic hamiltonian (\cref{eq:electronic-hamiltonian}) was used for all quantum calculations, and all fermionic operators were mapped to qubit operators via the Jordan-Wigner (JW) transformation.
+The same electronic Hamiltonian (\cref{eq:electronic-hamiltonian}) was used for all quantum calculations, and all fermionic operators were mapped to qubit operators via the Jordan-Wigner (JW) transformation.
 
 % ============================
 % Workflow 
@@ -79,7 +79,7 @@ where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\Lambda$ is a
 \WhitenSEquation
 where $\tilde{\mathbf{U}}$ and $\tilde{\boldsymbol{\Lambda}}$ contain only the retained overlap eigendirections. 
 Eigendirections were retained when $\lambda_i > \tau$, where $\tau$ denotes the specified overlap-eigenvalue threshold. 
-For statevector calculations, a fixed threshold of $1e-8$ was used consistently. For finite-shot sampling calculations, the thresholds used were specificed with all results. 
+For statevector calculations, a fixed threshold of $1e-8$ was used consistently. For finite-shot sampling calculations, the thresholds used were specified with all results. 
 
 Using $c=Vy$, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} is thereby reduced to 
 

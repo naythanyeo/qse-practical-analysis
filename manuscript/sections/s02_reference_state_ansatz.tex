@@ -14,7 +14,8 @@ In this study, six ansatz families were used: UCCSD, UCCSDSinglet,
 UCCGSD, and \(k\)-UpCCGSDSinglet with \(k=1,2,\) and \(3\).
 The ansätze were characterised by the excitation generators included in the cluster operator $\hat{T}$, summarised in the following table.
 
-For each ansatz, candidate singles and doubles transitions were first enumerated in fermionic form. Only canonical transitions that excite from a lower to higher spin orbital were retained because the reverse transitions would already be included through $\hat{T}^{\dagger}$ before exponentiation. All retained generators were spin conserving: single excitations preserved spin labels, while double excitations preserved the total number of $\alpha$ and $\beta$ spin electrons. 
+For each ansatz, candidate singles and doubles transitions were first enumerated in fermionic form. 
+Only canonical transitions that excite from a lower to higher energy spin orbital were retained because the reverse transitions would already be included through $\hat{T}^{\dagger}$ before exponentiation. All retained generators were spin conserving: single excitations preserved spin labels, while double excitations preserved the total number of $\alpha$ and $\beta$ spin electrons. 
 
 The non-generalised UCCSD and UCCSDSinglet ansätze were restricted to occupied-to-virtual single and double excitations relative to the reference Hartree-Fock determinant \cite{Anand2022UCCReview}. In contrast, the generalised UCCGSD ansatz allowed generalised orbital transitions between occupied--occupied and virtual--virtual spin orbitals \cite{Lee2018GeneralisedAnsatzOriginal, Diniz2021GeneralisedAnsatzAdaptations}.
 To reduce the size of the generalised-double operator pool, mixed-direction double excitations, in which one electron was promoted while the other was relaxed, were excluded. Across the $4e4o$ to $8e8o$ active spaces, this practical restriction reduced the number of independent parameters by 42.2--45.2\% and the circuit depth by 46.4--47.6\%.
@@ -28,10 +29,10 @@ For $k$-UpCCGSDSinglet, the complete generalised single and paired-double block 
 % ========================
 \subsection{VQE Optimisation}
 \label{sec:si-vqe-optimisation}
-Unless otherwise stated, all UCC operators were implemented with the first-order Suzuki Trotter product approximation as follows
+Unless otherwise stated, all UCC operators were implemented with the first-order Suzuki Trotter product approximation as follows:
 \SuzukiTrotterFirstOrderEquation
 
-The variational parameters were optimised classically using the L-BFGS-B optimiser through Qibo, to minimise the ground state expectation value. For the $k$-UpCCGSDSinglet ansatz, the parameters associated with all $k$ repeated layers were optimised simultaneously.
+The variational parameters were optimised classically using the L-BFGS-B optimiser through Qibo to minimise the ground state expectation value. For the $k$-UpCCGSDSinglet ansatz, the parameters associated with all $k$ repeated layers were optimised simultaneously.
 Before optimisation, ansatz parameters were initialised based on the following hierarchy: 
 \[
 \mathrm{MP2}
@@ -49,7 +50,7 @@ Before optimisation, ansatz parameters were initialised based on the following h
 \mathrm{UCCGSD}.
 \]
 
-Parameters associated with excitation generators shared with the preceding ansatz were initialised with the previously optimised amplitudes, while newly introduced generators were initialised to zero. The initial occupied-to-virtual double-excitation parameters were estimated using second-order Moller-Plesset perturbation theory (MP2). For parameter transfer from a \(k\)-UpCCGSDSinglet ansatz to a subsequent ansatz, the optimized amplitudes associated with each generator were summed across the \(k\) layers and used as the initial amplitude for the corresponding generator.
+Parameters associated with excitation generators shared with the preceding ansatz were initialised with the previously optimised amplitudes, while newly introduced generators were initialised to zero. The initial occupied-to-virtual double-excitation parameters were estimated using second-order M\o ller-Plesset perturbation theory (MP2). For parameter transfer from a \(k\)-UpCCGSDSinglet ansatz to a subsequent ansatz, the optimized amplitudes associated with each generator were summed across the \(k\) layers and used as the initial amplitude for the corresponding generator.
 
 % ========================
 % Spin Analysis
@@ -74,7 +75,7 @@ We first examine how these spin-contaminated states are distributed across the r
 We observe that spin contamination is relatively uncommon among the lower-lying roots, but becomes increasingly prevalent at higher energies. 
 Its extent also depends strongly on the reference ansatz: the paired ansätze produce almost entirely spin-pure spectra, whereas the more expressive UCCGSD ansatz exhibits more widespread spin contamination.
 This trend is consistent with the different restrictions imposed by the ansätze. 
-The paired ansätze restricts the excitation manifold to generalied singles and paired double excitations, strongly constraining the variational manifold and largely preserving the paired-electron character of the reference state. 
+The paired ansätze restrict the excitation manifold to generalised singles and paired double excitations, strongly constraining the variational manifold and largely preserving the paired-electron character of the reference state. 
 By contrast, UCCGSD employs a generalized excitation manifold in which excitations are not restricted by the occupied–virtual partition and may involve arbitrary active orbitals. 
 This greater flexibility introduces substantially more unpaired excitation pathways and therefore a greater opportunity for spin mixing, consistent with the larger spin contamination observed for UCCGSD.
 
