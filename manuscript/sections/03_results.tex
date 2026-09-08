@@ -52,9 +52,9 @@ The $S_1$ states generally exhibit substantial double-excitation weight, whereas
 This difference is consistent with the closed-shell character of the molecular benchmark. 
 Within the double-excitation sector, singlet states can contain both paired and non-pair doubles. 
 Triplet states, by contrast, can only obtain double-excitation character from the latter class, since a paired double excitation of a closed-shell HF reference produces another closed-shell singlet determinant. 
-The available double-excitaiton manifold is thererfore more restricted for triplet states, consistent with the smaller double-excitation weights observed.
+The available double-excitation manifold is therefore more restricted for triplet states, consistent with the smaller double-excitation weights observed.
 
-Howeve, it is important to note that double-excitation weight alone does not determine QSE accuracy: $S_0$ contains an even larger doubles contribution while remaining more accurately recovered than the low-lying triplet states. 
+However, it is important to note that double-excitation weight alone does not determine QSE accuracy: $S_0$ contains an even larger doubles contribution while remaining more accurately recovered than the low-lying triplet states. 
 This is consistent with the fact that the correlated structure of $S_0$ is already largely encoded in the optimized UCCSD VQE reference, which itself contains double-excitation amplitudes. 
 
 Excited states, however, can require a balance of single and double excitation character that can differ substantially from that of the VQE reference. 
@@ -75,7 +75,7 @@ These five molecules all contain 2 C=C double bonds, and their dominant singlet 
 Examination of the corresponding CASCI wavefunctions shows that $S_1$ carries substantially stronger double-excitation character, whereas $S_2$ is more strongly dominated by single excitations. 
 The restricted one-body QSE subspace therefore represents $S_2$ more readily than the lower-energy $S_1$ state. 
 As a result, the poorly represented $S_1$ state is effectively omitted from the recovered spectrum, while the more accessible $S_2$ state appears as the lowest excited QSE root. 
-This root omisission accounts for the particularly poor $S_1$ performance of these five molecules, with a mean error of approximately 90mHa. 
+This root omission accounts for the particularly poor $S_1$ performance of these five molecules, with a mean error of approximately 90mHa. 
 
 \begin{figure}[!ht]
     \centering
@@ -90,7 +90,7 @@ Benzene provides a prominent example \cref{fig:benzene-imidazole-case-studies}.
 Its low-lying singlet excitation has predominantly $\pi \rightarrow \pi^{*}$ character.
 In the more restricted $4e4o$ and $6e5o$ spaces, the exact CASCI states comprise of mainly singly excited determinants, and the $S_1$ errors remain relatively small. 
 Once the $LUMO+2$ orbital enters the active space, however, there is an increase in the double-excitation weight of the exact $S_1$ state. 
-This results in the QSE errors increasing substantialy.
+This results in the QSE errors increasing substantially.
 
 Imidazole provides a complementary example of the same active-orbital dependence. 
 Here, the dominant $S_1$ excitation has $n \rightarrow \pi^{*}$ character, involving the $HOMO-2$ nonbonding orbital and the $LUMO$ \cref{fig:benzene-imidazole-case-studies}.
@@ -185,7 +185,7 @@ This behaviour can be understood from how the different QSE operators act on the
 Because the reference state is dominated by the Hartree Fock determinant, operators that act directly on this component generate strongly supported basis directions and therefore larger overlap eigenvalues. 
 In contrast, operators that annihilate the dominant Hartree Fock component, or act primarily on the smaller correlated components of the reference state, generate much weaker directions and correspondingly smaller eigenvalues.
 
-This operator-support picture also explains the contrasting behaviour of the occupied number operators in the singlet and triplet sectors. As defined in \cref{eq:qse-singlet-operator-pool,eq:qse-triplet-operator-pool}, the diagonal singlet operator for an occupied spatial orbital $i$ is proportional to $\hat n_{i\alpha}+\hat n_{i\beta}$, so that
+This operator-support picture also explains the contrasting behaviour of the occupied number operators in the singlet and triplet sectors. As defined in \crefrange{eq:qse-singlet-operator-pool}{eq:qse-triplet-operator-pool}, the diagonal singlet operator for an occupied spatial orbital $i$ is proportional to $\hat n_{i\alpha}+\hat n_{i\beta}$, so that
 \SingletOnHFEquation
 
 The dominant Hartree-Fock component therefore provides strong support for this direction, consistent with the large singlet overlap eigenvalues observed. In contrast, the $M_S=0$ triplet diagonal operator is proportional to $\hat n_{i\alpha}-\hat n_{i\beta}$, which gives
@@ -264,13 +264,13 @@ However, as the active spaces grow, the number of matrix elements also increases
 Perturbation bounds for generalised Hermitian eigenvalue problems relate the generalised-eigenvalue errors to the spectral norms of the perturbations in $\mathbf{H}$ and $\mathbf{S}$ \cite{Nakatsukasa2010ErrorBounds}. 
 Since the spectral norm is bounded above by the Frobenius norm, the growth of the accumulated matrix perturbation sets a natural upper scale for the resulting QSE energy errors. 
 For the singles-only operator pool used here, the projected-matrix dimension scales as $d \propto n_{\mathrm{orb}}^2$. 
-Tthe empirical dependence in \cref{eq:error-scaling} is therefore consistent with the accumulation of finite-shot perturbations as the projected problems grow.
-This correspondence should not be interpreted as a direct derivation of the energy-error scaling, but rather as a consistency between the observed empirical trend and the expected growth of matrix perturbations. 
-Nevertheless, the averaged low-energy errors are well described by this empirical relationship over the active spaces studied.
+The empirical dependence in \cref{eq:error-scaling} is therefore consistent with the accumulation of finite-shot perturbations as the projected problems grow.
+Although these perturbation bounds do not directly determine the observed error scaling, which also depends on factors such as the conditioning of the retained overlap subspace, the averaged low-energy errors are nevertheless well described by the empirical relationship, as indicated by the high $R^2$ value.
 
 \subsubsection{Shot Budget Scaling}
+\label{sec:shot-budget-scaling}
 The empirical scaling in \cref{eq:error-scaling} can be used to estimate the measurement requirements for maintaining a fixed QSE accuracy as the active space grows. To maintain a constant error relative to the statevector, this would require approximately $N_{\mathrm{shots}} \propto n_{\mathrm{orb}}^4$. 
-For the $6e6o$ active space, recovering states to within chemical accuracy relative to the statevector already requires an excess of $2 \times 10^{5}$ shots per commuting group (\cref{fig:threshold-shot-error}). 
+For the $6e6o$ active space, recovering states to within chemical accuracy relative to the statevector already requires an excess of $5 \times 10^{5}$ shots per commuting group (\cref{fig:threshold-shot-error}). 
 
 The total measurement cost also depends on the number of distinct commuting groups required to construct both projected matrices. 
 Across the active spaces studied, we empirically determine this scaling to be about $\mathcal{O}\!\left(n_{\mathrm{orb}}^{6.77}\right)$ for singlets and $\mathcal{O}\!\left(n_{\mathrm{orb}}^{6.75}\right)$ for triplets (\cref{fig:si-commuting-group-scaling}). 
@@ -279,44 +279,60 @@ Here, the number of commuting groups was taken by grouping commuting terms acros
 Combining these two contributions gives an estimated total shot requirement for maintaining an approximately constant finite-shot accuracy as
 \TotalShotScalingEquation
 
-This empirically derived estimate indicates that QSE has a steep shot measurement overhead. Importantly, the present analysis considers only a one-body operator pool, whose size scales with $\mathcal{O}\!\left(n_{\mathrm{orb}}^{2}\right)$. 
-However, the representability results above suggest that more expressive operator pools may be required for chemically accurate excited-state recovery.
-Doing so can dramatically increase the shot overhead beyond the estimations we present in \cref{eq:total-shot-scaling}.
-For example, including two-body excitation operators would increase the operator-pool size to $\mathcal{O}\!\left(n_{\mathrm{orb}}^{4}\right)$. 
-If the observed dependence of finite-shot error on projected-matrix dimension persists, maintaining constant accuracy would then require approximately $\mathcal{O}\!\left(n_{\mathrm{orb}}^{8}\right)$ shots per commuting group. 
-The number of required measurement groups would also increase with the enlarged projected problem, leading to an even steeper scaling of the total measurement cost.
-
 % ================================
 % Section 4: Future Work
 % ================================
 \subsection{Scaling and Future Work}
-\subsubsection{Addition of Doubles Operators}
-% Doubles error
-\begin{figure}[htbp]
+Taken together, these results point to several challenges that must be addressed before QSE can be extended reliably to larger active spaces. 
+Most fundamentally, the operator-generated subspace must remain sufficiently expressive to represent the target low-energy states, yet the statevector results show a clear degradation in representability as the active space is enlarged.
+At the same time, the finite-shot calculations reveal a steep increase in measurement requirements with the problem size.
+In the following section, we consider several directions for addressing these limitations and improving the scalability of QSE. 
+
+\subsubsection{Addition of OV Doubles Operators}
+A major source of the representability errors identified above is insufficient independent support for double-excitation character within the one-body QSE subspace. 
+States with substantial double-excitation contributions can therefore remain poorly represented even in the absence of finite-shot noise. 
+A natural direction is to increase the expressiveness of the generated subspace by introducing explicit double-excitation operators. 
+Here, we examine this possibility at the $6e6o$ active space using an expanded operator pool comprising the original one-body excitations (\crefrange{eq:qse-singlet-operator-definition}{eq:qse-singlet-operator-pool}) together with a restricted set of occupied-to-virtual (OV) double excitations (\crefrange{eq:qse-singlet-ov-doubles-operator}{eq:qse-singlet-ov-doubles-operator-pool}).
+We focus this analysis on $S_1$, as it exhibits the largest representability errors among the low-lying states considered. 
+We restricted the operator pool to the OV sector because these excitations are expected to capture the dominant double-excitation pathways while keeping the calculation computationally tractable.
+
+\QSESingletOVDoublesOperatorPoolEquation
+
+\begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{figures/scaling_future_work/ov_doubles_s1_error_comparison.pdf}
     \caption{Comparison of $S_1$ QSE energy errors obtained with occupied-to-virtual singles and with an expanded operator pool including double excitations.}
     \label{fig:si-ov-doubles-s1-error-comparison}
 \end{figure}
 
-% Talk about the effect of adding doubles operators 
+As shown in \cref{fig:si-ov-doubles-s1-error-comparison}, augmenting the one-body operator pool with explicit OV double excitations substantially reduces the $S_1$ error across the benchmark.
+Nevertheless, approximately half the molecules remain above chemical accuracy, with strongly conjugated systems like Octatetraene and Hexatriene retaining errors above 10mHa. 
+This indicates that the restricted OV doubles excitations alone are not sufficient to fully repair the representability gap.
+Additional two-body directions may therefore be required to provide the missing flexibility, which could be important for strongly multiconfigurational states whose structure is not fully captured by the dominant OV sector alone. 
+A similar effect is observed for the one-body operator pool, where OV excitations provide the dominant contributions, but non-OV operators still make appreciable contributions towards the generated subspace.  
 
-While the preceding analysis indicates steep measurement overhead, we find that the projected matrices themselves exhibit substantial structure that may provide opportunities for more efficient reconstruction. 
+However, a complete doubles operator pool would substantially enlarge the projected problem and is beyond the scope of the present calculations. 
+Assessing the extent to which the remaining representability errors can be recovered by the full two-body operator manifold is therefore left for future work, particularly in larger and more strongly multiconfigurational active spaces. 
+Despite these remaining errors, the present results demonstrate that explicit double-excitation operators can markedly improve QSE representability, supporting higher-rank operator expansions as a promising direction.
+
+\subsubsection{Structure of the Projected Matrices}
+That said, a doubles operator pools (even the restricted OV form) scales as $\mathcal{O}\!\left(n_{\mathrm{orb}}^{4}\right)$, compared with $\mathcal{O}\!\left(n_{\mathrm{orb}}^{2}\right)$ for the present one-body pool. 
+This has important consequences for measurement scaling. 
+As the dimension of the projected problem now grows two powers faster with $n_{\mathrm{orb}}$, the measurement requirements are expected to increase even more steeply than for the one-body construction underlying the $\mathcal{O}\!\left(n_{\mathrm{orb}}^{11}\right)$ estimate in \cref{sec:shot-budget-scaling}. 
+This further highlights the central tension: increasing the expressiveness of the operator pool can improve representability, but at the cost of a rapidly increasing measurement burden. 
+Promisingly, the projected matrices themselves exhibit substantial structure that may provide opportunities for more efficient reconstruction. 
 In this section, we examine the recurring patterns and correlations within the projected $\mathbf{H}$ and $\mathbf{S}$ matrices, and how these features are affected by finite-shot sampling.
 
-\subsubsection{Structural Correlations and Sparsity}
-We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices (\cref{fig:si-h-s-element-correlation}). In general, elements with small overlap $S_{ij}$ also tend to have small Hamiltonian couplings $H_{ij}$ and vice versa. 
-This suggests that the Hamiltonian predominantly couples pairs of operator-generated states that already have appreciable overlap within the QSE subspace.
+We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices (\cref{fig:si-h-s-element-correlation}). 
+In general, elements with small overlap $S_{ij}$ also tend to have small Hamiltonian couplings $H_{ij}$. 
+This suggests that the Hamiltonian predominantly couples pairs of operator-generated states that already have appreciable overlap within the QSE subspace. 
 
 The matrices also exhibit pronounced internal structure. The overlap-matrix heatmaps in \cref{fig:si-full-singlet-heatmaps,fig:si-full-triplet-heatmaps} show consistently large diagonal elements, as expected from the self-overlap of the operator-generated states. 
 The off-diagonal elements are much less uniform. 
 Stronger couplings instead appear in recurring block-like regions associated with particular classes of excitation operators, leaving other regions weakly coupled or nearly empty.
-Consequently, the degree of sparsity varies substantially between matrices.
-Interestingly, however, we find no clear relationship between this sparsity and the molecular properties considered across the benchmark. 
-This suggests that the observed coupling patterns are not determined by molecular identity alone, but also depend on the chosen active space and the orbitals included within it. 
-Regardless of the degree of sparsity, the QSE matrix elements exhibit clear structure rather than being uniformly distributed.
+The degree of sparsity also varies substantially between matrices. 
+However, we find no clear relationship between this sparsity and the molecular properties considered across the benchmark, which suggests that the patterns could depend on other factors like the chosen active space and included orbitals.
 
-\subsubsection{Effects of Noise on Structure}
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=\linewidth]{figures/scaling_future_work/matrix_heatmaps/uccsd_6e6o_shot_overlap.pdf}
@@ -324,24 +340,26 @@ Regardless of the degree of sparsity, the QSE matrix elements exhibit clear stru
     \label{fig:shot-overlap-structure}
 \end{figure}
 
-We next consider how finite-shot sampling affects the matrix structure identified above. 
-As shown in \cref{fig:shot-overlap-structure}, sampling noise progressively obscures the detailed patterns present in the statevector overlap matrices. 
+When we perturb the matrices with finite-shot sampling noise (\cref{fig:shot-overlap-structure}), we observe that sampling noise progressively obscures the detailed patterns present in the statevector overlap matrices. 
 The dominant diagonal elements remain visible even at relatively low shot counts, whereas the finer off-diagonal and block-like structures are substantially blurred. 
 Increasing the number of shots gradually restores these features, with the reconstructed matrices approaching the underlying statevector structure more closely at higher sampling precision.
 
-Importantly, these finite-shot perturbations should not be interpreted as independent random errors applied to each matrix element. 
-In our measurement procedure, Pauli terms are grouped globally across the projected matrices, such that the same sampled measurement outcomes contribute to multiple matrix elements. 
-The resulting errors are therefore expected to exhibit correlations across the reconstructed matrices. 
-This provides an additional source of structure in the finite-shot problem beyond that already present in the underlying statevector matrices.
+Beyond the element-wise structure of the projected matrices, the sampling process itself introduces a further form of structure through correlated errors between $\mathbf{H}$ and $\mathbf{S}$.
+Throughout this study, commuting Pauli terms were grouped globally across both matrices, such that shared observables were estimated from the same measurement outcomes. 
+This induces correlated sampling errors between $\mathbf{H}$ and $\mathbf{S}$.
+To assess their importance, we deliberately break these correlations by solving the generalised eigenvalue problem using noisy $\mathbf{H}$ and $\mathbf{S}$ matrices obtained from independent measurements. 
+The resulting errors increase substantially (\cref{fig:si-breaking-h-s-correlated-errors}). 
+More strikingly, combining a finite-shot $\mathbf{H}$ matrix with an exact statevector $\mathbf{S}$ matrix can produce larger errors than using finite-shot estimates of both matrices. 
+This counterintuitive result indicates that correlated perturbations in $\mathbf{H}$ and $\mathbf{S}$ can partially compensate within the generalised eigenvalue problem, and that preserving these correlations is important for accurate QSE reconstruction.
 
 \subsubsection{Outlook for Structure-Aware reconstruction}
 The observations above suggest that finite-shot QSE should not simply be treated as a problem of reconstructing two dense matrices from independent noisy estimates. 
-The corresponding elements of $\mathbf{H}$ and $\mathbf{S}$ are strongly correlated, the statevector matrices exhibit recurring internal structure, and the finite-shot perturbations themselves are expected to be correlated through the shared measurement groups. 
+The corresponding elements of $\mathbf{H}$ and $\mathbf{S}$ are strongly correlated, the statevector matrices exhibit recurring internal structure, and the finite-shot perturbations themselves are correlated through the shared measurement groups. 
 As such, the projected QSE problem is highly structured at both the signal and noise levels.
 
 We envisage that this structure may provide opportunities for classical post-processing methods to reconstruct the projected matrices more accurately from a limited number of measurements. 
 Related approaches have already been explored in quantum error mitigation, where machine-learning and model-based methods exploit systematic structure or correlations in noisy measurement data to improve estimates of ideal observables \cite{Liao2024MLQEM, Aasen2025ReadoutMitigation}. 
 These methods are effective because the targeted errors are not treated as completely independent fluctuations, but instead contain patterns that can be learned or explicitly modelled. 
 
-As such, the steep shot scaling identified above should therefore be interpreted as the cost of the present direct-estimation strategy. 
-Structure-aware reconstruction methods that exploit the features we identified may allow comparable spectral accuracy to be achieved with substantially fewer measurements.
+Therefore, although QSE exhibits steep measurement scaling under present direct-estimation strategies, the substantial structure observed in the projected matrices provides a positive outlook for improving measurement efficiency. 
+Structure-aware reconstruction methods that exploit these recurring features may enable comparable spectral accuracy to be achieved with substantially fewer measurements.

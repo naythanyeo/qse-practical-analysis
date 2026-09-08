@@ -167,7 +167,9 @@
         &=
         \hat{a}^{\dagger}_{i\alpha}\hat{a}_{j\alpha}
         +
-        \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\beta}, \\
+        \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\beta}.
+        \label{eq:qse-singlet-operator-definition}
+        \\
         \mathcal{O}^{S}
         &=
         \left\{
@@ -196,7 +198,9 @@
         \qquad
         \hat{O}^{T,-1}_{ij}
         =
-        \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\alpha}, \\
+        \hat{a}^{\dagger}_{i\beta}\hat{a}_{j\alpha}.
+        \label{eq:qse-triplet-operator-definition}
+        \\
         \mathcal{O}^{T}
         =
         \left\{
@@ -207,6 +211,37 @@
         \right\}.
         \label{eq:qse-triplet-operator-pool}
     \end{gather}%
+}
+
+% QSE Singlet OV-Doubles Operator Pool
+\newcommand{\QSESingletOVDoublesOperatorPoolEquation}{%
+    \begin{align}
+        \hat{O}^{S,(2)}_{ij,ab}
+        & =
+        \frac{1}{\sqrt{2}}
+        \left(
+            \hat{a}^{\dagger}_{a\alpha}
+            \hat{a}^{\dagger}_{b\beta}
+            \hat{a}_{j\beta}
+            \hat{a}_{i\alpha}
+            +
+            \hat{a}^{\dagger}_{a\beta}
+            \hat{a}^{\dagger}_{b\alpha}
+            \hat{a}_{j\alpha}
+            \hat{a}_{i\beta}
+        \right).
+        \label{eq:qse-singlet-ov-doubles-operator}
+        \\
+        \mathcal{O}^{S,(2)}_{\mathrm{OV}}
+        & =
+        \left\{
+            \hat{O}^{S,(2)}_{ij,ab}
+            \mathrel{\big|}
+            i,j \in \{1, \ldots, n_{\mathrm{o}}\},
+            \ a,b \in \{1, \ldots, n_{\mathrm{v}}\}
+        \right\}.
+        \label{eq:qse-singlet-ov-doubles-operator-pool}
+    \end{align}%
 }
 
 \newcommand{\QSEProjectedMatricesEquation}{%
@@ -374,7 +409,7 @@
     \begin{equation}
         E_{\min}
         \propto
-        \frac{N_{\mathrm{orb}}^{2}}
+        \frac{n_{\mathrm{orb}}^{2}}
              {\sqrt{N_{\mathrm{shots}}}}.
         \label{eq:error-scaling}
     \end{equation}%
@@ -387,10 +422,10 @@
         =
         N_{\mathrm{shots}}N_{\mathrm{groups}}
         \propto
-        N_{\mathrm{orb}}^{4}
-        N_{\mathrm{orb}}^{6.76}
+        n_{\mathrm{orb}}^{4}
+        n_{\mathrm{orb}}^{6.76}
         \sim
-        N_{\mathrm{orb}}^{11}.
+        n_{\mathrm{orb}}^{11}.
         \label{eq:total-shot-scaling}
     \end{equation}%
 }
