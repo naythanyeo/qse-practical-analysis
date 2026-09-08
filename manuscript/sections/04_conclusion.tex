@@ -1,7 +1,8 @@
 In this work, we examined the accuracy, representability, numerical stability, and finite-shot behaviour of spin-resolved QSE across a chemically diverse molecular benchmark. 
 In the statevector limit, QSE generally recovers the ground state well, but the present one-body operator pool is less reliable for low-lying excited states, with representability degrading as the active space grows. 
-We further quantified the effects of missing or reordered roots, spin contamination, and incomplete projection onto the QSE subspace. 
-Among the ansätze considered, UCCSD provides a robust compromise between spectral accuracy, circuit complexity, and spin purity. 
+Much of this degradation is associated with the limited representation of states with substantial multiconfigurational character, reflecting a limitation of the present one-body operator pool. 
+The resulting representability errors vary substantially across molecules and active spaces, reflecting their sensitivity to the electronic character of the target states and the orbitals included.
+Among the ansätze considered, we find that UCCSD provides a robust compromise between spectral accuracy, circuit complexity, and spin purity. 
 Present results motivate the exploration of larger operator pools, including higher-order excitations, together with benchmarks in larger active spaces.
 
 Analysis of the overlap spectrum shows that the numerical instability of QSE originates largely from weakly supported operator-generated directions. 
