@@ -13,23 +13,23 @@ The dataset used in this study comprised 28 closed-shell organic molecules from 
 These molecules were selected to cover the most important chromophores in organic photochemistry, comprising hydrocarbons, heterocycles, carbonyls, amides and nucleobases (Figure~\ref{fig:benchmark-molecules}).
 The published Cartesian nuclear coordinates were referenced directly and used without further optimisation. 
 
-For each molecule, Restricted Hartree-Fock calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set, forming a set of canonical molecular orbitals that were optimised once and used consistently throughout the study.
-Active spaces (denoted $n_e e\, n_{\mathrm{o}} o$) comprised the $n_e / 2$ occupied molecular spatial orbitals closest to the HOMO and the $n_{\mathrm{o}} - n_e / 2$ virtual molecular spatial orbitals closest to the LUMO. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
+For each molecule, Restricted Hartree-Fock (RHF) calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set. The respective optimized canonical molecular orbitals are used throughout the study.
+Active spaces (denoted $n_e e\, n_{\mathrm{o}} o$) comprised the $n_e / 2$ occupied molecular spatial orbitals closest to the HOMO (inclusive) and the $n_{\mathrm{o}} - n_e / 2$ virtual molecular spatial orbitals closest to the LUMO (inclusive). For example, a $6e6o$ active space is defined as HOMO-2, HOMO-1, HOMO, LUMO, LUMO+1 and LUMO+2 in this study. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
 
 For each active space, the electronic Hamiltonian was constructed in second quantisation as follows:
 \ElectronicHamiltonianEquation
 where $E_{\mathrm{nuc}}$ is the core nuclear repulsion energy and $p, q, r, s$ index the active spin-orbitals. $h_{pq}$ and $g_{pqrs}$ are the one- and two-electron integral coefficients evaluated in the fixed canonical Hartree-Fock MO basis.
 
 Exact reference energies and wavefunctions were obtained from complete active-space configuration interaction (CASCI) diagonalisation of the active-space Hamiltonian in PySCF. 
-These reference states were subsequently used to assess the accuracy of the ground- and excited-state energies obtained from QSE.
+These reference states were subsequently used to assess the accuracy of the ground- and excited-state energies obtained from QSE. 
+
+To assess the performance of QSE across varying active spaces, we considered 2e2o, 2e3o, 4e3o, 4e4o, 4e5o, 6e5o, 6e6o, 6e7o, 8e7o and 8e8o.
 
 % ============================
 % Quantum calculations
 % ============================
 \subsection{Quantum Simulation Framework}
-In this study, all quantum-circuit calculations were performed using classical simulations implemented with the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. 
-Ideal noiseless simulations were employed throughout, with finite-sampling noise introduced only in the sections involving a limited number of measurement shots.
-The same electronic Hamiltonian (\cref{eq:electronic-hamiltonian}) was used for all quantum calculations, and all fermionic operators were mapped to qubit operators via the Jordan-Wigner (JW) transformation.
+In this study, all statevector and noiseless shots simulations were performed with Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. The same electronic Hamiltonian (\cref{eq:electronic-hamiltonian}) was used for all quantum calculations, and all fermionic operators were mapped to qubit operators via the Jordan-Wigner (JW) transformation.
 
 % ============================
 % Workflow 
@@ -39,14 +39,13 @@ The QSE workflow begins with the preparation of a ground-state reference wavefun
 We used a Unitary Coupled-Cluster (UCC) ansatz to parameterise the ground state wavefunction. 
 \UCCReferenceStateEquation
 where $\left|\Phi_{\mathrm{HF}}\right\rangle$ is the Hartree-Fock reference determinant and $\hat{T}(\boldsymbol{\theta})$ denotes the coupled cluster excitation operator.
-By default, UCCSD was used as the reference ansatz throughout this study. Additional ansatz classes were considered in \cref{sec:ansatz-dependence}, namely UCCSDSinglet, UCCGSD, and $k$-UpCCGSDSinglet with $k=1,2$ and $3$. 
+By default, UCCSD was used as the reference ansatz throughout this study. Additional ansatz classes were considered in \cref{sec:ansatz-dependence}, namely UCCSDSinglet, UCCGSD, and $k$-UpCCGSDSinglet with $k=1,2$ and $3$ with the 6e6o active space. 
 The corresponding excitation operators defining each ansatz are provided in \cref{sec:si-ansatz-classes}.
-The variational parameters $\boldsymbol{\theta}$ were optimised with the L-BFGS-B optimiser to minimise the exact statevector expectation value of the Hamiltonian (\cref{eq:electronic-hamiltonian}).
+The variational parameters $\boldsymbol{\theta}$ were optimized using the L-BFGS-B algorithm by minimizing the Hamiltonian expectation value obtained from exact statevector simulation. (\cref{eq:electronic-hamiltonian}).
 Unless otherwise stated, all UCC operators were implemented using the first-order Suzuki Trotter product approximation.
 
-This optimised VQE ground-state wavefunction was then used as the reference state for QSE calculations. 
-As introduced above, QSE constructs a trial subspace by applying a set of expansion operators to the reference state. 
-Following the original QSE formulation \cite{mcclean2017qse}, we restricted the expansion operator pool to one-body fermionic operators. 
+The VQE-optimized ground-state circuits were then used as the reference states for QSE calculations. 
+As introduced above, QSE constructs a trial subspace by applying a set of expansion operators to the reference state. Following the original QSE formulation \cite{mcclean2017qse}, we restricted the expansion operator pool to one-body fermionic operators. 
 To enable a spin-resolved analysis of the excited-state spectrum, these operators were further spin adapted to construct separate singlet and triplet operator pools. This allows low-lying singlet and triplet states to be targeted and analysed independently. 
 
 The singlet operator pool, $\mathcal{O}^{S}$, was defined as
@@ -61,11 +60,7 @@ The projected Hamiltonian and overlap matrices were then constructed as
 \QSEProjectedMatricesEquation
 where $\mu$ and $\nu$ index the expansion operators within the corresponding QSE operator pool. The spin character of each resulting QSE eigenstate was additionally evaluated using a projected spin-squared matrix (\cref{sec:si-spin-expectation}).
 
-In the absence of finite-shot sampling, the optimized VQE circuit was simulated to obtain the corresponding statevector, from which the required expectation values and projected matrix elements were evaluated exactly. 
-For finite-shot calculations, the Pauli terms contributing to the projected matrices were first grouped globally (across $\mathbf{H}$ and $\mathbf{S}$) into qubit-wise commuting (QWC) measurement sets. 
-For each group, the corresponding basis-rotation gates were first appended to the optimized VQE circuit. 
-The resulting rotated statevector was then sampled multinomially in the computational ($Z$) basis for the prescribed number of shots.
-These samples were used to estimate the expectation values for the projected matrices.
+For statevector calculations, the optimized VQE circuits were simulated to obtain the corresponding quantum states, from which the required expectation values and projected matrix elements were evaluated exactly. For finite-shot calculations, the Pauli terms contributing to both $\mathbf{H}$ and $\mathbf{S}$ were globally grouped into qubit-wise commuting (QWC) measurement sets. The appropriate basis-rotation gates were appended to the optimized VQE circuit for each measurement group, and the resulting rotated state was sampled multinomially in the computational ($Z$) basis using the prescribed number of shots. The resulting measurement outcomes were then used to estimate the Pauli expectation values and, consequently, the projected matrix elements.
 
 % ============================
 % Thresholding
@@ -74,14 +69,14 @@ These samples were used to estimate the expectation values for the projected mat
 In this work, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} was regularised by applying thresholding to the overlap matrix $\mathbf{S}$.
 The matrix was first diagonalised as
 \DiagonaliseSEquation
-where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\Lambda$ is a diagonal matrix containing the eigenvalues of $\mathbf{S}$. Then, we define the reduced whitening transformation
+where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\mathbf{\Lambda}$ is a diagonal matrix containing the eigenvalues of $\mathbf{S}$. Then, we define the reduced whitening transformation
 
 \WhitenSEquation
-where $\tilde{\mathbf{U}}$ and $\tilde{\boldsymbol{\Lambda}}$ contain only the retained overlap eigendirections. 
-Eigendirections were retained when $\lambda_i > \tau$, where $\tau$ denotes the specified overlap-eigenvalue threshold. 
-For statevector calculations, a fixed threshold of $1e-8$ was used consistently. For finite-shot sampling calculations, the thresholds used were specified with all results. 
+where $\tilde{\mathbf{U}}$ and $\tilde{\boldsymbol{\Lambda}}$ contain only the retained overlap eigenvectors. 
+Eigenvectors were retained when $\lambda_i > \tau$, where $\tau$ denotes the specified overlap-eigenvalue threshold. 
+For statevector calculations, a fixed threshold of $10^{-8}$ was used consistently. For finite-shot sampling calculations, the thresholds used were specified with all results. 
 
-Using $c=Vy$, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} is thereby reduced to 
+Defining $c=Vy$, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} is thereby rewritten as 
 
 \ReducedEigenvalueEquation
 

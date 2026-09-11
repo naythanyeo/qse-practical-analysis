@@ -2,7 +2,7 @@
 % Section 1: Representability
 % ================================
 \subsection{Accuracy and Representability of the QSE Subspace}
-In this section, we study the spectral accuracy and representability of low-lying roots generated with QSE using statevector simulations. 
+In this section, we study the spectral accuracy and representability of low-lying roots generated with QSE using statevector simulations for all active spaces considered using the UCCSD ansatz as ground state references. 
 The QSE excitation energies are compared against exact CASCI energies within the same active space. 
 Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2.
 We chose to characterise QSE performance in this low-energy region because the lowest excited states commonly govern key photophysical and photochemical processes, including fluorescence, phosphorescence, and excited-state reactions \cite{Fielding2018Spectroscopy}.
@@ -26,10 +26,10 @@ The near-exact recovery in the smallest active spaces is consistent with the rel
 In these cases, the one-body operator pool generates more basis states than there are physically accessible determinants within the relevant spin sector.
 The QSE subspace can therefore span most of the relevant Hilbert space, leaving little room for representability error.
 This favourable dimensionality does not persist as the active space grows. The number of one-body QSE operators scales polynomially, approximately as $n^2$, whereas the dimension of the full configuration-interaction (FCI) space grows combinatorially with the number of electrons and orbitals. 
-Therefore, the fraction of the many-electron space accessible to the generated QSE subspace decreases with system size, providing a natural explanation for the overall deterioration in accuracy.
+Therefore, the fraction of the full configurational space accessible to the generated QSE subspace decreases with system size, providing a natural explanation for the overall deterioration in accuracy.
 
 However, active-space size alone does not fully account for the observed error trends. 
-The deterioration in performance is nonuniform, with a particularly pronounced increase in errors between four and five orbital active spaces. 
+The deterioration in performance is non-uniform, with a particularly pronounced increase in errors between four and five orbital active spaces. 
 Furthermore, active spaces with the same number of orbitals can exhibit markedly different performance even when the relative dimensionality of the QSE and exact spaces is unchanged, as seen most clearly for 4e5o and 6e5o.
 
 Beyond active-space dependent trends, the QSE errors also vary substantially between electronic states. The ground state $S_0$ is generally recovered within chemical accuracy, whereas the lowest lying singlet state $S_1$ exhibits the largest errors. 
@@ -41,7 +41,7 @@ which measures the fraction of the $k$-th exact CASCI state contained within the
 Importantly, this projection is evaluated directly from the operator-generated QSE basis states, before solving the generalised eigenvalue problem. 
 It therefore isolates the representability of the target state from subsequent effects associated with overlap-matrix thresholding, numerical conditioning, or the ordering of the recovered Ritz roots.
 As shown in \cref{fig:si-error-vs-projection-deficit}, large energy errors are strongly associated with missing projection $1-P_k$. 
-This confirms that the observed errors predominantly arise from incomplete representation of the target states within the operator-generated QSE subspace.
+This confirms that the observed errors predominantly arise from incomplete representation of the target states within the operator-generated QSE subspace. 
 
 \subsubsection{State Dependence of QSE Representability}
 Next, we seek to better characterise the state-dependent errors observed above by examining the electronic structure of the exact CASCI states. 
@@ -50,7 +50,7 @@ We focus in particular on the double-excitation weight, defined as the fraction 
 Doubles are of particular interest because they are the lowest excitation rank not independently represented by the present one-body QSE operator pool. 
 
 The decomposition reveals clear differences between the low-lying states (\cref{fig:si-casci-double-excitation-weight}). 
-The $S_1$ states generally exhibit substantial double-excitation weight, whereas the corresponding $T_1$ and $T_2$ states contain markedly smaller contributions. 
+The $S_1$ states generally exhibit substantial double-excitation weight, whereas the corresponding $T_1$ and $T_2$ states contain markedly smaller contributions. {\color{red}{You need to quantify using numerical values, basically describe the figure in words using numbers, also mention that the doubles contributions increase with active space size in general, again quantitatively}}
 This difference is consistent with the closed-shell character of the molecular benchmark. 
 Within the double-excitation sector, singlet states can contain both paired and non-pair doubles. 
 Triplet states, by contrast, can only obtain double-excitation character from the latter class, since a paired double excitation of a closed-shell HF reference produces another closed-shell singlet determinant. 
@@ -60,8 +60,8 @@ However, it is important to note that double-excitation weight alone does not de
 This is consistent with the fact that the correlated structure of $S_0$ is already largely encoded in the optimized UCCSD VQE reference, which itself contains double-excitation amplitudes. 
 
 Excited states, however, can require a balance of single and double excitation character that can differ substantially from that of the VQE reference. 
-While the one-body operator pool provides independent access to singly excited directions, it does not introduce independent double-excitation directions. 
-The corresponding double-excitation amplitudes therefore cannot be tuned independently and remain largely constrained by the VQE reference. 
+While the one-body operator pool provides independent access to singly excited configurations, it does not introduce double-excitations independent of the optimized ground state ansatz. 
+The corresponding double-excitation amplitudes therefore cannot be tuned further and remain largely constrained by the VQE reference. 
 This reduced flexibility makes excited states with greater double-excitation character generally more difficult to represent accurately within the QSE subspace.
 
 \subsubsection{Molecular Case Studies and Active-Space Effects}
@@ -71,10 +71,10 @@ Since $S_1$ exhibits the largest representability failures across the benchmark,
 
 For each molecule, we first compare the lowest excited QSE root, $q_1$, with the exact CASCI singlet states using wavefunction overlap. 
 This diagnostic reveals a particularly consistent pattern for five molecules - butadiene, cyclopentadiene, furan, norbornadiene, and pyrrole. 
-For all active spaces $4e4o$ and larger, $q_1$ overlaps most strongly with $S_2$ rather than $S_1$ \cref{fig:si-q1-best-root-transition-map}. 
+For all active spaces $4e4o$ and larger, $q_1$ overlaps most strongly with $S_2$ rather than $S_1$ \cref{fig:si-q1-best-root-transition-map}. {\color{red}{You need to quantify using numerical values, basically describe the heatmap data in words using numbers}}
 These five molecules all contain two C=C double bonds, and their dominant singlet excitation is characterised by a $\pi \rightarrow \pi^{*}$ transition.
 
-Examination of the corresponding CASCI wavefunctions shows that $S_1$ carries substantially stronger double-excitation character, whereas $S_2$ is more strongly dominated by single excitations. 
+Examination of the corresponding CASCI wavefunctions shows that $S_1$ carries substantially stronger double-excitation character, whereas $S_2$ is more strongly dominated by single excitations.  {\color{red}{You need to quantify using numerical values, basically describe the heatmap data in words using numbers}}
 The restricted one-body QSE subspace therefore represents $S_2$ more readily than the lower-energy $S_1$ state. 
 As a result, the poorly represented $S_1$ state is effectively omitted from the recovered spectrum, while the more accessible $S_2$ state appears as the lowest excited QSE root. 
 This root omission accounts for the particularly poor $S_1$ performance of these five molecules, with a mean error of approximately 90 mHa. 
@@ -91,43 +91,43 @@ Rather than changing smoothly with active-space size, the error can change abrup
 Benzene provides a prominent example (\cref{fig:benzene-imidazole-case-studies}). 
 Its low-lying singlet excitation has predominantly $\pi \rightarrow \pi^{*}$ character.
 In the more restricted $4e4o$ and $6e5o$ spaces, the exact CASCI states consist mainly of singly excited determinants, and the $S_1$ errors remain relatively small. 
-Once the $LUMO+2$ orbital enters the active space, however, there is an increase in the double-excitation weight of the exact $S_1$ state. 
+Once the LUMO+2 orbital enters the active space, however, there is an increase in the double-excitation weight of the exact $S_1$ state. 
 This results in the QSE errors increasing substantially.
 
 Imidazole provides a complementary example of the same active-orbital dependence. 
-Here, the dominant $S_1$ excitation has $n \rightarrow \pi^{*}$ character, involving the $HOMO-2$ nonbonding orbital and the $LUMO$ (\cref{fig:benzene-imidazole-case-studies}).
-When $HOMO-2$ is unavailable from the smaller active spaces, this dominant single-excitation is unavailable and the exact state exhibits stronger multiconfigurational character. 
-Once $HOMO-2$ enters the active space, the $n \rightarrow \pi^{*}$ excitation becomes directly accessible, and the double-excitation contribution decreases.
+Here, the dominant $S_1$ excitation has $n \rightarrow \pi^{*}$ character, involving the HOMO-2 nonbonding orbital and the LUMO (\cref{fig:benzene-imidazole-case-studies}).
+When HOMO-2 is unavailable from the smaller active spaces, this dominant single-excitation is unavailable and the exact state exhibits stronger multiconfigurational character. 
+Once HOMO-2 enters the active space, the $n \rightarrow \pi^{*}$ excitation becomes directly accessible, and the double-excitation contribution decreases.
 This results in a substantial reduction in the QSE error, although not to within chemical accuracy.
 
 Together, these examples show that active-space-dependent variation in QSE accuracy can be traced to the inclusion of specific orbitals that alter the multiconfigurational character of the target state. 
-This provides a direct explanation for the pronounced changes in representability observed within the same molecule across different active spaces.
+This provides a direct explanation for the pronounced changes in representability observed within the same molecule across different active spaces. Our results also point to the fact that the accurate implementation of QSE requires a priori knowledge of relevant orbitals and important excitations. This information may not be available if classical benchmarks are computationally out-of-reach. 
 
 % Ansatz dependence
 \subsubsection{Reference Ansatz Dependence of QSE Performance}
-We next examine how the choice of variational reference ansatz affects QSE performance. 
+We next examine how the choice of variational reference ansatz affects QSE performance using the $6e6o$ active space. 
 Since the QSE subspace is generated from the optimized VQE state, differences in reference quality and excitation flexibility can influence the states accessible to the expansion. 
-We therefore compare several UCC-based ansätze with varying levels of expressiveness and circuit complexity.
+We therefore compare several UCC-based ansatz with varying levels of expressiveness and circuit complexity.
 
 \label{sec:ansatz-dependence}
 \input{tables/results/table1_ansatz_errors}
 
-We find that QSE performance varies with the choice of reference ansatz, with more expressive ansätze generally producing more accurate QSE spectra. 
+We find that QSE performance varies with the choice of reference ansatz, with more expressive ansatz generally producing more accurate QSE spectra. 
 The paired k-UpCCGSDSinglet ansatz restricts excitations to singles and paired doubles. 
 Consequently, this ansatz exhibits the largest errors in the predicted spectrum. 
 While increasing the number of layers from k=1 to k=3 systematically improves its performance, the ground-state error at k=3 remains more than an order of magnitude larger than that of the next best ansatz. 
 This indicates that increasing the flexibility of the paired ansatz does not fully compensate for the restrictions of its excitation manifold.
 In comparison, UCCSDSinglet and UCCSD achieve similar accuracies across the low-lying states. 
-Although UCCSDSinglet imposes additional parameter-tying constraints, both ansätze span the same excitation manifold and yield comparable errors.
+Although UCCSDSinglet imposes additional parameter-tying constraints, both ansatz span the same excitation manifold and yield comparable errors.
 UCCGSD, which provides the most flexible excitation manifold considered here, generally produces the lowest errors, albeit at the cost of considerably greater circuit depth. 
 These results illustrate the expected trade-off between reference-state expressiveness and circuit complexity.
 
 Furthermore, the influence of the reference ansatz is considerably more pronounced for the ground state than for the excited states. 
-For S0, the difference in median error between the paired and unpaired ansätze exceeds an order of magnitude, whereas the corresponding variation for S1, T1 and T2 is substantially smaller. 
+For S0, the difference in median error between the paired and unpaired ansatz exceeds an order of magnitude, whereas the corresponding variation for S1, T1 and T2 is substantially smaller. 
 This difference can be understood from the composition of the exact CASCI states relative to the VQE reference. 
-At the $6e6o$ active space, the exact $S_0$ state has a mean squared overlap of $95\%$ with the optimized VQE reference across the six ansätze considered.
+At the $6e6o$ active space, the exact $S_0$ state has a mean squared overlap of $95\%$ with the optimized VQE reference across the six ansätze considered. {\color{red}{Need a table to reference to}}
 The ground-state solution therefore depends much more on the quality of the reference wavefunction, and deficiencies in the reference can only be partially corrected by the remaining QSE directions.
-In contrast, the maximum squared overlap between the VQE reference and any of the excited states considered remains below $2\%$.
+In contrast, the maximum squared overlap between the VQE reference and any of the excited states considered remains below $2\%$.  {\color{red}{Need a table to reference to}}
 These states therefore rely predominantly on the additional operator-generated directions, whose greater flexibility can partially compensate for imperfections in the reference and reduce their sensitivity to the choice of ansatz.
 
 Beyond spectral accuracy, the choice of reference ansatz also affects the spin purity of the recovered states.
@@ -138,7 +138,7 @@ Importantly, we note that imposing spin adaptation at the ansatz level does not 
 In particular, UCCSDSinglet exhibits greater spin contamination than UCCSD at low Trotter order, an effect associated with finite-order Trotter errors (\cref{tab:s2-spin-mean-trotter}).
 A more detailed analysis of the spin contamination is provided in \cref{sec:si-spin-purity}.
 
-Taken together with the spectral-error analysis above, these results identify UCCSD as a favourable compromise among the ansätze considered. 
+Taken together with the spectral-error analysis above, these results identify UCCSD as the most cost-effective option among the ansatz considered. 
 It maintains relatively low spectral errors, exhibits substantially less spin contamination than UCCGSD, and avoids the greater circuit depth associated with the more expressive generalized ansatz.
 
 
@@ -174,55 +174,54 @@ It maintains relatively low spectral errors, exhibits substantially less spin co
 
 Having examined the representability and spectral accuracy of the QSE subspace, we next turn to its numerical stability. 
 As discussed in the Introduction, very small eigenvalues of the overlap matrix $\mathbf{S}$ can strongly amplify noise, making the generalised eigenvalue problem highly sensitive to perturbations.
-Here, we examine the full eigenvalue spectrum of $\mathbf{S}$ (\cref{fig:eigenvalue-spectrum}) to understand why these near-null directions arise in the first place. 
+Here, we examine the full eigenvalue spectrum of $\mathbf{S}$ (\cref{fig:eigenvalue-spectrum}) to understand why these near-null eigenvectors arise in the first place. 
 
 One clear trend that emerges is between the eigenvalue magnitude and the composition of its corresponding eigenvector. 
 We first classify the QSE excitation operators into three groups: occupied number operators, occupied-to-virtual (OV) excitations, and the remaining excitation classes. 
 Each eigenvector of $\mathbf{S}$ can then be decomposed into basis states corresponding to each category (\cref{fig:eigenvector-composition}). 
 One clear trend emerges between the eigenvalue magnitude and the composition of its corresponding eigenvector.
-The largest eigenvalues are generally associated with OV-dominated eigenmodes. Singlets additionally contain a strongly supported occupied-number mode, while the remaining operator classes contribute predominantly to smaller-eigenvalue directions. 
+The largest eigenvalues are generally associated with OV-dominated eigenmodes. Singlets additionally contain a strongly supported occupied-number mode, while the remaining operator classes contribute predominantly to smaller-eigenvalue directions. {\color{red}{Quantify with numbers}}
 For the singlet subspace, this produces one number-dominated eigenvector followed by a block of OV-dominated eigenvectors with eigenvalues close to unity, after which the spectrum drops to progressively smaller values. The triplet subspace retains the OV-dominated stable block, but the corresponding occupied-number contribution is much more weakly supported.
 
 This behaviour can be understood from how the different QSE operators act on the underlying VQE reference. 
-Because the reference state is dominated by the Hartree Fock determinant, operators that act directly on this component generate strongly supported basis directions and therefore larger overlap eigenvalues. 
-In contrast, operators that annihilate the dominant Hartree Fock component, or act primarily on the smaller correlated components of the reference state, generate much weaker directions and correspondingly smaller eigenvalues.
+Because the reference state is dominated by the Hartree–Fock determinant, operators that act directly on this component generate basis directions with relatively large amplitudes, resulting in larger overlap eigenvalues.
+In contrast, operators that annihilate the dominant Hartree Fock component, or act primarily on the smaller correlated components of the reference state, generate correspondingly smaller eigenvalues.
 
-This operator-support picture also explains the contrasting behaviour of the occupied number operators in the singlet and triplet sectors. As defined in \crefrange{eq:qse-singlet-operator-pool}{eq:qse-triplet-operator-pool}, the diagonal singlet operator for an occupied spatial orbital $i$ is proportional to $\hat n_{i\alpha}+\hat n_{i\beta}$, so that
+This also explains the contrasting behaviour of the occupied number operators in the singlet and triplet sectors. As defined in \crefrange{eq:qse-singlet-operator-pool}{eq:qse-triplet-operator-pool}, the diagonal singlet operator for an occupied spatial orbital $i$ is proportional to $\hat n_{i\alpha}+\hat n_{i\beta}$, so that
 \SingletOnHFEquation
 
-The dominant Hartree-Fock component therefore provides strong support for this direction, consistent with the large singlet overlap eigenvalues observed. In contrast, the $M_S=0$ triplet diagonal operator is proportional to $\hat n_{i\alpha}-\hat n_{i\beta}$, which gives
+The dominant Hartree-Fock component therefore translates to larger amplitude for the above operator, consistent with the large singlet overlap eigenvalues observed. In contrast, the $M_S=0$ triplet diagonal operator is proportional to $\hat n_{i\alpha}-\hat n_{i\beta}$, which gives
 \TripletOnHFEquation
 
 The $M_S=\pm1$ diagonal triplet operators likewise annihilate the closed-shell Hartree-Fock determinant because the corresponding spin-flip attempts to create an electron in an already occupied spin orbital. 
-The triplet number operators therefore receive support only from configurations containing singly occupied spatial orbitals. 
-This is particularly consequential for 1-UpCCGSD, which only allows for singles and paired doubles excitations. Its spectrum, shown in \cref{fig:si-1up-triplet-eigenvalues}, highlights the corresponding $M$ number-operator directions appearing as near-null eigenvalues.
+The triplet number operators therefore only contributes when acting on configurations containing singly occupied spatial orbitals. 
+This is particularly consequential for 1-UpCCGSD, which only allows for singles and paired doubles excitations. Its spectrum, shown in \cref{fig:si-1up-triplet-eigenvalues}, highlights the corresponding $M$ number-operator bases appearing as near-null eigenvalues.
 
-A second source of near-null directions observed occurs within the $2e2o$, $2e3o$, and $4e3o$ active spaces. In those cases, the number of nominal QSE basis states exceeds the dimension of the physically accessible subspace within the relevant spin sector. 
+A second source of near-null excitations observed occurs within the $2e2o$, $2e3o$, and $4e3o$ active spaces. In those cases, the number of nominal QSE basis states exceeds the dimension of the physically accessible subspace within the relevant spin sector. 
 This results in redundant linear combinations, which manifest as near null eigenvalues of the overlap matrix $\mathbf{S}$. 
-More generally, this occurs for small active spaces in which the orbital window does not extend beyond $HOMO\pm1$ and $LUMO\pm1$. 
+More generally, this occurs for small active spaces in which the orbital window does not extend beyond HOMO$\pm$1 and LUMO$\pm$1. 
 The resulting near-null eigenvalues are therefore not caused by weak operator support alone, but can arise simply from the dimensionality constraint of the many-electron Hilbert space.
 
 \subsubsection{Significance of Small Eigenvalues}
-Taken together, these trends reveal a recurring block of comparatively large overlap eigenvalues associated with the strongly supported operator classes identified above.
-The corresponding stable dimensions are therefore approximately $1+n_{\mathrm{occ}}n_{\mathrm{vir}}$ for singlets and $3n_{\mathrm{occ}}n_{\mathrm{vir}}$ for triplets, with the remaining directions progressively less well supported. 
-We term these dimensions \textit{stable} because their associated overlap eigenvalues remain consistently of magnitude one or larger. Retaining these directions therefore does not introduce any strong noise amplifications.
+Taken together, these trends reveal a recurring block of comparatively large overlap eigenvalues associated with operator classes whose action on the reference state produces basis states with relatively large weights identified above.
+The corresponding stable dimensions are therefore approximately $1+n_{\mathrm{occ}}n_{\mathrm{vir}}$ for singlets and $3n_{\mathrm{occ}}n_{\mathrm{vir}}$ for triplets, with the remaining basis states progressively less significant. 
+We term these basis states \textit{stable} because their associated overlap eigenvalues remain consistently of magnitude one or larger. Retaining them therefore does not introduce any strong noise amplifications.
 
-This naturally raises the question of whether these \textit{stable} dimensions alone are sufficient to recover most of the low-energy QSE spectrum. 
+This naturally raises the question of whether these \textit{stable} basis states alone are sufficient to recover most of the low-energy QSE spectrum. 
 This is of significant interest because a consistently stable rank would provide a natural basis for thresholding, particularly when shot-sampling noise is introduced.
-To test this, we restrict the QSE subspace to the stable, strongly supported dimensions identified above and solve the resulting generalised eigenvalue problem.
-However, restricting the QSE subspace to only these stable dimensions severely degrades the recovered spectrum, producing markedly larger energy errors across the target states (\cref{fig:si-max-stable-error-distribution}).
+To test this, we restrict the QSE subspace to be spanned by the stable basis states identified above and solve the resulting generalised eigenvalue problem.
+However, restricting the QSE subspace to severely degrades the recovered spectrum, producing markedly larger energy errors across the target states (\cref{fig:si-max-stable-error-distribution}). {\color{red}{Please quantify}}
 
-This suggests that while the stable dimensions form a well-conditioned core of the QSE subspace, they themselves are insufficient to recover the low-lying states accurately.
-The remaining weakly supported directions contribute important correlation effects that cannot be trivially discarded.
-This establishes a central trade-off: removing weak directions improves numerical stability, but can simultaneously degrade the representability and accuracy of the QSE subspace. 
+This suggests that while the stable basis states form a well-conditioned core of the QSE subspace, they themselves are insufficient to recover the low-lying states accurately.
+The remaining basis states with seemingly smaller amplitudes contribute important correlation effects that cannot be trivially discarded in order to achieve chemical accuracy.
 
 % ================================
 % Section 3: Shots
 % ================================
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
-This trade-off becomes particularly important under finite-shot sampling, where the near-null region of the overlap spectrum is most strongly perturbed, resulting in the smallest eigenvalues even becoming negative (\cref{fig:si-eigenvalue-lifting}). 
-This motivates the use of overlap-eigenvalue thresholding to remove poorly resolved directions.
-In this section, we therefore examine how thresholding can be used appropriately to regularise QSE under finite-shot noise.
+This trade-off becomes particularly important under finite-shot sampling, where the near-null region of the overlap spectrum is most strongly perturbed, resulting in instances where the smallest eigenvalues turn negative (\cref{fig:si-eigenvalue-lifting}). 
+This motivates the use of overlap-eigenvalue thresholding to weakly contributing eigenbases.
+In this section, we examine how thresholding can be used appropriately to regularise QSE under finite-shot noise.
 Sampling-induced errors are reported as the mean absolute deviation of the four low-lying states $S_0$, $S_1$, $T_1$, and $T_2$, from their corresponding statevector QSE energies. 
 Unless otherwise stated, $n_{\mathrm{shots}}$ denotes the number of shots allocated to each commuting measurement group.
 
@@ -237,9 +236,9 @@ Unless otherwise stated, $n_{\mathrm{shots}}$ denotes the number of shots alloca
 As the number of shots increases and the sampling noise decreases, this minimum shifts towards lower thresholds and lower overall errors.
 
 This behaviour reflects the competing effects of thresholding. 
-Directions associated with very small overlap eigenvalues are particularly susceptible to noise amplification, such that their contribution to the recovered spectrum can become dominated by statistical error rather than useful physical information. 
-Increasing the threshold initially removes these poorly resolved directions and therefore reduces the QSE error. 
-However, beyond the optimum, further increasing the threshold begins to remove directions that still contain physically important contributions to the QSE subspace, causing the error to increase again. 
+Eigenbases associated with very small overlap eigenvalues are particularly susceptible to noise amplification, such that their contribution to the recovered spectrum can become dominated by statistical error rather than useful physical information. 
+Increasing the threshold initially removes these poorly resolved eigenbases and therefore reduces the QSE error. 
+However, beyond the optimum, further increasing the threshold begins to remove more prominent eigenbases that contain physically important contributions to the QSE subspace, causing the error to increase again. 
 The resulting minimum therefore represents a balance between suppressing noise-amplified directions and retaining sufficient information for accurate spectral recovery \cref{fig:si-optimal-threshold}.
 
 Increasing the shot count improves the precision of the projected matrix elements and therefore allows progressively smaller overlap eigenvalues to be resolved reliably. Consequently, fewer directions need to be removed, shifting the optimal threshold towards smaller values as the shot count increases.
@@ -288,12 +287,12 @@ Combining these two contributions gives an estimated total shot requirement for 
 Taken together, these results point to several challenges that must be addressed before QSE can be extended reliably to larger active spaces. 
 Most fundamentally, the operator-generated subspace must remain sufficiently expressive to represent the target low-energy states, yet the statevector results show a clear degradation in representability as the active space is enlarged.
 At the same time, the finite-shot calculations reveal a steep increase in measurement requirements with the problem size.
-In the following section, we consider several directions for addressing these limitations and improving the scalability of QSE. 
+In the following section, we consider several approaches for addressing these limitations and improving the scalability of QSE. 
 
 \subsubsection{Addition of OV Doubles Operators}
 A major source of the representability errors identified above is insufficient independent support for double-excitation character within the one-body QSE subspace. 
 States with substantial double-excitation contributions can therefore remain poorly represented even in the absence of finite-shot noise. 
-A natural direction is to increase the expressiveness of the generated subspace by introducing explicit double-excitation operators. 
+A clear approach is to increase the expressiveness of the generated subspace by introducing explicit double-excitation operators. 
 Here, we examine this possibility at the $6e6o$ active space using an expanded operator pool comprising the original one-body excitations (\crefrange{eq:qse-singlet-operator-definition}{eq:qse-singlet-operator-pool}) together with a restricted set of occupied-to-virtual (OV) double excitations (\crefrange{eq:qse-singlet-ov-doubles-operator}{eq:qse-singlet-ov-doubles-operator-pool}).
 We focus this analysis on $S_1$, as it exhibits the largest representability errors among the low-lying states considered. 
 We restricted the operator pool to the OV sector because these excitations are expected to capture the dominant double-excitation pathways while keeping the calculation computationally tractable.
@@ -310,7 +309,7 @@ We restricted the operator pool to the OV sector because these excitations are e
 As shown in \cref{fig:si-ov-doubles-s1-error-comparison}, augmenting the one-body operator pool with explicit OV double excitations substantially reduces the $S_1$ error across the benchmark.
 Nevertheless, approximately half the molecules remain above chemical accuracy, with strongly conjugated systems like Octatetraene and Hexatriene retaining errors above 10mHa. 
 This indicates that the restricted OV doubles excitations alone are not sufficient to fully repair the representability gap.
-Additional two-body directions may therefore be required to provide the missing flexibility, which could be important for strongly multiconfigurational states whose structure is not fully captured by the dominant OV sector alone. 
+Additional two-body excitations may therefore be required to provide the missing flexibility, which could be important for strongly multiconfigurational states whose structure is not fully captured by the dominant OV sector alone. 
 A similar effect is observed for the one-body operator pool, where OV excitations provide the dominant contributions, but non-OV operators still make appreciable contributions towards the generated subspace.  
 
 However, a complete doubles operator pool would substantially enlarge the projected problem and is beyond the scope of the present calculations. 
@@ -318,14 +317,14 @@ Assessing the extent to which the remaining representability errors can be recov
 Despite these remaining errors, the present results demonstrate that explicit double-excitation operators can markedly improve QSE representability, supporting higher-rank operator expansions as a promising direction.
 
 \subsubsection{Structure of the Projected Matrices}
-That said, a doubles operator pools (even the restricted OV form) scales as $\mathcal{O}\!\left(n_{\mathrm{orb}}^{4}\right)$, compared with $\mathcal{O}\!\left(n_{\mathrm{orb}}^{2}\right)$ for the present one-body pool. 
+However, a doubles operator pools (even the restricted OV form) scales as $\mathcal{O}\!\left(n_{\mathrm{orb}}^{4}\right)$, compared with $\mathcal{O}\!\left(n_{\mathrm{orb}}^{2}\right)$ for the present one-body pool. 
 This has important consequences for measurement scaling. 
-As the dimension of the projected problem now grows two powers faster with $n_{\mathrm{orb}}$, the measurement requirements are expected to increase even more steeply than for the one-body construction underlying the $\mathcal{O}\!\left(n_{\mathrm{orb}}^{11}\right)$ estimate in \cref{sec:shot-budget-scaling}. 
+As the dimension of the projected problem now grows significantly faster with $n_{\mathrm{orb}}$, the measurement requirements are expected to increase even more steeply than for the one-body construction underlying the $\mathcal{O}\!\left(n_{\mathrm{orb}}^{11}\right)$ estimate in \cref{sec:shot-budget-scaling}. 
 This further highlights the central tension: increasing the expressiveness of the operator pool can improve representability, but at the cost of a rapidly increasing measurement burden. 
 Promisingly, the projected matrices themselves exhibit substantial structure that may provide opportunities for more efficient reconstruction. 
 In this section, we examine the recurring patterns and correlations within the projected $\mathbf{H}$ and $\mathbf{S}$ matrices, and how these features are affected by finite-shot sampling.
 
-We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices (\cref{fig:si-h-s-element-correlation}). 
+We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices (\cref{fig:si-h-s-element-correlation}). {\color{red}{please quantify}}
 In general, elements with small overlap $S_{ij}$ also tend to have small Hamiltonian couplings $H_{ij}$. 
 This suggests that the Hamiltonian predominantly couples pairs of operator-generated states that already have appreciable overlap within the QSE subspace. 
 
@@ -350,7 +349,7 @@ Beyond the element-wise structure of the projected matrices, the sampling proces
 Throughout this study, commuting Pauli terms were grouped globally across both matrices, such that shared observables were estimated from the same measurement outcomes. 
 This induces correlated sampling errors between $\mathbf{H}$ and $\mathbf{S}$.
 To assess their importance, we deliberately break these correlations by solving the generalised eigenvalue problem using noisy $\mathbf{H}$ and $\mathbf{S}$ matrices obtained from independent measurements. 
-The resulting errors increase substantially (\cref{fig:si-breaking-h-s-correlated-errors}). 
+The resulting errors increase substantially (\cref{fig:si-breaking-h-s-correlated-errors}). {\color{red}{please quantify}}
 More strikingly, combining a finite-shot $\mathbf{H}$ matrix with an exact statevector $\mathbf{S}$ matrix can produce larger errors than using finite-shot estimates of both matrices. 
 This counterintuitive result indicates that correlated perturbations in $\mathbf{H}$ and $\mathbf{S}$ can partially compensate within the generalised eigenvalue problem, and that preserving these correlations is important for accurate QSE reconstruction.
 
