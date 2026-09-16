@@ -87,7 +87,7 @@ year = {2018}
 
 
 % ==========================================================
-% Quantum Computing Advances 
+% Quantum Chemistry 
 % ==========================================================
 % Motivation for Electronic State Calculations 
 @article{blum2024ESRoadmap,
@@ -124,6 +124,140 @@ doi={10.1038/s41563-021-01013-3},
 url={https://doi.org/10.1038/s41563-021-01013-3}
 }
 
+% Quantum Chemistry Scaling 
+@article{Graf2025QuantumChemistryScaling,
+  author  = {Graf, Daniel and Drontschenko, Viktoria and Stan-Bernhardt, Alexandra and Ochsenfeld, Christian},
+  title   = {Quantum chemistry - from the first steps to linear-scaling electronic structure methods},
+  journal = {Pure and Applied Chemistry},
+  year    = {2025},
+  volume  = {97},
+  number  = {11},
+  pages   = {1635--1645},
+  doi     = {10.1515/pac-2025-0603},
+  pmid    = {41306992},
+  pmcid   = {PMC12645584},
+  issn    = {1365-3075}
+}
+
+% Excited states applications
+@article{Fielding2018Spectroscopy,
+    author = {Fielding, Helen H. and Worth, Graham A.},
+    title = {Using time-resolved photoelectron spectroscopy to unravel the electronic relaxation dynamics of photoexcited molecules},
+    journal = {Chemical Society Reviews},
+    volume = {47},
+    number = {2},
+    pages = {309-321},
+    year = {2018},
+    month = {01},
+    abstract = { Time-resolved photoelectron spectroscopy measurements combined with quantum chemistry and dynamics calculations allow unprecedented insight into the electronic relaxation mechanisms of photoexcited molecules in the gas-phase. In this Tutorial Review, we explain the essential concepts linking photoelectron spectroscopy measurements with electronic structure and how key features on the potential energy landscape are identified using quantum chemistry and quantum dynamics calculations. We illustrate how time-resolved photoelectron spectroscopy and theory work together using examples ranging in complexity from the prototypical organic molecule benzene to a pyrrole dimer bound by a weak N–H⋯π interaction and the green fluorescent protein chromophore. },
+    issn = {0306-0012},
+    doi = {10.1039/c7cs00627f},
+    url = {https://doi.org/10.1039/c7cs00627f},
+    eprint = {https://pubs.rsc.org/cs/article-pdf/47/2/309/1843957/c7cs00627f.pdf},
+}
+
+
+% Excited states review
+@article{Dreuw2026ExcitedStateReview,
+    author = {Dreuw, Andreas},
+    title = {Why Computational Photochemistry Is Challenging and Will Probably Remain So: A Quantum Chemist's Perspective},
+    journal = {Advanced Science},
+    volume = {13},
+    number = {21},
+    pages = {e21012},
+    keywords = {computational photochemistry, computational spectroscopy, electronic structure, excited states, quantum chemistry},
+    doi = {https://doi.org/10.1002/advs.202521012},
+    url = {https://advanced.onlinelibrary.wiley.com/doi/abs/10.1002/advs.202521012},
+    eprint = {https://advanced.onlinelibrary.wiley.com/doi/pdf/10.1002/advs.202521012},
+    abstract = {ABSTRACT Compared to ground-state chemistry, the theoretical description of molecular photochemistry, that is, chemical processes in electronically excited states or electronic spectra, is fundamentally more complex. Even for relatively small molecules, several open decay channels have to be considered at the same time, and thus several electronically excited states with different electronic structures need to be computed. Furthermore, the required accuracy of the employed electronic structure theory increases with the size of the studied molecule, even for a qualitative investigation of photochemical processes. They critically depend on the correct relative energies of the electronic states and the details of the underlying potential energy surfaces (PES), and with increasing molecular size, the excitation energies become smaller and smaller, and more and more electronic states lie within the error margins of most common electronic structure methods. This imposes clear size limits for tractable molecular systems and introduces an early and fast transition from highly accurate calculations to wild guessing. Computational chemistry always lives with the lazy compromise between accuracy and computational effort, and this is particularly true for computational photochemistry, as will be discussed within this perspective from the point of view of electronic structure theory.},
+    year = {2026}
+}
+
+% NAC for photochemistry/photophysics
+@article{Matsika2021NACReview,
+    author = {Matsika, Spiridoula},
+    title = {Electronic Structure Methods for the Description of Nonadiabatic Effects and Conical Intersections},
+    journal = {Chemical Reviews},
+    volume = {121},
+    number = {15},
+    pages = {9407-9449},
+    year = {2021},
+    month = {08},
+    abstract = {Nonadiabatic effects are ubiquitous in photophysics and photochemistry, and therefore, many theoretical developments have been made to properly describe them. Conical intersections are central in nonadiabatic processes, as they promote efficient and ultrafast nonadiabatic transitions between electronic states. A proper theoretical description requires developments in electronic structure and specifically in methods that describe conical intersections between states and nonadiabatic coupling terms. This review focuses on the electronic structure aspects of nonadiabatic processes. We discuss the requirements of electronic structure methods to describe conical intersections and nonadiabatic couplings, how the most common excited state methods perform in describing these effects, and what the recent developments are in expanding the methodology and implementing nonadiabatic couplings.},
+    issn = {0009-2665},
+    doi = {10.1021/acs.chemrev.1c00074},
+    url = {https://doi.org/10.1021/acs.chemrev.1c00074},
+    eprint = {https://pubs.acs.org/chreay/article-pdf/121/15/9407/3727271/cr1c00074.pdf},
+}
+
+% Photoswitches
+@article{Hutcheson2021Photoswitches,
+    author = {Hutcheson, Anders and Paul, Alexander Christian and Myhre, Rolf H. and Koch, Henrik and Høyvik, Ida-Marie},
+    title = {Describing ground and excited state potential energy surfaces for molecular photoswitches using coupled cluster models},
+    journal = {Journal of Computational Chemistry},
+    volume = {42},
+    number = {20},
+    pages = {1419-1429},
+    keywords = {azobenzene, coupled cluster, excited states, penta-2,4-dieniminium cation, photoisomerization},
+    doi = {https://doi.org/10.1002/jcc.26553},
+    url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/jcc.26553},
+    eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/jcc.26553},
+    abstract = {Abstract In this article, we use two extensively studied systems, a retinal model system and azobenzene, to explore the use of coupled cluster models for describing ground and singlet excited state potential energy surfaces of photoswitchable systems. While not being suitable for describing nuclear dynamics of photoisomerization, coupled cluster models have useful attributes, such as the inclusion of dynamical correlation, their black box nature, and the systematic improvement offered by truncation level. Results for the studied systems show that when triple excitations (here through the CC3 model) are included, ground and excited state potential energy surfaces for isomerization paths may reliably be generated, also for states of doubly excited character. For ground state equilibrium cis- and trans-azobenzene, the molecular geometry and basis set is seen to significantly impact the vertical excitation energies for the two lowest excited states. Efficient implementations of coupled cluster models can therefore constitute valuable tools for investigating photoswitchable systems and can be used for preliminary black box studies to gather information before more complicated excited state dynamics approaches are pursued.},
+    year = {2021}
+}
+
+% Photocatalyst
+@article{Ong2024PhotocatalystApplication,
+    author = {Ong, Albert and Wong, Zi Cheng and Chin, Kang Le Osmund and Loh, Wei Wei and Chua, Ming Hui and Ang, Shi Jun and Lim, Jason Y. C.},
+    title = {Enhancing the photocatalytic upcycling of polystyrene to benzoic acid: a combined computational-experimental approach for acridinium catalyst design},
+    journal = {Chemical Science},
+    volume = {15},
+    number = {3},
+    pages = {1061-1067},
+    year = {2024},
+    month = {01},
+    abstract = { Converting polystyrene into value-added oxygenated aromatic compounds is an attractive end-of-life upcycling strategy. However, identification of appropriate catalysts often involves laborious and time-consuming empirical screening. Herein, after demonstrating the feasibility of using acridinium salts for upcycling polystyrene into benzoic acid by photoredox catalysis for the first time, we applied low-cost descriptor-based combinatorial in silico screening to predict the photocatalytic performance of a family of potential candidates. Through this approach, we identified a non-intuitive fluorinated acridinium catalyst that outperforms other candidates for converting polystyrene to benzoic acid in useful yields at low catalyst loadings (≤5 mol\%). In addition, this catalyst also proved effective with real-life polystyrene waste containing dyes and additives. Our study underscores the potential of computer-aided catalyst design for valorizing polymeric waste into essential chemical feedstock for a more sustainable future. },
+    issn = {2041-6520},
+    doi = {10.1039/d3sc06388g},
+    url = {https://doi.org/10.1039/d3sc06388g},
+    eprint = {https://pubs.rsc.org/sc/article-pdf/15/3/1061/9404282/d3sc06388g.pdf},
+}
+
+% OLEDs
+@article{Santos2024OledReview,
+    author = {Dos Santos, John Marques and Hall, David and Basumatary, Biju and Bryden, Megan and Chen, Dongyang and Choudhary, Praveen and Comerford, Thomas and Crovini, Ettore and Danos, Andrew and De, Joydip and Diesing, Stefan and Fatahi, Mahni and Griffin, Máire and Gupta, Abhishek Kumar and Hafeez, Hassan and Hämmerling, Lea and Hanover, Emily and Haug, Janine and Heil, Tabea and Karthik, Durai and Kumar, Shiv and Lee, Oliver and Li, Haoyang and Lucas, Fabien and Mackenzie, Campbell Frank Ross and Mariko, Aminata and Matulaitis, Tomas and Millward, Francis and Olivier, Yoann and Qi, Quan and Samuel, Ifor D. W. and Sharma, Nidhi and Si, Changfeng and Spierling, Leander and Sudhakar, Pagidi and Sun, Dianming and Tankelevičiu̅tė, Eglė and Duarte Tonet, Michele and Wang, Jingxiang and Wang, Tao and Wu, Sen and Xu, Yan and Zhang, Le and Zysman-Colman, Eli},
+    title = {The Golden Age of Thermally Activated Delayed Fluorescence Materials: Design and Exploitation},
+    journal = {Chemical Reviews},
+    volume = {124},
+    number = {24},
+    pages = {13736-14110},
+    year = {2024},
+    month = {12},
+    abstract = {Since the seminal report by Adachi and co-workers in 2012, there has been a veritable explosion of interest in the design of thermally activated delayed fluorescence (TADF) compounds, particularly as emitters for organic light-emitting diodes (OLEDs). With rapid advancements and innovation in materials design, the efficiencies of TADF OLEDs for each of the primary color points as well as for white devices now rival those of state-of-the-art phosphorescent emitters. Beyond electroluminescent devices, TADF compounds have also found increasing utility and applications in numerous related fields, from photocatalysis, to sensing, to imaging and beyond. Following from our previous review in 2017 (Adv. Mater. 2017, 1605444), we here comprehensively document subsequent advances made in TADF materials design and their uses from 2017–2022. Correlations highlighted between structure and properties as well as detailed comparisons and analyses should assist future TADF materials development. The necessarily broadened breadth and scope of this review attests to the bustling activity in this field. We note that the rapidly expanding and accelerating research activity in TADF material development is indicative of a field that has reached adolescence, with an exciting maturity still yet to come.},
+    issn = {0009-2665},
+    doi = {10.1021/acs.chemrev.3c00755},
+    url = {https://doi.org/10.1021/acs.chemrev.3c00755},
+    eprint = {https://pubs.acs.org/chreay/article-pdf/124/24/13736/2187162/cr3c00755.pdf},
+}
+
+% Photochemistry Mini Review
+@article{Mai2020PhotochemistryMiniReview,
+author = {Mai, Sebastian and González, Leticia},
+title = {Molecular Photochemistry: Recent Developments in Theory},
+journal = {Angewandte Chemie International Edition},
+volume = {59},
+number = {39},
+pages = {16832-16846},
+keywords = {excited states, molecular chemistry, non-adiabatic dynamics, photochemistry, quantum chemistry},
+doi = {https://doi.org/10.1002/anie.201916381},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/anie.201916381},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/anie.201916381},
+abstract = {Abstract Photochemistry is a fascinating branch of chemistry that is concerned with molecules and light. However, the importance of simulating light-induced processes is reflected also in fields as diverse as biology, material science, and medicine. This Minireview highlights recent progress achieved in theoretical chemistry to calculate electronically excited states of molecules and simulate their photoinduced dynamics, with the aim of reaching experimental accuracy. We focus on emergent methods and give selected examples that illustrate the progress in recent years towards predicting complex electronic structures with strong correlation, calculations on large molecules, describing multichromophoric systems, and simulating non-adiabatic molecular dynamics over long time scales, for molecules in the gas phase or in complex biological environments.},
+year = {2020}
+}
+
+
+
 % DFT Review
 @article{Burke2012DFTReview,
     author = {Burke, Kieron},
@@ -142,23 +276,24 @@ url={https://doi.org/10.1038/s41563-021-01013-3}
     eprint = {https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.4704546/19858608/150901_1_1.4704546.pdf},
 }
 
-
-% Correlated ES
-@article{Evangelista2024CorrelatedES,
-    author = {Evangelista, Francesco A.},
-    title = {Concluding remarks},
-    journal = {Faraday Discussions},
-    volume = {254},
-    pages = {708-717},
-    year = {2024},
-    month = {11},
-    abstract = { The Faraday Discussion on Correlated electronic structure took place from the 17th to the 19th of July 2024 in London, UK. The Discussion encompassed various facets of electron correlation, ranging from its formal definition and quantification to emerging frontiers in electronic structure theory, with applications in the solid state, integration with machine learning, and quantum computing. },
-    issn = {1359-6640},
-    doi = {10.1039/d4fd00152d},
-    url = {https://doi.org/10.1039/d4fd00152d},
-    eprint = {https://pubs.rsc.org/fd/article-pdf/doi/10.1039/d4fd00152d/1830504/d4fd00152d.pdf},
+@article{Vuckovic2023DFTChallengesReview,
+    author = {Vuckovic, Stefan and Gerolin, Augusto and Daas, Kimberly J. and Bahmann, Hilke and Friesecke, Gero and Gori-Giorgi, Paola},
+    title = {Density functionals based on the mathematical structure of the strong-interaction limit of DFT},
+    journal = {WIREs Computational Molecular Science},
+    volume = {13},
+    number = {2},
+    pages = {e1634},
+    keywords = {exchange–correlation functionals, optimal transport theory, strong electronic correlation},
+    doi = {https://doi.org/10.1002/wcms.1634},
+    url = {https://wires.onlinelibrary.wiley.com/doi/abs/10.1002/wcms.1634},
+    eprint = {https://wires.onlinelibrary.wiley.com/doi/pdf/10.1002/wcms.1634},
+    abstract = {Abstract While in principle exact, Kohn–Sham density functional theory—the workhorse of computational chemistry—must rely on approximations for the exchange–correlation functional. Despite staggering successes, present-day approximations still struggle when the effects of electron–electron correlation play a prominent role. The limit in which the electronic Coulomb repulsion completely dominates the exchange–correlation functional offers a well-defined mathematical framework that provides insight for new approximations able to deal with strong correlation. In particular, the mathematical structure of this limit, which is now well-established thanks to its reformulation as an optimal transport problem, points to the use of very different ingredients (or features) with respect to the traditional ones used in present approximations. We focus on strategies to use these new ingredients to build approximations for computational chemistry and highlight future promising directions. This article is categorized under: Electronic Structure Theory > Density Functional Theory},
+    year = {2023}
 }
 
+% ==========================================================
+% Quantum Computers for Quantum Chemistry 
+% ==========================================================
 % Quantum Computers for Quantum Chemistry Review
 @article{McArdle2020QuantumComputingChemistryReview,
   title = {Quantum computational chemistry},
@@ -215,21 +350,6 @@ abstract={Simulating quantum systems with high accuracy remains one of the funda
 issn={0019-4964},
 doi={10.1007/s41745-025-00488-2},
 url={https://doi.org/10.1007/s41745-025-00488-2}
-}
-
-@article{Sharma2020VQENoiseResilience,
-doi = {10.1088/1367-2630/ab784c},
-url = {https://doi.org/10.1088/1367-2630/ab784c},
-year = {2020},
-month = {04},
-publisher = {IOP Publishing},
-volume = {22},
-number = {4},
-pages = {043006},
-author = {Sharma, Kunal and Khatri, Sumeet and Cerezo, M and Coles, Patrick J},
-title = {Noise resilience of variational quantum compiling},
-journal = {New Journal of Physics},
-abstract = {Variational hybrid quantum-classical algorithms (VHQCAs) are near-term algorithms that leverage classical optimization to minimize a cost function, which is efficiently evaluated on a quantum computer. Recently VHQCAs have been proposed for quantum compiling, where a target unitary U is compiled into a short-depth gate sequence V. In this work, we report on a surprising form of noise resilience for these algorithms. Namely, we find one often learns the correct gate sequence V (i.e. the correct variational parameters) despite various sources of incoherent noise acting during the cost-evaluation circuit. Our main results are rigorous theorems stating that the optimal variational parameters are unaffected by a broad class of noise models, such as measurement noise, gate noise, and Pauli channel noise. Furthermore, our numerical implementations on IBM’s noisy simulator demonstrate resilience when compiling the quantum Fourier transform, Toffoli gate, and W-state preparation. Hence, variational quantum compiling, due to its robustness, could be practically useful for noisy intermediate-scale quantum devices. Finally, we speculate that this noise resilience may be a general phenomenon that applies to other VHQCAs such as the variational quantum eigensolver.}
 }
 
 
@@ -443,26 +563,5 @@ url={https://doi.org/10.1038/s42256-024-00927-2}
   doi = {10.1103/6p6s-t8b7},
   url = {https://link.aps.org/doi/10.1103/6p6s-t8b7}
 }
-
-% ==========================================================
-% Excited states 
-% ==========================================================
-% Importance of low lying excited states
-@article{Fielding2018Spectroscopy,
-    author = {Fielding, Helen H. and Worth, Graham A.},
-    title = {Using time-resolved photoelectron spectroscopy to unravel the electronic relaxation dynamics of photoexcited molecules},
-    journal = {Chemical Society Reviews},
-    volume = {47},
-    number = {2},
-    pages = {309-321},
-    year = {2018},
-    month = {01},
-    abstract = { Time-resolved photoelectron spectroscopy measurements combined with quantum chemistry and dynamics calculations allow unprecedented insight into the electronic relaxation mechanisms of photoexcited molecules in the gas-phase. In this Tutorial Review, we explain the essential concepts linking photoelectron spectroscopy measurements with electronic structure and how key features on the potential energy landscape are identified using quantum chemistry and quantum dynamics calculations. We illustrate how time-resolved photoelectron spectroscopy and theory work together using examples ranging in complexity from the prototypical organic molecule benzene to a pyrrole dimer bound by a weak N–H⋯π interaction and the green fluorescent protein chromophore. },
-    issn = {0306-0012},
-    doi = {10.1039/c7cs00627f},
-    url = {https://doi.org/10.1039/c7cs00627f},
-    eprint = {https://pubs.rsc.org/cs/article-pdf/47/2/309/1843957/c7cs00627f.pdf},
-}
-
 
 
