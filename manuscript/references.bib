@@ -507,8 +507,16 @@ abstract = {Quantum subspace methods (QSMs) are a class of quantum computing alg
     eprint = {https://pubs.acs.org/jctcce/article-pdf/22/6/2892/63146721/ct5c02010.pdf},
 }
 
-
-
+% qscEOM workflow
+@misc{sundar2026qscEOMWorkflow,
+      title={Molecular Excited States using Quantum Subspace Methods: Accuracy, Resource Reduction, and Error-Mitigated Hardware Implementation of q-sc-EOM}, 
+      author={Srivathsan Poyyapakkam Sundar and Prince Frederick Kwao and Alexey Galda and Ayush Asthana},
+      year={2026},
+      eprint={2604.05380},
+      archivePrefix={arXiv},
+      primaryClass={quant-ph},
+      url={https://arxiv.org/abs/2604.05380}, 
+}
 
 
 % ==========================================================
@@ -540,11 +548,48 @@ abstract = {Quantum subspace methods (QSMs) are a class of quantum computing alg
   pages = {020502},
   numpages = {6},
   year = {2022},
-  month = {Jul},
+  month = {07},
   publisher = {American Physical Society},
   doi = {10.1103/PhysRevLett.129.020502},
   url = {https://link.aps.org/doi/10.1103/PhysRevLett.129.020502}
 }
+
+% ADAPT QSE
+@article{Nakamura2024AdaptQSE,
+    doi = {10.1088/1367-2630/ad2c3b},
+    url = {https://doi.org/10.1088/1367-2630/ad2c3b},
+    year = {2024},
+    month = {03},
+    publisher = {IOP Publishing},
+    volume = {26},
+    number = {3},
+    pages = {033028},
+    author = {Nakamura, Yuma and Yano, Yoshichika and Yoshioka, Nobuyuki},
+    title = {Adaptive measurement strategy for quantum subspace methods},
+    journal = {New Journal of Physics},
+    abstract = {Estimation of physical observables for unknown quantum states is an important problem that underlies a wide range of fields, including quantum information processing, quantum physics, and quantum chemistry. In the context of quantum computation, in particular, existing studies have mainly focused on holistic state tomography or estimation on specific observables with known classical descriptions, while this lacks the important class of problems where the estimation target itself relies on the measurement outcome. In this work, we propose an adaptive measurement optimization method that is useful for the quantum subspace methods, namely the variational simulation methods that utilize classical postprocessing on measurement outcomes. The proposed method first determines the measurement protocol for classically simulatable states, and then adaptively updates the protocol of quantum subspace expansion (QSE) according to the quantum measurement result. As a numerical demonstration, we have shown for excited-state simulation of molecules that (i) we are able to reduce the number of measurements by an order of magnitude by constructing an appropriate measurement strategy (ii) the adaptive iteration converges successfully even for a strongly correlated molecule of H4. Our work reveals that the potential of the QSE method can be empowered by elaborated measurement protocols, and opens a path to further pursue efficient quantum measurement techniques in practical computations.}
+}
+
+% Resource efficient QSE 
+@article{Liu2026CSQSE,
+    author = {Liu, Chao and Deng, Yuxin},
+    title = {Resource-Efficient Simulation of Molecular Ground and Excited States Based on Contextual Subspace and Quantum Subspace Expansion},
+    journal = {Journal of Chemical Theory and Computation},
+    volume = {22},
+    number = {16},
+    pages = {8170-8187},
+    year = {2026},
+    month = {08},
+    abstract = {Predicting spectra and photochemical pathways relies on the computation of molecular excited states. However, the practicality of near-term variational quantum algorithms is threatened by the prohibitive growth of measurement overheads. Integrating Quantum Subspace Expansion with the Contextual Subspace (CS) method, we propose a CS-QSE framework to resolve the scaling bottlenecks in excited-state energy estimation. By confining excitation operators to a compact CS, the framework removes redundant degrees of freedom and reduces Pauli string counts, thereby easing the measurement burden. The primary strength of CS-QSE lies in its substantial reduction of the operator-pool size. Benchmarking on LiH, HF, H2O, and HCl shows that CS-QSE achieves errors within the target tolerance of 1.6 × 10–3 Ha relative to full configuration interaction benchmarks in the same basis set while mitigating the prohibitive scaling inherent in the full-space method. Numerical simulations reveal that the operator pool size is consistently pruned by over 90\% across all systems, with the reduction reaching as high as 99.7\% for molecules such as HCl. This CS-QSE framework establishes a resource-efficient route for molecular simulations tailored to near-term noisy intermediate-scale quantum devices.},
+    issn = {1549-9618},
+    doi = {10.1021/acs.jctc.6c00432},
+    url = {https://doi.org/10.1021/acs.jctc.6c00432},
+    eprint = {https://pubs.acs.org/jctcce/article-pdf/22/16/8170/66394547/acs.jctc.6c00432.pdf},
+}
+
+
+
+
 
 % ==========================================================
 % Analysis
