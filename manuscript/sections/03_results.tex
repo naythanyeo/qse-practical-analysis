@@ -5,8 +5,7 @@
 In this section, we study the spectral accuracy and representability of low-lying roots generated with QSE using statevector simulations for all active spaces considered using the UCCSD ansatz as ground state references. 
 The QSE excitation energies are compared against exact CASCI energies within the same active space. 
 Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2.
-We chose to characterise QSE performance in this low-energy region because the lowest excited states commonly govern key photophysical and photochemical processes, including fluorescence, phosphorescence, and excited-state reactions \cite{Fielding2018Spectroscopy}.
-% CITE MORE!!!
+We chose to characterise QSE performance in this low-energy region because the lowest excited states commonly govern key photophysical and photochemical processes, including fluorescence, phosphorescence, and excited-state reactions \cite{Dreuw2026ExcitedStateReview, Mai2020PhotochemistryMiniReview}.
 
 \subsubsection{Overview of statevector QSE performance}
 
@@ -359,7 +358,7 @@ The corresponding elements of $\mathbf{H}$ and $\mathbf{S}$ are strongly correla
 As such, the projected QSE problem is highly structured at both the signal and noise levels.
 
 We envisage that this structure may provide opportunities for classical post-processing methods to reconstruct the projected matrices more accurately from a limited number of measurements. 
-Related approaches have already been explored in quantum error mitigation, where machine-learning and model-based methods exploit systematic structure or correlations in noisy measurement data to improve estimates of ideal observables \cite{Liao2024MLQEM, Aasen2025ReadoutMitigation}. 
+Related approaches have already been explored in quantum error mitigation, where machine-learning, model-based and constrained-based methods exploit systematic structure, correlations or known physical constraints in noisy measurement data to improve estimates of ideal observables \cite{Liao2024MLQEM, Aasen2025ReadoutMitigation, Wang2026RDMErrorPostProcessing}. 
 These methods are effective because the targeted errors are not treated as completely independent fluctuations, but instead contain patterns that can be learned or explicitly modelled. 
 
 Therefore, although QSE exhibits steep measurement scaling under present direct-estimation strategies, the substantial structure observed in the projected matrices provides a positive outlook for improving measurement efficiency. 

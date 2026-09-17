@@ -39,7 +39,7 @@ The QSE workflow begins with the preparation of a ground-state reference wavefun
 We used a Unitary Coupled-Cluster (UCC) ansatz to parameterise the ground state wavefunction. 
 \UCCReferenceStateEquation
 where $\left|\Phi_{\mathrm{HF}}\right\rangle$ is the Hartree-Fock reference determinant and $\hat{T}(\boldsymbol{\theta})$ denotes the coupled cluster excitation operator.
-By default, UCCSD was used as the reference ansatz throughout this study. Additional ansatz classes were considered in \cref{sec:ansatz-dependence}, namely UCCSDSinglet, UCCGSD, and $k$-UpCCGSDSinglet with $k=1,2$ and $3$ with the 6e6o active space. 
+By default, UCCSD was used as the reference ansatz throughout this study. Additional ansatz classes were considered in \cref{sec:ansatz-dependence}, namely UCCSDSinglet, UCCGSD, and $k$-UpCCGSDSinglet \cite{Anand2022UCCReview,Diniz2021GeneralisedAnsatzAdaptations, Lee2018GeneralisedAnsatzOriginal} with $k=1,2$ and $3$ with the 6e6o active space. 
 The corresponding excitation operators defining each ansatz are provided in \cref{sec:si-ansatz-classes}.
 The variational parameters $\boldsymbol{\theta}$ were optimized using the L-BFGS-B algorithm by minimizing the Hamiltonian expectation value obtained from exact statevector simulation. (\cref{eq:electronic-hamiltonian}).
 Unless otherwise stated, all UCC operators were implemented using the first-order Suzuki Trotter product approximation.
