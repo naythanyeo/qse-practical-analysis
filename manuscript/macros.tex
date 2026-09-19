@@ -39,14 +39,18 @@
             &=
             \operatorname{span}\!\left\{
                 \hat{O}_{\mu}
-                \left|\Psi_{\mathrm{VQE}}(\boldsymbol{\theta})\right\rangle
+                \left|\Psi_{\mathrm{VQE}}\right\rangle
             \right\}_{\mu=1}^{d_{\mathrm{QSE}}}, \\
             P_k
             &=
-            \left\|
-                \operatorname{Proj}_{\mathcal{Q}}
-                \left|\Psi_k^{\mathrm{CASCI}}\right\rangle
-            \right\|^2 .
+            \sum_{a=1}^{\dim(\mathcal{Q})}
+            \left|
+                \left\langle
+                    q_a
+                    \,\middle|
+                    \Psi_k^{\mathrm{CASCI}}
+                \right\rangle
+            \right|^2 .
         \end{aligned}
         \label{eq:qse-exact-state-projection}
     \end{equation}%
