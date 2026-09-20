@@ -11,14 +11,14 @@ We then characterize the spin properties of each ansatz and present supplementar
 \label{sec:si-ansatz-classes}
 \input{tables/table_S1_ansatz_class}
 In this study, six ansatz families were used: UCCSD, UCCSDSinglet,
-UCCGSD, and \(k\)-UpCCGSDSinglet with \(k=1,2,\) and \(3\).
+UCCGSD, and \(k\)-UpCCGSDSinglet with \(k=1,2\), and \(3\).
 The ansätze were characterized by the excitation generators included in the cluster operator $\hat{T}$, summarized in \cref{tab:ansatz-families}.
 
 For each ansatz, candidate singles and doubles transitions were first enumerated in fermionic form. 
 Only canonical transitions that excite from a lower to higher energy spin orbital were retained because the reverse transitions would already be included through $\hat{T}^{\dagger}$ before exponentiation. All retained generators were spin conserving: single excitations preserved spin labels, while double excitations preserved the total number of $\alpha$ and $\beta$ spin electrons. 
 
 The non-generalized UCCSD and UCCSDSinglet ansätze were restricted to occupied-to-virtual single and double excitations relative to the reference Hartree-Fock determinant \cite{Anand2022UCCReview}. In contrast, the generalized UCCGSD ansatz allowed generalized orbital transitions between occupied-occupied and virtual-virtual spin orbitals \cite{Lee2018GeneralisedAnsatzOriginal, Diniz2021GeneralisedAnsatzAdaptations}.
-To reduce the size of the generalized double-excitation operator pool, mixed-direction double excitations, in which one electron was promoted while the other was relaxed, were excluded. Across the $4e4o$ to $8e8o$ active spaces, this practical restriction reduced the number of independent parameters by $42.2\%$-$45.2\%$ and the circuit depth by $46.4\%$-$47.6\%$.
+To reduce the size of the generalized double-excitation operator pool, mixed-direction double excitations, in which one electron was promoted while the other was relaxed, were excluded. Across the $4e4o$ to $8e8o$ active spaces, this practical restriction reduced the number of independent parameters by $42.2$--$45.2\%$ and the circuit depth by $46.4$--$47.6\%$.
 
 The $k$-UpCCGSDSinglet ansatz combined generalized singles with generalized paired doubles. For each paired double excitation, an $\alpha\beta$ electron pair was removed from one spatial orbital and created in another. 
 The UCCSDSinglet and $k$-UpCCGSDSinglet constructions imposed spin-adapted parameter sharing between spin-orbital excitations that had the same spatial-orbital labels. 
@@ -83,7 +83,7 @@ We observe that spin contamination is relatively uncommon among the lower-lying 
 Its extent also depends strongly on the reference ansatz: the paired ansätze produce almost entirely spin-pure spectra, whereas the more expressive UCCGSD ansatz exhibits more widespread spin contamination.
 This trend is consistent with the different restrictions imposed by the ansätze. 
 The paired ansätze restrict the excitation manifold to generalized singles and paired double excitations, strongly constraining the variational manifold and largely preserving the paired-electron character of the reference state. 
-By contrast, UCCGSD employs a generalized excitation manifold in which excitations are not restricted by the occupied–virtual partition and may involve arbitrary active orbitals. 
+By contrast, UCCGSD employs a generalized excitation manifold in which excitations are not restricted by the occupied--virtual partition and may involve arbitrary active orbitals. 
 This greater flexibility introduces substantially more unpaired excitation pathways and therefore more opportunities for spin mixing, consistent with the larger spin contamination observed for UCCGSD.
 
 \begin{figure}[htbp]

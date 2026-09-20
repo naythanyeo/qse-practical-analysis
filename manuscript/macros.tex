@@ -179,7 +179,7 @@
         \left\{
             \hat{O}^{S}_{ij}
             \mathrel{\big|}
-            i,j \in \{1, \ldots, n_{\mathrm{o}}\}
+            i,j \in \{1, \ldots, n_{\mathrm{orb}}\}
         \right\}.
         \label{eq:qse-singlet-operator-pool}
     \end{align}%
@@ -210,7 +210,7 @@
         \left\{
             \hat{O}^{T,m}_{ij}
             \mathrel{\big|}
-            i,j \in \{1, \ldots, n_{\mathrm{o}}\},
+            i,j \in \{1, \ldots, n_{\mathrm{orb}}\},
             \ m \in \{-1, 0, +1\}
         \right\}.
         \label{eq:qse-triplet-operator-pool}
@@ -241,7 +241,7 @@
         \left\{
             \hat{O}^{S,(2)}_{ij,ab}
             \mathrel{\big|}
-            i,j \in \{1, \ldots, n_{\mathrm{o}}\},
+            i,j \in \{1, \ldots, n_{\mathrm{orb}}\},
             \ a,b \in \{1, \ldots, n_{\mathrm{v}}\}
         \right\}.
         \label{eq:qse-singlet-ov-doubles-operator-pool}
@@ -304,39 +304,6 @@
         =
         E\mathbf{y}.
         \label{eq:reduced-eigenvalue}
-    \end{equation}%
-}
-% Max Dimensions (Stable SV)
-\newcommand{\MaxDimensionsEquation}{%
-    \begin{equation}
-        \begin{aligned}
-            d_{\mathrm{S}}^{\max}
-            &=
-            \min\!\left[
-                \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}}^{2}
-                -
-                \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}+1}
-                \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}-1},
-                \,
-                n_{\mathrm{o}}^{2}
-            \right], \\
-            d_{\mathrm{T}}^{\max}
-            &=
-            \min\!\left[
-                3\left(
-                    \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}+1}
-                    \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}-1}
-                    -
-                    \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}+2}
-                    \binom{n_{\mathrm{o}}}{n_{\mathrm{p}}-2}
-                \right),
-                \,
-                3n_{\mathrm{o}}(n_{\mathrm{o}}-1)
-            \right],
-            \qquad
-            n_{\mathrm{p}}=\frac{n_{\mathrm{e}}}{2}.
-        \end{aligned}
-        \label{eq:max-dimensions}
     \end{equation}%
 }
 

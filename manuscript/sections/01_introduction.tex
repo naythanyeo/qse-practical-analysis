@@ -23,10 +23,10 @@ Quantum algorithms may therefore help extend accurate excited-state calculations
 The current generation of quantum hardware, albeit rapidly advancing, remains constrained by imperfect gate operations and limited coherent circuit depth \cite{Fauseweh2024QuantumHardwareReview, Ransford2026QuantinuumHelios, Acharya2025GoogleWillow}.
 These limitations have motivated hybrid quantum-classical algorithms that use quantum processors for state preparation and measurement, while delegating parameter optimization and post-processing to classical hardware. Among the most prominent is the Variational Quantum Eigensolver (VQE), which minimizes the expectation value of the Hamiltonian to approximate the lowest-energy state accessible to a chosen ansatz \cite{McArdle2020QuantumComputingChemistryReview, Cao2019QCforQCReview, Kumar2025VQEReview}.
 Quantum Subspace Methods (QSM) provide a complementary strategy by projecting the full eigenvalue problem onto a compact trial subspace. 
-If the chosen subspace accurately captures the low-energy manifold, the ground and low-lying excited state solutions can be recovered without diagonalising the full many-body Hamiltonian \cite{Motta2024QSMReview}. 
+If the chosen subspace accurately captures the low-energy manifold, the ground and low-lying excited state solutions can be recovered without diagonalizing the full many-body Hamiltonian \cite{Motta2024QSMReview}. 
 
 % PARA 4: Formalisation of QSE
-Quantum Subspace Expansion (QSE), introduced by McClean et al. \cite{mcclean2017qse}, is a popular operator-generated realisation of this framework. 
+Quantum Subspace Expansion (QSE), introduced by McClean et al. \cite{mcclean2017qse}, is a popular operator-generated realization of this framework. 
 QSE constructs a trial subspace by applying a selected set of operators ${\hat{O}_{\mu}}$ to a reference state $\left|\Psi_{\mathrm{ref}}\right\rangle$, often the VQE ground state. 
 Within this subspace, the $k$-th approximate state is represented as a linear combination of the resulting operator-generated states,
 \KthReferenceStateEquation
@@ -48,7 +48,7 @@ QSE, however, retains a distinct advantage in its treatment of the reference sta
 Consequently, a single projected calculation can serve a dual purpose: refinement of an approximate ground state through the lowest Ritz solution and approximation of excited states through the higher solutions \cite{mcclean2017qse,yoshioka2022GeneralisedQSE}.
 This capability is particularly valuable when the underlying VQE reference remains approximate, since preparing highly accurate VQE states becomes increasingly challenging as system size and correlation complexity grows \cite{Kumar2025VQEReview}.
 QSE also offers greater flexibility in constructing the expansion manifold. 
-Because its operators are not constrained by the vacuum-annihilation condition imposed in self-consistent EOM formulations, it can accommodate a broader range of physically motivated operator pools and variational reference ansatze \cite{mcclean2017qse, Kwao2026QSMGeneralisedEigenvalueProblem}. 
+Because its operators are not constrained by the vacuum-annihilation condition imposed in self-consistent EOM formulations, it can accommodate a broader range of physically motivated operator pools and variational reference ansätze \cite{mcclean2017qse, Kwao2026QSMGeneralisedEigenvalueProblem}. 
 Lastly, QSE avoids additional state-preparation gates beyond the reference circuit, preserving a comparatively shallow coherent circuit implementation \cite{mcclean2017qse}. 
 Together, these features provide complementary practical motivations for QSE despite the conditioning challenges associated with its nonorthogonal subspace.
 
