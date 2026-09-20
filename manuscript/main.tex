@@ -22,19 +22,42 @@
 \maketitle
 
 \begin{abstract}
-Probably not.
+Accurate treatment of excited states remains challenging for classical electronic-structure methods because the underlying many-electron state grows exponentially with system size. 
+By contrast, quantum computers provide a compact representation of many-electron states using qubits, motivating quantum algorithms for excited-state calculations with potentially more favourable resource scaling. 
+One such algorithm is Quantum Subspace Expansion (QSE), which applies expansion operators to a variational reference state to construct a reduced subspace in which multiple electronic states are obtained.
+In this work, we systematically assess the practical performance of QSE for low-lying electronic states across 28 organic molecules from the Thiel benchmark set. 
+Using statevector simulations, we first examine the representability of the method for low-lying states. We find that errors associated with QSE depend strongly on state, active space, and molecule used, often being strongly influenced by the degree of multiconfigurational character.
+We then analyse the overlap matrix underlying the QSE generalized eigenvalue problem and show that weakly supported directions drive numerical instability, yet cannot be discarded indiscriminately without degrading spectral accuracy. 
+Under finite-shot sampling, the resulting energy errors follow an empirical scaling of approximately $n_{\mathrm{orb}}^2/\sqrt{N_{\mathrm{shots}}}$. 
+Combined with the observed growth in measurement groups, this yields an estimated total measurement cost of approximately $\mathcal{O}(n_{\mathrm{orb}}^{11})$ for constant accuracy under the present one-body direct-estimation protocol. 
+Explicit double-excitation operators substantially improve representability for challenging excited states, but at the cost of a rapidly expanding operator space. 
+Finally, the projected matrices exhibit recurring structural correlations and correlated sampling errors, suggesting opportunities for more efficient structure-aware reconstruction.
+These results highlight a central tension in QSE between subspace expressiveness, numerical resolvability, and measurement cost, and establish practical conditions governing its reliable finite-shot application.
+
+
 \end{abstract}
 
 \section*{Keywords}
 
-quantum subspace expansion; variational quantum eigensolver; excited states;
-active spaces; measurement noise
+Quantum Subspace Expansion; 
+Variational Quantum Eigensolver; 
+Generalized Eigenvalue Problem; 
+Excited States;
+Finite-shot Noise
 
 \section*{Abbreviations}
 
-QSE, quantum subspace expansion; VQE, variational quantum eigensolver; UCC,
-unitary coupled cluster; CASCI, complete active space configuration
-interaction.
+QSE, Quantum Subspace Expansion; 
+VQE, Variational Quantum Eigensolver; 
+q-SC-EOM, Quantum Self-Consistent Equation-of-Motion; 
+UCC, Unitary Coupled Cluster; 
+CASCI, Complete Active Space Configuration Interaction; 
+FCI, Full Configuration Interaction; 
+HF, Hartree-Fock; 
+HOMO, Highest Occupied Molecular Orbital; 
+LUMO, Lowest Unoccupied Molecular Orbital; 
+QWC, Qubit-Wise-Commuting;
+OV, Occupied-to-Virtual.
 
 \section{Introduction}
 \input{sections/01_introduction}
@@ -51,19 +74,12 @@ interaction.
 \section*{Acknowledgements}
 N Z. X. Yeo, Z. C. Wong and S. J. Ang are supported by the National Research Foundation, Singapore through the National Quantum Office, hosted in A*STAR, under its Quantum Engineering Programme 3.0 Funding Initiative (W24Q3D0002).
 
-\section*{Code Availability}
-% TBC add in Github link etc here
-*TBC
+\section*{Data and Software Availability}
+All quantum-circuit calculations in this work were performed using a research fork of Qibochem (Git commit b208da6), whose source code is openly available at https://github.com/naythanyeo/qibochem.git. 
+The scripts used to run and process the simulations, perform the analyses, and generate the figures reported in this work are available at https://github.com/naythanyeo/qse-practical-analysis.git. 
+The numerical data underlying the reported results, including the raw projected matrices and processed analysis files, are deposited in Figshare at [TBC].
+Instructions for accessing the data and reproducing the analyses are provided in the analysis repository.
 
-All quantum-circuit calculations in this study were performed using classical simulations implemented with the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. These frameworks were used to construct, represent and simulate the quantum circuits employed.
-A research fork of Qibochem was developed to support the computational workflow used in the study. The fork introduced configurable ansatz classes, optimised circuit evaluation routines, support for measuring spin observables, and dedicated functionality for constructing and sampling the projected matrices required for Quantum Subspace Expansion calculations. 
-% Cite Github Branch 
-% Link to Qse-practical-analysis repo here
-
-
-\section*{Data Availability}
-% TBC add in Figshare link etc here
-*TBC
 \clearpage
 \printbibliography
 
