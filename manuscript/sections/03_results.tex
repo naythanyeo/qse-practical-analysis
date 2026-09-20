@@ -125,10 +125,9 @@ Furthermore, the influence of the reference ansatz is considerably more pronounc
 For S0, the difference in median error between the paired and unpaired ansatz exceeds an order of magnitude, whereas the corresponding variation for S1, T1 and T2 is substantially smaller. 
 This difference can be understood from the composition of the exact CASCI states relative to the VQE reference. 
 
-At the $6e6o$ active space, the exact $S_0$ state has a mean squared overlap of $95\%$ with the optimized VQE reference across the six ansätze considered. {\color{red}{Need a table to reference to}}
-
+At the $6e6o$ active space, the exact $S_0$ state has a mean squared overlap of $95\%$ with the optimized VQE reference across the six ansätze considered (\cref{tab:si-vqe-overlap}). 
 The ground-state solution therefore depends much more on the quality of the reference wavefunction, and deficiencies in the reference can only be partially corrected by the remaining QSE directions.
-In contrast, the maximum squared overlap between the VQE reference and any of the excited states considered remains below $2\%$.  {\color{red}{Need a table to reference to}}
+In contrast, the maximum squared overlap between the VQE reference and any of the excited states considered remains below $2\%$ (\cref{tab:si-vqe-overlap}).
 These states therefore rely predominantly on the additional operator-generated directions, whose greater flexibility can partially compensate for imperfections in the reference and reduce their sensitivity to the choice of ansatz.
 
 Beyond spectral accuracy, the choice of reference ansatz also affects the spin purity of the recovered states.
@@ -178,10 +177,16 @@ As discussed in the Introduction, very small eigenvalues of the overlap matrix $
 Here, we examine the full eigenvalue spectrum of $\mathbf{S}$ (\cref{fig:eigenvalue-spectrum}) to understand why these near-null eigenvectors arise in the first place. 
 
 We first classify the QSE excitation operators into three groups: occupied number operators, occupied-to-virtual (OV) excitations, and the remaining excitation classes. 
-Each eigenvector of $\mathbf{S}$ can then be decomposed into basis states corresponding to each category (\cref{fig:eigenvector-composition}). 
-One clear trend emerges between the eigenvalue magnitude and the composition of its corresponding eigenvector.
-The largest eigenvalues are generally associated with OV-dominated eigenmodes. Singlets additionally contain a strongly supported occupied-number mode, while the remaining operator classes contribute predominantly to smaller-eigenvalue directions. {\color{red}{Quantify with numbers}}
-For the singlet subspace, this produces one number-dominated eigenvector followed by a block of OV-dominated eigenvectors with eigenvalues close to unity, after which the spectrum drops to progressively smaller values. The triplet subspace retains the OV-dominated stable block, but the corresponding occupied-number contribution is much more weakly supported.
+Each operator generates a corresponding QSE basis state, allowing the eigenvectors of $\mathbf{S}$ to be characterised according to the operator classes from which their components originate (\cref{fig:eigenvector-composition}). 
+
+A clear relationship emerges between the eigenvalue magnitude and the composition of the corresponding eigenvectors. 
+In both the singlet and triplet subspaces, the spectrum contains a well-supported block of eigenvectors with eigenvalues close to unity. 
+Across the active spaces considered, these modes are strongly dominated by OV-generated states. 
+In the $6e6o$ active space, for example, OV-generated states account for approximately $95\%$–$99\%$ of their composition. 
+The singlet block contains $n_{\mathrm{occ}}n_{\mathrm{vir}}$ such eigenvectors, while the triplet block contains $3n_{\mathrm{occ}}n_{\mathrm{vir}}$, corresponding exactly to the number of OV operators in their respective operator pools. 
+The singlet spectrum additionally contains a distinct occupied-number dominated mode, with more than $99.9\%$ number character and a mean eigenvalue of $11.5$ at the $6e6o$ active space. 
+Beyond these well-supported eigenmodes, the eigenvalues decrease rapidly, accompanied by a progressive reduction in the contribution from OV-generated states.
+
 
 This behaviour can be understood from how the different QSE operators act on the underlying VQE reference. 
 Because the reference state is dominated by the Hartree–Fock determinant, operators that act directly on this component generate basis directions with relatively large amplitudes, resulting in larger overlap eigenvalues.
@@ -211,7 +216,7 @@ We term these basis states \textit{stable} because their associated overlap eige
 This naturally raises the question of whether these \textit{stable} basis states alone are sufficient to recover most of the low-energy QSE spectrum. 
 This is of significant interest because a consistently stable rank would provide a natural basis for thresholding, particularly when shot-sampling noise is introduced.
 To test this, we restrict the QSE subspace to be spanned by the stable basis states identified above and solve the resulting generalised eigenvalue problem.
-However, restricting the QSE subspace severely degrades the recovered spectrum, producing markedly larger energy errors across the target states (\cref{fig:si-max-stable-error-distribution}). {\color{red}{Please quantify}}
+However, this restriction severely degrades the recovered spectrum, with the median errors across the low-lying states increasing by $6.1-13.8 mHa$ (\cref{fig:si-max-stable-error-distribution}). 
 
 This suggests that while the stable basis states form a well-conditioned core of the QSE subspace, they themselves are insufficient to recover the low-lying states accurately.
 The remaining basis states with seemingly smaller amplitudes contribute important correlation effects that cannot be trivially discarded in order to achieve chemical accuracy.
