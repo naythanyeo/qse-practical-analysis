@@ -4,7 +4,7 @@ import json
 
 import numpy as np
 
-from config import output_figures_dir, output_tables_dir
+from config import output_figures_dir
 
 
 def parse_active_space(active_space):
@@ -25,13 +25,6 @@ def read_npz(path):
             record[key] = value.item() if value.ndim == 0 else value
 
     return record
-
-
-def save_table(df, subfolder, title):
-    output_path = output_tables_dir / subfolder / f"{title}.csv"
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_path)
-    return output_path
 
 
 def save_figure(fig, subfolder, title):

@@ -9,7 +9,7 @@ We then characterize the spin properties of each ansatz and present supplementar
 % ========================
 \subsection{Ansatz Classes}
 \label{sec:si-ansatz-classes}
-\input{tables/methods/ansatz}
+\input{tables/table_S1_ansatz_class}
 In this study, six ansatz families were used: UCCSD, UCCSDSinglet,
 UCCGSD, and \(k\)-UpCCGSDSinglet with \(k=1,2,\) and \(3\).
 The ansätze were characterised by the excitation generators included in the cluster operator $\hat{T}$, summarised in the following table.
@@ -53,9 +53,16 @@ Before optimisation, ansatz parameters were initialised based on the following h
 Parameters associated with excitation generators shared with the preceding ansatz were initialised with the previously optimised amplitudes, while newly introduced generators were initialised to zero. The initial occupied-to-virtual double-excitation parameters were estimated using second-order M\o ller-Plesset perturbation theory (MP2). For parameter transfer from a \(k\)-UpCCGSDSinglet ansatz to a subsequent ansatz, the optimized amplitudes associated with each generator were summed across the \(k\) layers and used as the initial amplitude for the corresponding generator.
 
 % ========================
+% CASCI Overlap with VQE state 
+% ========================
+\subsection{CASCI overlap with VQE state}
+Here, we examine how the overlap between each exact CASCI state and the corresponding VQE state varies across the ansätze considered.
+
+\input{tables/table_S2_vqe_overlap}
+
+% ========================
 % Spin Analysis
 % ========================
-% Might re-write this section
 \subsection{Ansatz-Dependent Spin Purity}
 \label{sec:si-spin-purity}
 
@@ -91,11 +98,11 @@ The first severe deviations in the triplet expansion occur at raw eigenvector in
 Some earlier UCCSD and UCCSDSinglet eigenvectors have $\langle \hat S^2\rangle$ close to the quintet value of 6, interleaved with predominantly triplet states. 
 
 
-\input{tables/results/table_S1_spin_contamination}
+\input{tables/table_S3_spin_contamination}
 
 Notably, the spin-adapted UCCSDSinglet ansatz, which ties parameters associated with equivalent spatial-orbital transitions, exhibits greater spin contamination than the more flexible UCCSD ansatz, both in the number of contaminated roots (\cref{fig:si-spin-contaminated-roots}) and in the mean spin deviation (\cref{tab:si-low-lying-spin-contamination}). 
 
-\input{tables/results/table_s2_spin_mean_trotter}
+\input{tables/table_S4_spin_mean_trotter}
 To examine whether this behaviour arises from the finite-order Trotter approximation, we repeated the UCCSD and UCCSDSinglet calculations with increasing numbers of Trotter steps. 
 The spin contamination of UCCSDSinglet decreases systematically with increasing Trotter order, whereas that of UCCSD remains approximately unchanged (\cref{tab:s2-spin-mean-trotter}). 
 In the present calculations, the spin-purity advantage associated with parameter tying becomes apparent only beyond 16 Trotter steps. 

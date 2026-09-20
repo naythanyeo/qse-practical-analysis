@@ -13,5 +13,4 @@ RAW_MATRICES_DIR = DATA_DIR / "raw_matrices"
 
 PROCESSED_DATAFRAMES_DIR = DATA_DIR / "processed_dataframes"
 
-output_tables_dir = PROJECT_ROOT / "manuscript" / "tables" / "table_data"
 output_figures_dir = PROJECT_ROOT / "manuscript" / "figures"
