@@ -14,7 +14,7 @@ $n_\alpha = \frac{n_e}{2} + M_S, n_\beta = \frac{n_e}{2} - M_S$
 
 Singlet states were obtained from the $M_S=0$ sector, while triplet states were calculated in the $M_S=0, +1, -1$ sectors. For each active-space spin projection sector, the determinant-space dimension, and therefore the maximum number of available roots, was $\binom{n_{\mathrm{o}}}{n_\alpha} \binom{n_{\mathrm{o}}}{n_\beta}$. 
 
-Where available, the lowest 11 singlet states (ground state + 10 excited states), and the lowest 10 triplet states (within each spin projection sector) were calculated. To ensure that the target number of states was obtained, three times the required number of CASCI roots were initially requested from the FCI solver, subject to the maximum dimension of the corresponding determinant space. 
+Where available, the ground state and lowest 10 singlet excited states, and the lowest 10 triplet states within each spin projection sector were calculated. To ensure that the target number of states was obtained, three times the required number of CASCI roots were initially requested from the FCI solver, subject to the maximum dimension of the corresponding determinant space. 
 The resulting roots were then filtered according to their $\Ssq$ expectation values, retaining only roots that satisfy $\left| \Ssq - S(S+1) \right| < 10^{-5}$ with $S=0$ for singlets and $S=1$ for triplets. 
 
 % ============================
@@ -27,7 +27,7 @@ Throughout this study, wavefunctions were represented in a common active spin-or
 This vector includes all determinants with $n_e$ electrons distributed among the $2n_{\mathrm{o}}$ active spin-orbitals (irrespective of their spin projections).
 Determinants were ordered lexicographically using an interleaved spin-orbital convention $(1\alpha, 1\beta, 2\alpha, 2\beta, \ldots)$.
 
-PySCF represented each wavefunction as a two-dimensional CI coefficient matrix with dimensions $\binom{n_{\mathrm{o}}}{n_{\mathrm{\alpha}}}$ by $\binom{n_{\mathrm{o}}}{n_{\mathrm{\beta}}}$, corresponding to the $\alpha$ and $\beta$ electron occupation strings. These coefficients were embedded into the corresponding entries of the common state-vector representation.  During this conversion, the fermionic phase arising from the permutation between PySCF's separated $\alpha$ and $\beta$ electron ordering and the interleaved spin-orbital convention was included explicitly.
+PySCF represented each wavefunction as a two-dimensional CI coefficient matrix with dimensions $\binom{n_{\mathrm{o}}}{n_{\mathrm{\alpha}}}$ by $\binom{n_{\mathrm{o}}}{n_{\mathrm{\beta}}}$, corresponding to the $\alpha$ and $\beta$ electron occupation strings. These coefficients were embedded into the corresponding entries of the common state-vector representation. During this conversion, the fermionic phase arising from the permutation between PySCF's separated $\alpha$ and $\beta$ electron ordering and the interleaved spin-orbital convention was included explicitly.
 
 % ============================
 % QSE Details
@@ -38,7 +38,7 @@ PySCF represented each wavefunction as a two-dimensional CI coefficient matrix w
 To construct the projected QSE matrix elements, the fermionic QSE expansion operators and each target observable were mapped separately to Pauli operators using the Jordan-Wigner transformation. 
 The projected observables were then constructed by multiplication in the Pauli representation. 
 Terms with coefficients of magnitude smaller than $10^{-12}$ were discarded after the final product construction. 
-The resulting Pauli-string expectation values were then evaluated either exactly from the optimised VQE states, $\left|\Psi_{\mathrm{VQE}}\right\rangle$ or estimated from sampled measurement outcomes (detailed in the next subsection).
+The resulting Pauli-string expectation values were then evaluated either exactly from the optimized VQE states, $\left|\Psi_{\mathrm{VQE}}\right\rangle$, or estimated from sampled measurement outcomes (detailed in the next subsection).
 For all calculations performed, only the diagonal and upper-triangular matrix elements were constructed and evaluated. Lower-triangular matrix terms were then reconstructed using Hermitian symmetry.
 
 % ============================
@@ -46,7 +46,7 @@ For all calculations performed, only the diagonal and upper-triangular matrix el
 % ============================
 \subsection{Spin}
 \label{sec:si-spin-expectation}
-Spin operators were constructed in the same second quantisation basis as follows.
+Spin operators were constructed in the same second quantization basis as follows.
 
 \SpinZEquation
 \SpinLadderOperatorsEquation

@@ -4,8 +4,8 @@
 \subsection{Accuracy and Representability of the QSE Subspace}
 In this section, we use statevector simulations with the UCCSD ansatz to study the spectral accuracy and representability of low-lying QSE roots across all active spaces considered. 
 The QSE excitation energies are compared against exact CASCI energies within the same active space. 
-Unless otherwise stated, we focus on the singlet ground state, S0, together with the lowest singlet and triplet excited states, S1, T1 and T2.
-We chose to characterise QSE performance in this low-energy region because the lowest excited states commonly govern key photophysical and photochemical processes, including fluorescence, phosphorescence, and excited-state reactions \cite{Dreuw2026ExcitedStateReview, Mai2020PhotochemistryMiniReview}.
+Unless otherwise stated, we focus on the singlet ground state, $S_0$, together with the lowest singlet and triplet excited states, $S_1$, $T_1$ and $T_2$.
+We chose to characterize QSE performance in this low-energy region because the lowest excited states commonly govern key photophysical and photochemical processes, including fluorescence, phosphorescence, and excited-state reactions \cite{Dreuw2026ExcitedStateReview, Mai2020PhotochemistryMiniReview}.
 
 \subsubsection{Overview of statevector QSE performance}
 
@@ -24,7 +24,7 @@ Beyond these cases, substantially larger errors are observed across the benchmar
 The near-exact recovery in the smallest active spaces is consistent with the relative dimensionality of the QSE subspace. 
 In these cases, the one-body operator pool generates more basis states than there are physically accessible determinants within the relevant spin sector.
 The QSE subspace can therefore span most of the relevant Hilbert space, leaving little room for representability error.
-This favourable dimensionality does not persist as the active space grows. The number of one-body QSE operators scales polynomially, approximately as $n^2$, whereas the dimension of the full configuration-interaction (FCI) space grows combinatorially with the number of electrons and orbitals. 
+This favorable dimensionality does not persist as the active space grows. The number of one-body QSE operators scales polynomially, approximately as $n^2$, whereas the dimension of the full configuration-interaction (FCI) space grows combinatorially with the number of electrons and orbitals. 
 Therefore, the fraction of the full configurational space accessible to the generated QSE subspace decreases with system size, providing a natural explanation for the overall deterioration in accuracy.
 
 However, active-space size alone does not fully account for the observed error trends. 
@@ -38,12 +38,12 @@ To further quantify the representability of these states, we define a projection
 \QSEProjectionEquation
 Here, $\hat{O}_{\mu}$ denotes a QSE expansion operator acting on the reference VQE state, and ${\left|q_a\right\rangle}$ denotes an element of an orthonormal basis of $Q$. 
 This metric, $P_k$, measures the fraction of the $k$-th exact CASCI state contained within the operator-generated QSE subspace. 
-Importantly, it is evaluated before solving the generalised eigenvalue problem and is therefore independent of subsequent numerical treatment.
+Importantly, it is evaluated before solving the generalized eigenvalue problem and is therefore independent of subsequent numerical treatment.
 As shown in \cref{fig:si-error-vs-projection-deficit}, large energy errors are strongly associated with increasing projection deficit, $1-P_k$. 
-This supports the conclusion that the dominant source of error is incomplete representation of the target states within the QSE subspace, rather than numerical artefacts introduced during the subsequent generalized-eigenvalue solution or root assignment.
+This supports the conclusion that the dominant source of error is incomplete representation of the target states within the QSE subspace, rather than numerical artifacts introduced during the subsequent generalized-eigenvalue solution or root assignment.
 
 \subsubsection{State Dependence of QSE Representability}
-Next, we seek to better characterise the state-dependent errors observed above by examining the electronic structure of the exact CASCI states. 
+Next, we seek to better characterize the state-dependent errors observed above by examining the electronic structure of the exact CASCI states. 
 Each CASCI wavefunction is decomposed according to the excitation rank of its constituent Slater determinants relative to the Hartree–Fock (HF) reference. 
 We focus in particular on the double-excitation weight, defined as the fraction of the total CI weight arising from determinants that differ from the HF reference by two orbital excitations. 
 Doubles are of particular interest because they are the lowest excitation rank not independently represented by the present one-body QSE operator pool. 
@@ -57,7 +57,7 @@ The available double-excitation manifold is therefore more restricted for triple
 
 That being said, the larger double-excitation weights observed for $S_1$, together with its increased errors, do not imply that the double-excitation weight alone governs QSE accuracy. 
 $S_0$, for example, contains a larger doubles contribution than the low-lying triplet states, with a mean weight of $5.42\%$–$8.62\%$ over the same active spaces, while remaining substantially more accurately recovered. 
-The relevant distinction is that the double-excitation structure of $S_0$ is already largely encoded in the optimised UCCSD reference. 
+The relevant distinction is that the double-excitation structure of $S_0$ is already largely encoded in the optimized UCCSD reference. 
 For excited states however, difficulties arise when the required balance of single and double-excitation character differs from that encoded in the VQE reference.
 This is challenging for the one-body QSE operator pool studied, which provides independent access only to one-body excitation directions. 
 The double-excitation character can consequently be modified only indirectly and remains largely constrained by the VQE reference. 
@@ -70,9 +70,9 @@ We therefore examine several molecular cases to identify the electronic-structur
 Since $S_1$ exhibits the largest representability failures across the benchmark, the following case studies focus primarily on this state. 
 
 For each molecule, we first compare the lowest excited QSE root, $q_1$, with the exact CASCI singlet states using wavefunction overlap. 
-This diagnostic reveals a particularly consistent pattern for five molecules - butadiene, cyclopentadiene, furan, norbornadiene, and pyrrole. 
+This diagnostic reveals a particularly consistent pattern for five molecules: butadiene, cyclopentadiene, furan, norbornadiene, and pyrrole. 
 For all active spaces $4e4o$ and larger, $q_1$ overlaps most strongly with $S_2$ rather than $S_1$ (\cref{fig:si-q1-best-root-transition-map}), with a median overlap exceeding $99\%$. 
-These five molecules all contain two C=C double bonds, and their dominant singlet excitation is characterised by a $\pi \rightarrow \pi^{*}$ transition.
+These five molecules all contain two C=C double bonds, and their dominant singlet excitation is characterized by a $\pi \rightarrow \pi^{*}$ transition.
 Examination of their corresponding CASCI wavefunctions shows a clear contrast in excitation character: $S_1$ carries strong double-excitation character, with a mean weight of $54.70\%$-$55.19\%$, whereas $S_2$ remains predominantly singly excited, with $94\%$-$96\%$ singles character and only $3\%$-$5\%$ doubles weight.  
 The restricted one-body QSE subspace therefore represents $S_2$ more readily than the lower-energy $S_1$ state. 
 As a result, the poorly represented $S_1$ state is effectively omitted from the recovered spectrum, while the more accessible $S_2$ state appears as the lowest excited QSE root. 
@@ -89,7 +89,7 @@ The molecule-specific variation is also reflected in the sensitivity of QSE perf
 Rather than changing smoothly with active-space size, the error can change abruptly when orbitals important to the character of the target state enter the active space.
 Benzene provides a prominent example (\cref{fig:benzene-imidazole-case-studies}). 
 Its low-lying singlet excitation has predominantly $\pi \rightarrow \pi^{*}$ character.
-In the more restricted $4e4o$ and $6e5o$ spaces, the exact CASCI states have a singles weight greater than $99\%$ and negligible doubles weight, with the $S_1$ errors below $0.001 mHa$.
+In the more restricted $4e4o$ and $6e5o$ spaces, the exact CASCI states have a singles weight greater than $99\%$ and negligible doubles weight, with errors in $S_1$ below $0.001 mHa$.
 Once the LUMO+2 orbital enters the active space, however, there is an increase in the double-excitation weight of the exact $S_1$ state to approximately $9\%$. 
 This change coincides with an increase in QSE errors to more than $70 mHa$.
 
@@ -106,7 +106,7 @@ This provides a direct explanation for the pronounced changes in representabilit
 \subsubsection{Reference Ansatz Dependence of QSE Performance}
 We next examine how the choice of variational reference ansatz affects QSE performance using the $6e6o$ active space. 
 Since the QSE subspace is generated from the optimized VQE state, differences in reference quality and excitation flexibility can influence the states accessible to the expansion. 
-We therefore compare several UCC-based ansatz with varying levels of expressiveness and circuit complexity.
+We therefore compare several UCC-based ansätze with varying levels of expressiveness and circuit complexity.
 
 \label{sec:ansatz-dependence}
 \input{tables/table1_ansatz_errors}
@@ -173,11 +173,11 @@ It maintains relatively low spectral errors, exhibits substantially less spin co
 \end{figure}
 
 Having examined the representability and spectral accuracy of the QSE subspace, we next turn to its numerical stability. 
-As discussed in the Introduction, very small eigenvalues of the overlap matrix $\mathbf{S}$ can strongly amplify noise, making the generalised eigenvalue problem highly sensitive to perturbations.
+As discussed in the Introduction, very small eigenvalues of the overlap matrix $\mathbf{S}$ can strongly amplify noise, making the generalized eigenvalue problem highly sensitive to perturbations.
 Here, we examine the full eigenvalue spectrum of $\mathbf{S}$ (\cref{fig:eigenvalue-spectrum}) to understand why these near-null eigenvectors arise in the first place. 
 
 We first classify the QSE excitation operators into three groups: occupied number operators, occupied-to-virtual (OV) excitations, and the remaining excitation classes. 
-Each operator generates a corresponding QSE basis state, allowing the eigenvectors of $\mathbf{S}$ to be characterised according to the operator classes from which their components originate (\cref{fig:eigenvector-composition}). 
+Each operator generates a corresponding QSE basis state, allowing the eigenvectors of $\mathbf{S}$ to be characterized according to the operator classes from which their components originate (\cref{fig:eigenvector-composition}). 
 
 A clear relationship emerges between the eigenvalue magnitude and the composition of the corresponding eigenvectors. 
 In both the singlet and triplet subspaces, the spectrum contains a well-supported block of eigenvectors with eigenvalues close to unity. 
@@ -188,11 +188,11 @@ The singlet spectrum additionally contains a distinct occupied-number dominated 
 Beyond these well-supported eigenmodes, the eigenvalues decrease rapidly, accompanied by a progressive reduction in the contribution from OV-generated states.
 
 
-This behaviour can be understood from how the different QSE operators act on the underlying VQE reference. 
+This behavior can be understood from how the different QSE operators act on the underlying VQE reference. 
 Because the reference state is dominated by the Hartree–Fock determinant, operators that act directly on this component generate basis directions with relatively large amplitudes, resulting in larger overlap eigenvalues.
 In contrast, operators that annihilate the dominant Hartree Fock component, or act primarily on the smaller correlated components of the reference state, generate correspondingly smaller eigenvalues.
 
-This also explains the contrasting behaviour of the occupied number operators in the singlet and triplet sectors. As defined in \crefrange{eq:qse-singlet-operator-pool}{eq:qse-triplet-operator-pool}, the diagonal singlet operator for an occupied spatial orbital $i$ is proportional to $\hat n_{i\alpha}+\hat n_{i\beta}$, so that
+This also explains the contrasting behavior of the occupied number operators in the singlet and triplet sectors. As defined in \crefrange{eq:qse-singlet-operator-pool}{eq:qse-triplet-operator-pool}, the diagonal singlet operator for an occupied spatial orbital $i$ is proportional to $\hat n_{i\alpha}+\hat n_{i\beta}$, so that
 \SingletOnHFEquation
 
 The dominant Hartree-Fock component therefore translates to larger amplitude for the above operator, consistent with the large singlet overlap eigenvalues observed. In contrast, the $M_S=0$ triplet diagonal operator is proportional to $\hat n_{i\alpha}-\hat n_{i\beta}$, which gives
@@ -227,7 +227,7 @@ The remaining basis states with seemingly smaller amplitudes contribute importan
 \subsection{Finite-Shot Effects on Generalized Eigenvalue Stability}
 This trade-off becomes particularly important under finite-shot sampling, where the near-null region of the overlap spectrum is most strongly perturbed, resulting in instances where the smallest eigenvalues turn negative (\cref{fig:si-eigenvalue-lifting}). 
 This motivates the use of overlap-eigenvalue thresholding to remove weakly supported eigenmodes.
-In this section, we examine how thresholding can be used appropriately to regularise QSE under finite-shot noise.
+In this section, we examine how thresholding can be used appropriately to regularize QSE under finite-shot noise.
 Sampling-induced errors are reported as the mean absolute deviation of the four low-lying states $S_0$, $S_1$, $T_1$, and $T_2$ from their corresponding statevector QSE energies. 
 Unless otherwise stated, $n_{\mathrm{shots}}$ denotes the number of shots allocated to each commuting measurement group.
 
@@ -238,10 +238,10 @@ Unless otherwise stated, $n_{\mathrm{shots}}$ denotes the number of shots alloca
     \caption{Mean absolute QSE energy error as a function of the overlap-eigenvalue threshold for the $6e6o$ active space at different shot counts. The dotted line indicates chemical accuracy, and the curves show the trade-off between suppressing sampling-noise amplification and discarding physically relevant subspace directions.}
     \label{fig:threshold-shot-error}
 \end{figure}
-\Cref{fig:threshold-shot-error} shows a clear minimum in the QSE error as a function of the overlap-eigenvalue threshold, indicating that an optimal degree of regularisation exists for each noise level. 
+\Cref{fig:threshold-shot-error} shows a clear minimum in the QSE error as a function of the overlap-eigenvalue threshold, indicating that an optimal degree of regularization exists for each noise level. 
 As the number of shots increases and the sampling noise decreases, this minimum shifts towards lower thresholds and lower overall errors.
 
-This behaviour reflects the competing effects of thresholding. 
+This behavior reflects the competing effects of thresholding. 
 Eigenbases associated with very small overlap eigenvalues are particularly susceptible to noise amplification, such that their contribution to the recovered spectrum can become dominated by statistical error rather than useful physical information. 
 Increasing the threshold initially removes these poorly resolved eigenbases and therefore reduces the QSE error. 
 However, beyond the optimum, further increasing the threshold begins to remove more prominent eigenbases that contain physically important contributions to the QSE subspace, causing the error to increase again. 
@@ -258,17 +258,17 @@ Increasing the shot count improves the precision of the projected matrix element
 \end{figure}
 
 We further find that finite-shot errors depend systematically on the size of the QSE projected matrices. 
-Empirically, the minimum error after threshold optimisation scales approximately as 
+Empirically, the minimum error after threshold optimization scales approximately as 
 \ErrorScalingEquation
 where $n_{\mathrm{orb}}$ is the number of active spatial orbitals (\cref{fig:shot-error-scaling}). 
 Consistent with this trend, the optimal overlap threshold generally increases with the active-space size and decreases with shot count (\cref{fig:si-optimal-threshold}).
-This indicates that progressively stronger regularisation is required as the projected problem grows or as the sampling precision is reduced. 
+This indicates that progressively stronger regularization is required as the projected problem grows or as the sampling precision is reduced. 
 
-This behaviour can be rationalised from the accumulation of finite-sampling errors across the projected matrices. 
+This behavior can be rationalised from the accumulation of finite-sampling errors across the projected matrices. 
 The precision of expectation values estimated from $N_{\mathrm{shots}}$ repeated measurements follows a known $N_{\mathrm{shots}}^{-1/2}$ scaling \cite{Knill2007PrecisionScaling}. 
 This scaling characterises the errors of each individual matrix element. 
 However, as the active spaces grow, the number of matrix elements also increases. For a $d \times d$ projected matrix, the Frobenius norm of the accumulated finite-shot perturbation scales approximately as $\frac{d}{\sqrt{N_{\mathrm{shots}}}}$. 
-Perturbation bounds for generalised Hermitian eigenvalue problems relate the generalised-eigenvalue errors to the spectral norms of the perturbations in $\mathbf{H}$ and $\mathbf{S}$ \cite{Nakatsukasa2010ErrorBounds}. 
+Perturbation bounds for generalized Hermitian eigenvalue problems relate the generalized-eigenvalue errors to the spectral norms of the perturbations in $\mathbf{H}$ and $\mathbf{S}$ \cite{Nakatsukasa2010ErrorBounds}. 
 Since the spectral norm is bounded above by the Frobenius norm, the growth of the accumulated matrix perturbation sets a natural upper scale for the resulting QSE energy errors. 
 For the singles-only operator pool used here, the projected-matrix dimension scales as $d \propto n_{\mathrm{orb}}^2$. 
 The empirical dependence in \cref{eq:error-scaling} is therefore consistent with the accumulation of finite-shot perturbations as the projected problems grow.
@@ -316,7 +316,7 @@ As shown in \cref{fig:si-ov-doubles-s1-error-comparison}, augmenting the one-bod
 Nevertheless, approximately half the molecules remain above chemical accuracy, with strongly conjugated systems like Octatetraene and Hexatriene retaining errors above 10mHa. 
 This indicates that the restricted OV doubles excitations alone are not sufficient to fully repair the representability gap.
 Additional two-body excitations may therefore be required to provide the missing flexibility, which could be important for strongly multiconfigurational states whose structure is not fully captured by the dominant OV sector alone. 
-A similar effect is observed for the one-body operator pool, where OV excitations provide the dominant contributions, but non-OV operators still make appreciable contributions towards the generated subspace.  
+A similar effect is observed for the one-body operator pool, where OV excitations provide the dominant contributions, but non-OV operators still make appreciable contributions toward the generated subspace.  
 
 However, a complete doubles operator pool would substantially enlarge the projected problem and is beyond the scope of the present calculations. 
 Assessing the extent to which the remaining representability errors can be recovered by the full two-body operator manifold is therefore left for future work, particularly in larger and more strongly multiconfigurational active spaces. 
@@ -330,7 +330,7 @@ This further highlights the central tension: increasing the expressiveness of th
 Promisingly, the projected matrices themselves exhibit substantial structure that may provide opportunities for more efficient reconstruction and measurement. 
 In the remainder of this section, we further examine the recurring patterns and correlations within the projected $\mathbf{H}$ and $\mathbf{S}$ matrices.
 
-We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices, with $R^2=0.99$. (\cref{fig:si-h-s-element-correlation}). 
+We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices, with $R^2=0.99$ (\cref{fig:si-h-s-element-correlation}). 
 In general, elements with small overlap $S_{ij}$ also tend to have small Hamiltonian couplings $H_{ij}$. 
 This suggests that the Hamiltonian predominantly couples pairs of operator-generated states that already have appreciable overlap within the QSE subspace. 
 
@@ -353,7 +353,7 @@ Increasing the number of shots gradually restores these features, with the recon
 Beyond the element-wise structure of the projected matrices, we also observe that the sampling process itself introduces a further form of structure through correlated errors between $\mathbf{H}$ and $\mathbf{S}$.
 Throughout this study, commuting Pauli terms were grouped globally across both matrices, such that shared observables were estimated from the same measurement outcomes. 
 This induces correlated sampling errors between $\mathbf{H}$ and $\mathbf{S}$.
-To assess their importance, we deliberately break these correlations by solving the generalised eigenvalue problem using noisy $\mathbf{H}$ and $\mathbf{S}$ matrices obtained from independent measurements. 
+To assess their importance, we deliberately break these correlations by solving the generalized eigenvalue problem using noisy $\mathbf{H}$ and $\mathbf{S}$ matrices obtained from independent measurements. 
 We find that the resulting errors increase substantially by about four orders of magnitude (\cref{fig:si-breaking-h-s-correlated-errors}). 
 More strikingly, combining a finite-shot $\mathbf{H}$ matrix with an exact statevector $\mathbf{S}$ matrix can produce larger errors than using finite-shot estimates of both matrices. 
 This counterintuitive result indicates that correlated perturbations in $\mathbf{H}$ and $\mathbf{S}$ can partially compensate within the generalised eigenvalue problem, and that preserving these correlations is important for accurate QSE reconstruction.

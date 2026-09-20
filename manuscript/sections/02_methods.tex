@@ -11,16 +11,16 @@
 
 The dataset used in this study comprised 28 closed-shell organic molecules from Thiel's excited-state benchmark set \cite{thiels2008benchmark}. 
 These molecules were selected to cover the most important chromophores in organic photochemistry, comprising hydrocarbons, heterocycles, carbonyls, amides and nucleobases (Figure~\ref{fig:benchmark-molecules}).
-The published Cartesian nuclear coordinates were referenced directly and used without further optimisation. 
+The published Cartesian nuclear coordinates were referenced directly and used without further optimization. 
 
-For each molecule, Restricted Hartree-Fock (RHF) calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set. The respective optimized canonical molecular orbitals are used throughout the study.
+For each molecule, Restricted Hartree-Fock (RHF) calculations were performed using PySCF \cite{pyscf2018,pyscf2020} with the STO-3G basis set. The respective optimized canonical molecular orbitals were used throughout the study.
 Active spaces (denoted $n_e e\, n_{\mathrm{o}} o$) comprised the $n_e / 2$ occupied molecular spatial orbitals closest to the HOMO (inclusive) and the $n_{\mathrm{o}} - n_e / 2$ virtual molecular spatial orbitals closest to the LUMO (inclusive). For example, a $6e6o$ active space is defined as HOMO-2, HOMO-1, HOMO, LUMO, LUMO+1 and LUMO+2 in this study. The remaining occupied orbitals were treated as frozen and doubly occupied, while the remaining virtual orbitals were excluded from calculations. 
 
-For each active space, the electronic Hamiltonian was constructed in second quantisation as follows:
+For each active space, the electronic Hamiltonian was constructed in second quantization as follows:
 \ElectronicHamiltonianEquation
 where $E_{\mathrm{nuc}}$ is the core nuclear repulsion energy and $p, q, r, s$ index the active spin-orbitals. $h_{pq}$ and $g_{pqrs}$ are the one- and two-electron integral coefficients evaluated in the fixed canonical Hartree-Fock MO basis.
 
-Exact reference energies and wavefunctions were obtained from complete active-space configuration interaction (CASCI) diagonalisation of the active-space Hamiltonian in PySCF. 
+Exact reference energies and wavefunctions were obtained from complete active-space configuration interaction (CASCI) diagonalization of the active-space Hamiltonian in PySCF. 
 These reference states were subsequently used to assess the accuracy of the ground- and excited-state energies obtained from QSE. 
 
 To assess the performance of QSE across varying active spaces, we considered 2e2o, 2e3o, 4e3o, 4e4o, 4e5o, 6e5o, 6e6o, 6e7o, 8e7o and 8e8o.
@@ -29,24 +29,24 @@ To assess the performance of QSE across varying active spaces, we considered 2e2
 % Quantum calculations
 % ============================
 \subsection{Quantum Simulation Framework}
-In this study, all statevector and noiseless shots simulations were performed with Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. The same electronic Hamiltonian (\cref{eq:electronic-hamiltonian}) was used for all quantum calculations, and all fermionic operators were mapped to qubit operators via the Jordan-Wigner (JW) transformation.
+In this study, all statevector and noiseless shots simulations were performed using the Qibo and Qibochem \cite{qibo2021,qibochem2024zenodo} frameworks. The same electronic Hamiltonian (\cref{eq:electronic-hamiltonian}) was used for all quantum calculations, and all fermionic operators were mapped to qubit operators via the Jordan-Wigner (JW) transformation.
 
 % ============================
 % Workflow 
 % ============================
 \subsection{QSE Workflow}
 The QSE workflow begins with the preparation of a ground-state reference wavefunction using the Variational Quantum Eigensolver (VQE). 
-We used a Unitary Coupled-Cluster (UCC) ansatz to parameterise the ground state wavefunction. 
+We used a Unitary Coupled-Cluster (UCC) ansatz to parameterize the ground state wavefunction. 
 \UCCReferenceStateEquation
 where $\left|\Phi_{\mathrm{HF}}\right\rangle$ is the Hartree-Fock reference determinant and $\hat{T}(\boldsymbol{\theta})$ denotes the coupled cluster excitation operator.
-By default, UCCSD was used as the reference ansatz throughout this study. Additional ansatz classes were considered in \cref{sec:ansatz-dependence}, namely UCCSDSinglet, UCCGSD, and $k$-UpCCGSDSinglet \cite{Anand2022UCCReview,Diniz2021GeneralisedAnsatzAdaptations, Lee2018GeneralisedAnsatzOriginal} with $k=1,2$ and $3$ with the 6e6o active space. 
+By default, UCCSD was used as the reference ansatz throughout this study. Additional ansatz classes were considered in \cref{sec:ansatz-dependence}, namely UCCSDSinglet, UCCGSD, and $k$-UpCCGSDSinglet \cite{Anand2022UCCReview,Diniz2021GeneralisedAnsatzAdaptations, Lee2018GeneralisedAnsatzOriginal} for $k=1,2$ and $3$ in the 6e6o active space. 
 The corresponding excitation operators defining each ansatz are provided in \cref{sec:si-ansatz-classes}.
-The variational parameters $\boldsymbol{\theta}$ were optimized using the L-BFGS-B algorithm by minimizing the Hamiltonian expectation value obtained from exact statevector simulation. (\cref{eq:electronic-hamiltonian}).
+The variational parameters $\boldsymbol{\theta}$ were optimized using the L-BFGS-B algorithm by minimizing the Hamiltonian expectation value obtained from exact statevector simulation (\cref{eq:electronic-hamiltonian}).
 Unless otherwise stated, all UCC operators were implemented using the first-order Suzuki Trotter product approximation.
 
 The VQE-optimized ground-state circuits were then used as the reference states for QSE calculations. 
 As introduced above, QSE constructs a trial subspace by applying a set of expansion operators to the reference state. Following the original QSE formulation \cite{mcclean2017qse}, we restricted the expansion operator pool to one-body fermionic operators. 
-To enable a spin-resolved analysis of the excited-state spectrum, these operators were further spin adapted to construct separate singlet and triplet operator pools. This allows low-lying singlet and triplet states to be targeted and analysed independently. 
+To enable a spin-resolved analysis of the excited-state spectrum, these operators were further spin adapted to construct separate singlet and triplet operator pools. This allows low-lying singlet and triplet states to be targeted and analyzed independently. 
 
 The singlet operator pool, $\mathcal{O}^{S}$, was defined as
 
@@ -65,9 +65,9 @@ For statevector calculations, the optimized VQE circuits were simulated to obtai
 % ============================
 % Thresholding
 % ============================
-\subsection{Generalised Eigenvalue Problem and Thresholding}
-In this work, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} was regularised by applying thresholding to the overlap matrix $\mathbf{S}$.
-The matrix was first diagonalised as
+\subsection{Generalized Eigenvalue Problem and Thresholding}
+In this work, the generalized eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} was regularized by applying thresholding to the overlap matrix $\mathbf{S}$.
+The matrix was first diagonalized as
 \DiagonaliseSEquation
 where the columns of $U$ are the eigenvectors of $\mathbf{S}$ and $\mathbf{\Lambda}$ is a diagonal matrix containing the eigenvalues of $\mathbf{S}$. Then, we define the reduced whitening transformation
 
@@ -76,8 +76,8 @@ where $\tilde{\mathbf{U}}$ and $\tilde{\boldsymbol{\Lambda}}$ contain only the r
 Eigenvectors were retained when $\lambda_i > \tau$, where $\tau$ denotes the specified overlap-eigenvalue threshold. 
 For statevector calculations, a fixed threshold of $10^{-8}$ was used consistently. For finite-shot sampling calculations, the thresholds used were specified with all results. 
 
-Defining $c=Vy$, the generalised eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} is thereby rewritten as 
+Defining $\mathbf C=\tilde{\mathbf V}\mathbf y$, the generalized eigenvalue problem \cref{eq:generalised-eigenvalue-problem-k} is thereby rewritten as 
 
 \ReducedEigenvalueEquation
 
-This gives the wavefunction in the QSE operator basis as $\mathbf{c}_k=\tilde{\mathbf{V}}\mathbf{y}_k$.
+This gives the wavefunction in the QSE operator basis as $\mathbf{C}_k=\tilde{\mathbf{V}}\mathbf{y}_k$.

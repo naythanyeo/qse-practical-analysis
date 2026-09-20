@@ -3,7 +3,7 @@ Electronic-structure calculations provide a fundamental framework for predicting
 At their core, electronic-structure methods seek to describe the many-electron quantum state of a molecule.
 The many-electron wavefunction resides in a Hilbert space whose dimension grows combinatorially with the number of electrons and orbitals. 
 In a direct classical representation, this requires explicitly storing and manipulating an exponentially growing number of wavefunction amplitudes, making exact wavefunction treatments computationally prohibitive for large systems \cite{blum2024ESRoadmap, Graf2025QuantumChemistryScaling}. 
-Alternative non-wavefunction-based approaches, such as Density Functional Approximations (DFAs), offer favourable polynomial scaling and have achieved broad success across chemical applications. 
+Alternative non-wavefunction-based approaches, such as Density Functional Approximations (DFAs), offer favorable polynomial scaling and have achieved broad success across chemical applications. 
 However, their accuracy is less reliable in strongly correlated regimes, where substantial multiconfigurational character becomes important \cite{Burke2012DFTReview,Marzari2021ESApplications,Vuckovic2023DFTChallengesReview, Graf2025QuantumChemistryScaling}.
 
 % PARA 1B: 
@@ -17,13 +17,13 @@ One area where these advantages are particularly relevant is excited-state chemi
 Accurate predictions of excitation and emission energies, conical intersections and nonadiabatic couplings are central to understanding photophysical and photochemical processes \cite{Dreuw2026ExcitedStateReview, Matsika2021NACReview}, with direct implications for the design of functional molecules and materials such as photoswitches, photocatalysts, and organic light-emitting diodes (OLEDs) \cite{Hutcheson2021Photoswitches, Ong2024PhotocatalystApplication, Santos2024OledReview}. 
 However, excited-state calculations become particularly challenging in the presence of near-degeneracies and state crossings, where strong multiconfigurational character can develop.
 Classically, accurate treatment of such regimes often requires multireference methods like CASSCF and its perturbative extensions (CASPT2 or NEVPT2), which are computationally restricted to small systems and active spaces \cite{Mai2020PhotochemistryMiniReview}. 
-Quantum algorithms may therefore help extend accurate excited-state calculations to larger chemical spaces, potentially accelerating high-throughput screening for molecules with desired photochemical and optoelectronic properties
+Quantum algorithms may therefore help extend accurate excited-state calculations to larger chemical spaces, potentially accelerating high-throughput screening for molecules with desired photochemical and optoelectronic properties.
 
 % PARA 3: Quantum Computing Challenges and Methods
 The current generation of quantum hardware, albeit rapidly advancing, remains constrained by imperfect gate operations and limited coherent circuit depth \cite{Fauseweh2024QuantumHardwareReview, Ransford2026QuantinuumHelios, Acharya2025GoogleWillow}.
-These limitations have motivated hybrid quantum-classical algorithms that use quantum processors for state preparation and measurement, while delegating parameter optimisation and post-processing to classical hardware. Among the most prominent is the Variational Quantum Eigensolver (VQE), which minimises the expectation value of the Hamiltonian to approximate the lowest-energy state accessible to a chosen ansatz \cite{McArdle2020QuantumComputingChemistryReview, Cao2019QCforQCReview, Kumar2025VQEReview}.
+These limitations have motivated hybrid quantum-classical algorithms that use quantum processors for state preparation and measurement, while delegating parameter optimization and post-processing to classical hardware. Among the most prominent is the Variational Quantum Eigensolver (VQE), which minimizes the expectation value of the Hamiltonian to approximate the lowest-energy state accessible to a chosen ansatz \cite{McArdle2020QuantumComputingChemistryReview, Cao2019QCforQCReview, Kumar2025VQEReview}.
 Quantum Subspace Methods (QSM) provide a complementary strategy by projecting the full eigenvalue problem onto a compact trial subspace. 
-If the chosen subspace accurately captures the low-energy manifold, the target ground and low-lying excited state solutions can be recovered without diagonalising the full many-body Hamiltonian \cite{Motta2024QSMReview}. 
+If the chosen subspace accurately captures the low-energy manifold, the ground and low-lying excited state solutions can be recovered without diagonalising the full many-body Hamiltonian \cite{Motta2024QSMReview}. 
 
 % PARA 4: Formalisation of QSE
 Quantum Subspace Expansion (QSE), introduced by McClean et al. \cite{mcclean2017qse}, is a popular operator-generated realisation of this framework. 
@@ -31,13 +31,13 @@ QSE constructs a trial subspace by applying a selected set of operators ${\hat{O
 Within this subspace, the $k$-th approximate state is represented as a linear combination of the resulting operator-generated states,
 \KthReferenceStateEquation
 where $\mathbf{C}_k$ contains the coefficients determining the contribution of each basis state.
-These coefficients and the associated energies are obtained by constructing the projected Hamiltonian and overlap matrices, $\mathbf{H}$ and $\mathbf{S}$, and solving the generalised eigenvalue problem 
+These coefficients and the associated energies are obtained by constructing the projected Hamiltonian and overlap matrices, $\mathbf{H}$ and $\mathbf{S}$, and solving the generalized eigenvalue problem 
 \GeneralisedEigenvalueProblemKEquation
 
 % PARA 5: Limitations of QSE
-In general, the operator-generated basis states are not orthogonal, such that $\mathbf{S} \neq \mathbf{I}$. As such, solving this generalised eigenvalue problem typically involves a whitening transformation containing factors proportional to $\frac{1}{\sqrt{\lambda_i}}$, where $\lambda_i$ are the eigenvalues of $\mathbf{S}$. 
+In general, the operator-generated basis states are not orthogonal, such that $\mathbf{S} \neq \mathbf{I}$. As such, solving this generalized eigenvalue problem typically involves a whitening transformation containing factors proportional to $\frac{1}{\sqrt{\lambda_i}}$, where $\lambda_i$ are the eigenvalues of $\mathbf{S}$. 
 If the generated basis states are nearly linearly dependent,  $\mathbf{S}$ develops very small or even near-null eigenvalues. 
-Consequently, measurement errors in the matrix elements are strongly amplified, rendering the projected problem numerically unstable. This ill-conditioning of $\mathbf{S}$ is a well-known limitation of QSE, and particularly consequential because statistical shot noise is inherent to real quantum hardware measurements, even in the fault-tolerant regime.
+Consequently, measurement errors in the matrix elements are strongly amplified, rendering the projected problem numerically unstable. This ill-conditioning of $\mathbf{S}$ is a well-known limitation of QSE, and is particularly consequential because statistical shot noise is inherent to real quantum hardware measurements, even in the fault-tolerant regime.
 
 % PARA 6: Then given that, why still bother with QSE
 Alternative QSM formulations, such as Quantum Self-Consistent Equation-of-Motion (q-SC-EOM) methods, address this source of instability by constructing an orthogonal excitation manifold \cite{Asthana2023QscEOM}. 
@@ -62,5 +62,5 @@ A systematic assessment is therefore needed to distinguish intrinsic limitations
 Here, we address these questions through a systematic study of spin-resolved QSE across 28 organic molecules from the Thiel set \cite{thiels2008benchmark}, a widely used benchmark for classical excited-state methods. 
 We first use statevector simulations to characterize the intrinsic representability and spectral accuracy of QSE, examining the effects of active-space choice, electronic-state character, and reference ansatz. 
 We then introduce finite-shot sampling to quantify the onset and consequences of overlap-matrix ill-conditioning, relating numerical recoverability to sampling precision, problem size, and the regularization threshold. 
-Finally, we further quantify the finite-shot measurement scaling, provide practical guidance of regularization and operator-pool construction, and discuss potential strategies for improving QSE scalability. 
+Finally, we further quantify the finite-shot measurement scaling, provide practical guidance on regularization and operator-pool construction, and discuss potential strategies for improving QSE scalability. 
 Our central aim is to establish when QSE provides a sufficiently expressive and numerically stable representation of molecular ground and excited states, and to identify practical directions for improving its reliability under finite-shot sampling.
