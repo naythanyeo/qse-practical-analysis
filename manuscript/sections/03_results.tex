@@ -312,7 +312,7 @@ We restricted the operator pool to the OV sector because these excitations are e
     \label{fig:si-ov-doubles-s1-error-comparison}
 \end{figure}
 
-As shown in \cref{fig:si-ov-doubles-s1-error-comparison}, augmenting the one-body operator pool with explicit OV double excitations substantially reduces the $S_1$ error across the benchmark.
+As shown in \cref{fig:si-ov-doubles-s1-error-comparison}, augmenting the one-body operator pool with explicit OV double excitations significantly reduces the $S_1$ error across the benchmark, with molecules like Pyrrole improving by over two orders of magnitude. 
 Nevertheless, approximately half the molecules remain above chemical accuracy, with strongly conjugated systems like Octatetraene and Hexatriene retaining errors above 10mHa. 
 This indicates that the restricted OV doubles excitations alone are not sufficient to fully repair the representability gap.
 Additional two-body excitations may therefore be required to provide the missing flexibility, which could be important for strongly multiconfigurational states whose structure is not fully captured by the dominant OV sector alone. 
@@ -323,20 +323,19 @@ Assessing the extent to which the remaining representability errors can be recov
 Despite these remaining errors, the present results demonstrate that explicit double-excitation operators can markedly improve QSE representability, supporting higher-rank operator expansions as a promising direction.
 
 \subsubsection{Structure of the Projected Matrices}
-However, a doubles operator pool (even the restricted OV form) scales as $\mathcal{O}\!\left(n_{\mathrm{orb}}^{4}\right)$, compared with $\mathcal{O}\!\left(n_{\mathrm{orb}}^{2}\right)$ for the present one-body pool. 
+That being said, a doubles operator pool (even the restricted OV form) scales as $\mathcal{O}\!\left(n_{\mathrm{orb}}^{4}\right)$, compared with $\mathcal{O}\!\left(n_{\mathrm{orb}}^{2}\right)$ for the present one-body pool. 
 This has important consequences for measurement scaling. 
 As the dimension of the projected problem now grows significantly faster with $n_{\mathrm{orb}}$, the measurement requirements are expected to increase even more steeply than for the one-body construction underlying the $\mathcal{O}\!\left(n_{\mathrm{orb}}^{11}\right)$ estimate in \cref{sec:shot-budget-scaling}. 
 This further highlights the central tension: increasing the expressiveness of the operator pool can improve representability, but at the cost of a rapidly increasing measurement burden. 
-Promisingly, the projected matrices themselves exhibit substantial structure that may provide opportunities for more efficient reconstruction. 
-In this section, we examine the recurring patterns and correlations within the projected $\mathbf{H}$ and $\mathbf{S}$ matrices, and how these features are affected by finite-shot sampling.
+Promisingly, the projected matrices themselves exhibit substantial structure that may provide opportunities for more efficient reconstruction and measurement. 
+In the remainder of this section, we further examine the recurring patterns and correlations within the projected $\mathbf{H}$ and $\mathbf{S}$ matrices.
 
-We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices (\cref{fig:si-h-s-element-correlation}). {\color{red}{please quantify}}
+We first observe a strong correlation between corresponding elements of the projected $H$ and $S$ matrices, with $R^2=0.99$. (\cref{fig:si-h-s-element-correlation}). 
 In general, elements with small overlap $S_{ij}$ also tend to have small Hamiltonian couplings $H_{ij}$. 
 This suggests that the Hamiltonian predominantly couples pairs of operator-generated states that already have appreciable overlap within the QSE subspace. 
 
 The matrices also exhibit pronounced internal structure. The overlap-matrix heatmaps in \cref{fig:si-full-singlet-heatmaps,fig:si-full-triplet-heatmaps} show consistently large diagonal elements, as expected from the self-overlap of the operator-generated states. 
-The off-diagonal elements are much less uniform. 
-Stronger couplings instead appear in recurring block-like regions associated with particular classes of excitation operators, leaving other regions weakly coupled or nearly empty.
+The off-diagonal elements are much less uniform: stronger couplings appear in recurring block-like regions associated with particular classes of excitation operators, leaving other regions weakly coupled or nearly empty.
 The degree of sparsity also varies substantially between matrices. 
 However, we find no clear relationship between this sparsity and the molecular properties considered across the benchmark, which suggests that the patterns could depend on other factors like the chosen active space and included orbitals.
 
@@ -347,17 +346,21 @@ However, we find no clear relationship between this sparsity and the molecular p
     \label{fig:shot-overlap-structure}
 \end{figure}
 
-When we perturb the matrices with finite-shot sampling noise (\cref{fig:shot-overlap-structure}), we observe that sampling noise progressively obscures the detailed patterns present in the statevector overlap matrices. 
+When we perturb the matrices with finite-shot sampling noise (\cref{fig:shot-overlap-structure}), we observe that the noise progressively obscures the detailed patterns present in the statevector overlap matrices. 
 The dominant diagonal elements remain visible even at relatively low shot counts, whereas the finer off-diagonal and block-like structures are substantially blurred. 
 Increasing the number of shots gradually restores these features, with the reconstructed matrices approaching the underlying statevector structure more closely at higher sampling precision.
 
-Beyond the element-wise structure of the projected matrices, the sampling process itself introduces a further form of structure through correlated errors between $\mathbf{H}$ and $\mathbf{S}$.
+Beyond the element-wise structure of the projected matrices, we also observe that the sampling process itself introduces a further form of structure through correlated errors between $\mathbf{H}$ and $\mathbf{S}$.
 Throughout this study, commuting Pauli terms were grouped globally across both matrices, such that shared observables were estimated from the same measurement outcomes. 
 This induces correlated sampling errors between $\mathbf{H}$ and $\mathbf{S}$.
 To assess their importance, we deliberately break these correlations by solving the generalised eigenvalue problem using noisy $\mathbf{H}$ and $\mathbf{S}$ matrices obtained from independent measurements. 
-The resulting errors increase substantially (\cref{fig:si-breaking-h-s-correlated-errors}). {\color{red}{please quantify}}
+We find that the resulting errors increase substantially by about four orders of magnitude (\cref{fig:si-breaking-h-s-correlated-errors}). 
 More strikingly, combining a finite-shot $\mathbf{H}$ matrix with an exact statevector $\mathbf{S}$ matrix can produce larger errors than using finite-shot estimates of both matrices. 
 This counterintuitive result indicates that correlated perturbations in $\mathbf{H}$ and $\mathbf{S}$ can partially compensate within the generalised eigenvalue problem, and that preserving these correlations is important for accurate QSE reconstruction.
+
+This distinction is particularly important when comparing with previous studies that reported improved accuracy when replacing the noisy overlap matrix with its exact statevector counterpart \cite{Asthana2023QscEOM}. 
+In those studies, sampling uncertainty was modelled by adding random perturbations directly and independently to individual matrix elements, under the assumption that the elements experience errors of comparable magnitude. 
+However, our results suggest that such simplified noise models alone may be insufficient to accurately represent finite-shot QSE, and that future simulations should preserve the correlations induced by the underlying measurement and grouping protocol.
 
 \subsubsection{Outlook for Structure-Aware reconstruction}
 The observations above suggest that finite-shot QSE should not simply be treated as a problem of reconstructing two dense matrices from independent noisy estimates. 
