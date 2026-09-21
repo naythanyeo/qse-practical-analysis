@@ -23,16 +23,19 @@
 
 \begin{abstract}
 Accurate treatment of excited states remains challenging for classical electronic-structure methods because the underlying many-electron state grows exponentially with system size. 
-By contrast, quantum computers provide a compact representation of many-electron states using qubits, motivating quantum algorithms for excited-state calculations with potentially more favourable resource scaling. 
+By contrast, quantum computers provide a compact representation of many-electron states using qubits, motivating quantum algorithms for excited-state calculations with potentially more favorable resource scaling. 
 One such algorithm is Quantum Subspace Expansion (QSE), which applies expansion operators to a variational reference state to construct a reduced subspace in which multiple electronic states are obtained.
 In this work, we systematically assess the practical performance of QSE for low-lying electronic states across 28 organic molecules from the Thiel benchmark set. 
-Using statevector simulations, we first examine the representability of the method for low-lying states. We find that errors associated with QSE depend strongly on state, active space, and molecule used, often being strongly influenced by the degree of multiconfigurational character.
-We then analyse the overlap matrix underlying the QSE generalized eigenvalue problem and show that weakly supported directions drive numerical instability, yet cannot be discarded indiscriminately without degrading spectral accuracy. 
+Using statevector simulations, we first examine the representability of the method for low-lying states. 
+We find that QSE errors depend strongly on the target state, active space, and molecular electronic structure, with multiconfigurational character emerging as an important factor governing representability.
+In several cases, the one-body QSE subspace is unable to adequately represent the target states, revealing a clear representability gap.
+We then analyze the overlap matrix underlying the QSE generalized eigenvalue problem and show that weakly supported eigenmodes drive numerical instability, yet cannot be discarded indiscriminately without degrading spectral accuracy. 
 Under finite-shot sampling, the resulting energy errors follow an empirical scaling of approximately $n_{\mathrm{orb}}^2/\sqrt{N_{\mathrm{shots}}}$. 
-Combined with the observed growth in measurement groups, this yields an estimated total measurement cost of approximately $\mathcal{O}(n_{\mathrm{orb}}^{11})$ for constant accuracy under the present one-body direct-estimation protocol. 
-Explicit double-excitation operators substantially improve representability for challenging excited states, but at the cost of a rapidly expanding operator space. 
-Finally, the projected matrices exhibit recurring structural correlations and correlated sampling errors, suggesting opportunities for more efficient structure-aware reconstruction.
-These results highlight a central tension in QSE between subspace expressiveness, numerical resolvability, and measurement cost, and establish practical conditions governing its reliable finite-shot application.
+Combined with the observed growth in measurement groups, this yields an total measurement cost of approximately $\mathcal{O}(n_{\mathrm{orb}}^{11})$ for constant accuracy under the present direct-estimation protocol. 
+Addressing the representability limitation by introducing explicit double-excitation operators substantialy improves challenging excited states, but further increases the size of the operator space and associated measurement burden.
+This exposes a central tension in QSE, in which increasing subspace expressively can improve representability while exacerbating numerical instability and measurement cost.
+Encouragingly, we find that the projected matrices exhibit recurring structural patterns, while the finite-shot perturbations in the Hamiltonian and overlap matrices show nontrivial covariance, suggesting opportunities for more efficient structure-aware measurement and reconstruction strategies. 
+Overall, our results provide an assessment of QSE across chemically diverse molecules, identifying present limitations while highlighting potential routes toward more practical future implementations.
 
 
 \end{abstract}
