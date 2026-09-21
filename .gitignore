@@ -34,13 +34,6 @@ manuscript/*.out
 manuscript/*.run.xml
 manuscript/*.synctex.gz
 manuscript/*.toc
-manuscript/tables/
-manuscript/figures/
-
-# Generated notebook/script outputs
-figures/generated/
-manuscript/figures/generated/
-manuscript/tables/generated/
 
 # Large or machine-specific data products
 data/raw_matrices

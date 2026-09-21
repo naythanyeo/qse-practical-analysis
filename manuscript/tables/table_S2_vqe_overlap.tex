@@ -1,0 +1,28 @@
+% Source: notebooks/01_subspace_representability.ipynb
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Mean and maximum squared overlap, expressed as a percentage, between the optimized VQE reference state and the exact CASCI states across the 28-molecule benchmark in the $6e6o$ active space. Values are rounded to two decimal places. Triplet overlaps are averaged over the three spin sectors.}
+    \label{tab:si-vqe-overlap}
+    \begin{tabular}{@{}ll*{4}{S[table-format=3.2]}@{}}
+        \toprule
+        Ansatz & Statistic & {$s0$} & {$s1$} & {$t1$} & {$t2$} \\
+        \midrule
+        1UpCCGSDSinglet & Mean & 96.79 & 0.08 & 0.00 & 0.00 \\
+        1UpCCGSDSinglet & Maximum & 99.96 & 1.01 & 0.00 & 0.00 \\
+        2UpCCGSDSinglet & Mean & 98.18 & 0.13 & 0.00 & 0.00 \\
+        2UpCCGSDSinglet & Maximum & 99.96 & 1.79 & 0.00 & 0.00 \\
+        3UpCCGSDSinglet & Mean & 98.48 & 0.05 & 0.00 & 0.00 \\
+        3UpCCGSDSinglet & Maximum & 99.97 & 0.40 & 0.00 & 0.00 \\
+        UCCSDSinglet & Mean & 99.88 & 0.00 & 0.00 & 0.00 \\
+        UCCSDSinglet & Maximum & 100.00 & 0.05 & 0.00 & 0.00 \\
+        UCCSD & Mean & 99.90 & 0.00 & 0.00 & 0.00 \\
+        UCCSD & Maximum & 100.00 & 0.03 & 0.00 & 0.00 \\
+        UCCGSD & Mean & 99.98 & 0.00 & 0.00 & 0.00 \\
+        UCCGSD & Maximum & 100.00 & 0.01 & 0.00 & 0.00 \\
+        \midrule
+        Overall & Mean & 98.87 & 0.04 & 0.00 & 0.00 \\
+        Overall & Maximum & 100.00 & 1.79 & 0.00 & 0.00 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

@@ -1,0 +1,21 @@
+% Source: notebooks/01_subspace_representability.ipynb, df_trotter_spin_mean.
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Mean spin contamination and circuit depth for the UCCSDSinglet and UCCSD ansatzes across Trotter steps in the $4e4o$ active space.}
+    \label{tab:s2-spin-mean-trotter}
+    \begin{tabular}{@{}ccccc@{}}
+        \toprule
+        & \multicolumn{2}{c}{UCCSDSinglet} & \multicolumn{2}{c}{UCCSD} \\
+        \cmidrule(lr){2-3} \cmidrule(l){4-5}
+        Trotter steps & \multicolumn{1}{c}{Mean spin contamination} & \multicolumn{1}{c}{Circuit depth} & \multicolumn{1}{c}{Mean spin contamination} & \multicolumn{1}{c}{Circuit depth} \\
+        \midrule
+        \num{1} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{2.943113e-06} & \num{2181} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{1.207535e-08} & \num{1951} \\
+        \num{2} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{6.894982e-07} & \num{4370} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{1.370162e-08} & \num{3939} \\
+        \num{4} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{1.690743e-07} & \num{8748} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{2.079582e-08} & \num{7915} \\
+        \num{8} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{4.205176e-08} & \num{17504} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{1.926998e-08} & \num{15867} \\
+        \num{16} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{1.049051e-08} & \num{35016} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{1.674152e-08} & \num{31771} \\
+        \num{32} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{2.620550e-09} & \num{70040} & \num[scientific-notation=true,round-mode=figures,round-precision=3]{1.650981e-08} & \num{63579} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
