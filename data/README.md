@@ -1,37 +1,42 @@
 # Data
 
-This folder contains the small tracked inputs and the expected local layout for larger generated QSE datasets.
+This directory combines tracked molecular inputs with externally archived calculation results. Complete the [environment setup](../README.md) before processing data.
 
 ## Tracked Data
 
 - `28_mols/`: molecule geometries as `.xyz` files.
-- `parameters/`: VQE parameter JSONL files used by the analysis notebooks.
+- `parameters/hf_data/`: cached canonical orbitals, integrals, and Hartree-Fock metadata in NPZ files.
+- `parameters/vqe_params/`: optimised VQE parameters and energies in NPZ files.
 
 ## External Data
 
-The full generated QSE matrix datasets are large and should be downloaded separately from:
-
-`[TODO: DOI / archive link]`
-
-After downloading, place them under:
+Download the raw matrices and processed dataframes from [Figshare](https://doi.org/10.6084/m9.figshare.33950287). Preserve their subdirectories when extracting into this expected layout:
 
 ```text
-data/matrices/
-├── SV_hamiltonian/
-├── SV_spin/
-└── shots_hamiltonian/
+data/
+  raw_matrices/
+    SV_hamiltonian/
+    SV_spin/
+    pyscf_casci/
+    qse_state_matrices/
+    shots_hamiltonian/
+    SV_hamiltonian_select_doubles/
+      ov_doubles/
+  processed_dataframes/
+    sv_qse_data.pkl
+    shots_qse_data.pkl
+    sv_qse_ov_doubles_data.pkl
+    Orbital_Character.csv
 ```
-
-These matrix files are ignored by git and are meant to be local working data.
 
 ## File Contents
 
-Statevector QSE files contain molecule and calculation metadata together with real and imaginary components of the Hamiltonian and overlap matrices.
+Raw NPZ files hold calculation metadata and numerical arrays: projected Hamiltonian/overlap matrices, spin matrices, exact CASCI energies and vectors, or QSE basis-state matrices, depending on the directory.
 
-Shot-based QSE files contain the same matrix data, plus shot-count and repeat/sample metadata.
+Finite-shot files also contain sampling information and repeated matrix estimates. Processed pickle files combine records into pandas dataframes. Load pickle files only from trusted sources.
 
-VQE parameter files contain molecule, active-space, ansatz, VQE energy, parameter names, and optimized parameter values.
+Visualise.zip contains cube files of all the molecular orbitals.
 
-## Practical Notes
+## Rebuilding Processed Data
 
-The statevector matrix files are generally small enough to load directly into memory. The shot-based files can be much larger, so notebooks should stream, filter, or summarize them when possible.
+Run [00_data_processing.ipynb](../notebooks/00_data_processing.ipynb) to regenerate the three pickle files from the corresponding raw datasets. This does not regenerate the underlying calculations, QSE state matrices, or molecular metadata.

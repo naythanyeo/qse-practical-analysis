@@ -1,38 +1,36 @@
 # Practical QSE Analysis
 
-This repository contains the publishable notebooks, helper utilities, data layout, and manuscript sources for practical Quantum Subspace Expansion (QSE) analysis with QiboChem. The workflow is organized around processing generated workstation data into paper-ready datasets, then analyzing QSE dimensions, ansatz choices, finite-shot behavior, and scaling trends.
+This repository contains the calculation scripts, analysis notebooks, and manuscript sources accompanying our study of practical quantum subspace expansion (QSE). Together with the archived datasets, it provides the workflow for reproducing the numerical analyses and figures presented in the paper. Calculations use our [research fork of Qibochem](https://github.com/naythanyeo/qibochem-qse), a quantum chemistry plugin for Qibo.
 
 ## Repository Layout
 
-- `notebooks/`: numbered analysis notebooks for the paper workflow.
-- `notebooks/notebook_utils/`: shared Python helpers used by the notebooks.
-- `data/`: molecule files, VQE parameters, and local slots for generated QSE data.
-- `manuscript/`: LaTeX manuscript sources.
+| Directory | Contents |
+| --- | --- |
+| [data/](data/README.md) | Molecular inputs, cached parameters, and calculation datasets |
+| [notebooks/](notebooks/README.md) | Data processing, numerical analysis, and figure generation |
+| [scripts/](scripts/README.md) | Scripts for generating calculation data |
+| [manuscript/](manuscript/) | Paper sources, tables, and figures |
 
-## Notebook Workflow
+Each directory has its own README with detailed instructions.
 
-Run the notebooks in order when rebuilding the analysis:
 
-1. `00_data_processing.ipynb`: convert raw/generated workstation outputs into paper-ready formats.
-2. `01_dimensions_analysis.ipynb`: analyze QSE dimension, overlap spectra, and retained ranks.
-3. `02_ansatz_analysis.ipynb`: compare ansatz-dependent QSE behavior.
-4. `03_shots_data.ipynb`: analyze finite-shot and noisy QSE datasets.
-5. `04_scaling_heatmaps.ipynb`: generate operator-count, matrix-structure, heatmap, and scaling analyses.
+## Set up 
 
-## Environment
+Clone the repository:
 
-The working conda environment for this project is currently `qse-qibochem`. A formal `environment.yml` can be added once the dependency set is stable.
+```bash
+git clone https://github.com/naythanyeo/qse-practical-analysis.git
+cd qse-practical-analysis
+```
 
-For local development, QiboChem can be installed in editable mode from the local source checkout. For publication or reproduction, this should eventually be replaced with a pinned GitHub branch, tag, or commit.
+Set up conda environment for dependencies:
 
-## Data
+```bash
+conda env create -f environment.yml
+conda activate qse-qibochem
+```
 
-Large generated matrix files are not intended to be tracked directly in git. Download the archived raw JSONL data from:
+## Data source
 
-`[TODO: DOI / archive link]`
-
-and place the extracted files under `data/matrices/` using the folder structure described in `data/README.md`.
-
-## Citation
-
-Citation and data-availability details will be added once the manuscript and data archive are finalized.
+Download the raw matrices and processed dataframes from [Figshare](https://doi.org/10.6084/m9.figshare.33950287). 
+Unzip the folders and place them in the folder [data/](data/README.md).
