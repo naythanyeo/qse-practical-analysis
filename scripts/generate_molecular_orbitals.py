@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Generate canonical frontier molecular orbitals as cube files."""
 
 import numpy as np
@@ -6,10 +5,9 @@ from pyscf.tools import cubegen
 
 from script_utils import DATA_DIR, MOLECULE_NAMES, load_pyscf_mol
 
-
 ACTIVE_SPACE = "8e8o"
-VISUALISE_DIR = DATA_DIR / "visualise"
 GRID_POINTS = 80
+VISUALISE_DIR = DATA_DIR / "visualise"
 
 
 def get_frontier_orbitals(mf):

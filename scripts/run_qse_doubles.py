@@ -1,31 +1,24 @@
+"""Generate statevector QSE matrices with singles and OV doubles."""
+
 import gc
 from concurrent.futures import ThreadPoolExecutor
-
-from qibochem.measurement.protocol import StateVectorProtocol
-from qibochem.selected_ci.qse import (
-    QSE_Computable,
-    generate_singlet_singles
-)
-from qibochem.ansatz.ucc import Ansatz_UCCSD
-from script_utils import (
-    FERM_QUBIT_MAP,
-    MAP_THRESHOLD,
-    MOLECULE_NAMES,
-    SV_CACHE_DIR,
-    SV_OUTPUT_DIR,
-    get_vqe_circuit,
-    load_qibo_mol,
-    save_npz,
-)
-
-import openfermion
 from itertools import combinations_with_replacement
+
 import numpy as np
+import openfermion
+from qibochem.ansatz.ucc import Ansatz_UCCSD
+from qibochem.measurement.protocol import StateVectorProtocol
+from qibochem.selected_ci.qse import QSE_Computable, generate_singlet_singles
 
-ANSATZ_FUNCTIONS = {"UCCSD": Ansatz_UCCSD}
+from script_utils import (
+    FERM_QUBIT_MAP, MAP_THRESHOLD, MOLECULE_NAMES, SV_CACHE_DIR, SV_OUTPUT_DIR, get_vqe_circuit,
+    load_qibo_mol, save_npz,
+)
+
 ACTIVE_SPACES = ["6e6o"]
+ANSATZ_FUNCTIONS = {"UCCSD": Ansatz_UCCSD}
+MAX_WORKERS = 4
 
-MAX_WORKERS = 8
 
 def generate_singlet_singles_and_select_paired_doubles(excitation_params: dict):
     """
@@ -99,6 +92,7 @@ def generate_singlet_singles_and_select_paired_doubles(excitation_params: dict):
 
     return all_operators
 
+
 def generate_singlet_adapt_singles(occupied, virtual):
     """
     Returns the spin adapt singles transitions only
@@ -108,9 +102,11 @@ def generate_singlet_adapt_singles(occupied, virtual):
         openfermion.FermionOperator(f"{2*virtual+1}^ {2*occupied+1}")
     )
 
+
 def normalise_operator(operator):
     norm = np.sqrt(sum(abs(coefficient) ** 2 for coefficient in operator.terms.values()))
     return operator / norm
+
 
 def generate_singles_and_ov_doubles(excitation_params: dict):
     single_operators = generate_singlet_singles(excitation_params)

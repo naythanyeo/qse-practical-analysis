@@ -1,3 +1,5 @@
+"""Generate statevector QSE spin matrices."""
+
 import gc
 from concurrent.futures import ThreadPoolExecutor
 
@@ -5,24 +7,16 @@ from qibochem.measurement.protocol import StateVectorProtocol
 from qibochem.selected_ci.qse import QSE_Computable
 
 from script_utils import (
-    ANSATZ_FUNCTIONS,
-    FERM_QUBIT_MAP,
-    MAP_THRESHOLD,
-    MOLECULE_NAMES,
-    QSE_EXPANSIONS,
-    SPIN_CACHE_DIR,
-    SPIN_OUTPUT_DIR,
-    get_vqe_circuit,
-    load_qibo_mol,
-    parse_active_space,
+    ANSATZ_FUNCTIONS, FERM_QUBIT_MAP, MAP_THRESHOLD, MOLECULE_NAMES, QSE_EXPANSIONS,
+    SPIN_CACHE_DIR, SPIN_OUTPUT_DIR, get_vqe_circuit, load_qibo_mol, parse_active_space,
     save_npz,
 )
 
-
-ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", 
-                 "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"]
-
-MAX_WORKERS = 2
+ACTIVE_SPACES = [
+    "2e2o", "2e3o", "4e3o", "4e4o", "4e5o",
+    "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
+]
+MAX_WORKERS = 4
 
 
 def run_molecule_expansion(

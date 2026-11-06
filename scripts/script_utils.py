@@ -1,9 +1,11 @@
+"""Shared paths, configuration, and helpers for benchmark generation scripts."""
+
 import re
 from functools import partial
 from pathlib import Path
 
 import numpy as np
-
+from pyscf import fci, gto, scf
 from qibochem.ansatz.ucc import (
     Ansatz_UCCGSD,
     Ansatz_UCCSD,
@@ -14,8 +16,6 @@ from qibochem.ansatz.ucc_util import params2amplitudes
 from qibochem.driver.molecule import Molecule
 from qibochem.measurement.protocol import StateVectorProtocol
 from qibochem.selected_ci.qse import generate_singlet_singles, generate_triplet_singles
-
-from pyscf import fci, gto, scf
 
 """
 0. INITIALISATION
@@ -68,6 +68,7 @@ QSE_EXPANSIONS = {
 1. FILE UTILITY
 """
 
+
 def parse_active_space(active_space):
     """
     Help extract active space information
@@ -101,6 +102,7 @@ def save_npz(path, **arrays):
 """
 2. HARTREE FOCK HELPERS
 """
+
 
 def _run_pyscf(xyz_path, num_active_e, num_active_o):
     """
@@ -194,6 +196,7 @@ def load_pyscf_mol(molecule_name, active_space):
 3. VQE HELPER
 """
 
+
 def get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name):
     ansatz_function = ANSATZ_FUNCTIONS[ansatz_name]
     vqe_params_path = VQE_PARAMS_DIR / active_space / molecule_name / f"{ansatz_name}.npz"
@@ -230,6 +233,7 @@ def get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name):
 """
 4. PYSCF MATRIX HELPER
 """
+
 
 def mat2pvec(ci_matrix, active_space, m):
     """

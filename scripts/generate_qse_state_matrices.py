@@ -1,21 +1,18 @@
-"""Generate optimized VQE states in the fixed-electron determinant basis."""
+"""Generate QSE basis-state matrices from optimised VQE references."""
 
 import numpy as np
 from scipy.sparse import csr_matrix
 
 from script_utils import (
-    ANSATZ_FUNCTIONS,
-    MOLECULE_NAMES,
-    QSE_EXPANSIONS,
-    QSE_STATE_OUTPUT_DIR,
-    get_vqe_circuit,
-    load_qibo_mol,
-    parse_active_space,
-    save_npz,
+    ANSATZ_FUNCTIONS, MOLECULE_NAMES, QSE_EXPANSIONS, QSE_STATE_OUTPUT_DIR, get_vqe_circuit,
+    load_qibo_mol, parse_active_space, save_npz,
 )
 
-ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", 
-                 "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"]
+ACTIVE_SPACES = [
+    "2e2o", "2e3o", "4e3o", "4e4o", "4e5o",
+    "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
+]
+
 
 def get_fixed_electron_basis(active_space):
     """
@@ -35,6 +32,7 @@ def get_fixed_electron_basis(active_space):
             determinant_bitstrings.append(bitstring)
 
     return np.asarray(determinant_indices, dtype=np.int64), determinant_bitstrings
+
 
 def operator_on_bitstring(fermionic_operator, bitstring):
     """
@@ -82,6 +80,7 @@ def operator_on_bitstring(fermionic_operator, bitstring):
     
     return results
 
+
 def operator2partial_permu_mat(fermionic_operator, determinant_bitstrings):
     """
     Build a partial permutation matrix for a fermionic operator given a 
@@ -118,6 +117,7 @@ def operator2partial_permu_mat(fermionic_operator, determinant_bitstrings):
     matrix = csr_matrix((matrix_data, (row_data, cols_data)), shape=(dim, dim))
 
     return matrix
+
 
 def generate_qse_state_matrices(molecule_name, active_space, ansatz_name, determinant_indices, projection_matrices):
     output_paths = {

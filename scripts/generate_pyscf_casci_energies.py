@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-"""Generate compact PySCF spin-resolved CASCI reference energies."""
+"""Generate spin-resolved CASCI reference energies and vectors."""
 
 import math
 
@@ -8,22 +7,20 @@ from pyscf import mcscf
 from pyscf.fci import spin_op
 
 from script_utils import (
-    MOLECULE_NAMES,
-    PYSCF_OUTPUT_DIR,
-    load_pyscf_mol,
-    mat2pvec,
-    parse_active_space,
-    save_npz,
+    MOLECULE_NAMES, PYSCF_OUTPUT_DIR, load_pyscf_mol, mat2pvec, parse_active_space, save_npz,
 )
 
+ACTIVE_SPACES = [
+    "2e2o", "2e3o", "4e3o", "4e4o", "4e5o",
+    "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
+]
 N_ROOTS = 10
 
-ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", 
-                 "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"]
 
 def sector_dimension(num_orbitals, n_alpha, n_beta):
     # Number of roots in each spin sector
     return math.comb(num_orbitals, n_alpha) * math.comb(num_orbitals, n_beta)
+
 
 def get_casci_roots(
     mf,

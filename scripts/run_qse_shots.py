@@ -1,3 +1,5 @@
+"""Generate finite-shot QSE Hamiltonian and overlap matrices."""
+
 import gc
 from concurrent.futures import ThreadPoolExecutor
 
@@ -5,27 +7,18 @@ from qibochem.measurement.protocol import MultiShotProtocol
 from qibochem.selected_ci.qse import QSE_Computable
 
 from script_utils import (
-    FERM_QUBIT_MAP,
-    MAP_THRESHOLD,
-    MOLECULE_NAMES,
-    QSE_EXPANSIONS,
-    SHOTS_CACHE_DIR,
-    SHOTS_OUTPUT_DIR,
-    get_vqe_circuit,
-    load_qibo_mol,
-    save_npz,
+    FERM_QUBIT_MAP, MAP_THRESHOLD, MOLECULE_NAMES, QSE_EXPANSIONS, SHOTS_CACHE_DIR,
+    SHOTS_OUTPUT_DIR, get_vqe_circuit, load_qibo_mol, save_npz,
 )
 
-
 ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o"]
-
 SHOT_LADDER = (
     1000, 2000, 5000, 10000, 20000,
     50000, 100000, 200000, 500000, 1000000,
 )
 N_REPEATS = 10
-
 MAX_WORKERS = 4
+
 
 def run_molecule_expansion(molecule_name, active_space, expansion, excitation_generator, spin_projection):
     output_path = SHOTS_OUTPUT_DIR / active_space / expansion / f"{molecule_name}.npz"
@@ -76,10 +69,10 @@ def run_molecule_expansion(molecule_name, active_space, expansion, excitation_ge
     gc.collect()
 
 
-def main(max_workers=MAX_WORKERS):
+def main():
     for active_space in ACTIVE_SPACES:
         for expansion, (excitation_generator, spin_projection) in QSE_EXPANSIONS.items():
-            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
                 futures = [
                     executor.submit(
                         run_molecule_expansion, molecule_name, active_space,
