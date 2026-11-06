@@ -14,16 +14,8 @@ from script_utils import (
     save_npz,
 )
 
-ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"]
-"""
-,  "6e7o", "8e7o", "8e8o"
-"""
-from qibochem.ansatz.ucc import (
-    Ansatz_UCCSD
-)
-ANSATZ_FUNCTIONS = {
-    "UCCSD": Ansatz_UCCSD,
-}
+ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o", 
+                 "6e5o", "6e6o", "6e7o", "8e7o", "8e8o"]
 
 def get_fixed_electron_basis(active_space):
     """

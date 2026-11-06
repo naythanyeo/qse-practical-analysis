@@ -4,12 +4,9 @@ from concurrent.futures import ThreadPoolExecutor
 from qibochem.measurement.protocol import StateVectorProtocol
 from qibochem.selected_ci.qse import (
     QSE_Computable,
-    generate_singlet_singles,
+    generate_singlet_singles
 )
-from qibochem.ansatz.ucc import (
-    Ansatz_UCCSD
-)
-
+from qibochem.ansatz.ucc import Ansatz_UCCSD
 from script_utils import (
     FERM_QUBIT_MAP,
     MAP_THRESHOLD,
@@ -29,8 +26,6 @@ ANSATZ_FUNCTIONS = {"UCCSD": Ansatz_UCCSD}
 ACTIVE_SPACES = ["6e6o"]
 
 MAX_WORKERS = 8
-
-
 
 def generate_singlet_singles_and_select_paired_doubles(excitation_params: dict):
     """
