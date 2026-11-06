@@ -14,6 +14,7 @@ from script_utils import (
     SPIN_OUTPUT_DIR,
     get_vqe_circuit,
     load_qibo_mol,
+    parse_active_space,
     save_npz,
 )
 
@@ -24,11 +25,14 @@ ACTIVE_SPACES = ["2e2o", "2e3o", "4e3o", "4e4o", "4e5o",
 MAX_WORKERS = 2
 
 
-def run_molecule_expansion(molecule_name, active_space, expansion, excitation_generator, spin_projection):
+def run_molecule_expansion(
+    molecule_name, active_space, expansion,
+    excitation_generator, spin_projection, ansatz_names,
+):
     # First get all the file paths within the molecule and active space
     output_paths = {
         ansatz_name: SPIN_OUTPUT_DIR / active_space / expansion / f"{molecule_name}_{ansatz_name}.npz"
-        for ansatz_name in ANSATZ_FUNCTIONS
+        for ansatz_name in ansatz_names
     }
     # Retain only the ones that do not yet exist 
     pending_ansatzes = [
@@ -87,12 +91,16 @@ def run_molecule_expansion(molecule_name, active_space, expansion, excitation_ge
 
 def main():
     for active_space in ACTIVE_SPACES:
+        _, num_orbitals = parse_active_space(active_space)
+        # Match benchmark coverage, not a restriction of the implementation.
+        ansatz_names = list(ANSATZ_FUNCTIONS) if num_orbitals <= 6 else ["UCCSD"]
+
         for expansion, (excitation_generator, spin_projection) in QSE_EXPANSIONS.items():
             with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
                 futures = [
                     executor.submit(
                         run_molecule_expansion, molecule_name, active_space,
-                        expansion, excitation_generator, spin_projection
+                        expansion, excitation_generator, spin_projection, ansatz_names
                     )
                     for molecule_name in MOLECULE_NAMES
                 ]

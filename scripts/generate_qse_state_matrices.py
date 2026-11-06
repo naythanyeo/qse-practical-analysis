@@ -164,6 +164,8 @@ def main():
         # Save the relevant determinants and bitstrings matching the active space
         determinant_indices, determinant_bitstrings = get_fixed_electron_basis(active_space)
         num_active_e, num_active_o = parse_active_space(active_space)
+        # Match benchmark coverage, not a restriction of the implementation.
+        ansatz_names = list(ANSATZ_FUNCTIONS) if num_active_o <= 6 else ["UCCSD"]
         projection_matrices = {}
 
         # Calculate unique projection matrices once
@@ -182,7 +184,7 @@ def main():
 
         # Use the projection matrices 
         for molecule_name in MOLECULE_NAMES:
-            for ansatz_name in ANSATZ_FUNCTIONS:
+            for ansatz_name in ansatz_names:
                 generate_qse_state_matrices(
                     molecule_name, active_space, ansatz_name,
                     determinant_indices, projection_matrices
