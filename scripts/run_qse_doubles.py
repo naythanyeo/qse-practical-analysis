@@ -11,12 +11,13 @@ from qibochem.measurement.protocol import StateVectorProtocol
 from qibochem.selected_ci.qse import QSE_Computable, generate_singlet_singles
 
 from script_utils import (
-    FERM_QUBIT_MAP, MAP_THRESHOLD, MOLECULE_NAMES, SV_CACHE_DIR, SV_OUTPUT_DIR, get_vqe_circuit,
+    DATA_DIR, FERM_QUBIT_MAP, MAP_THRESHOLD, MOLECULE_NAMES, SV_CACHE_DIR, get_vqe_circuit,
     load_qibo_mol, save_npz,
 )
 
 ACTIVE_SPACES = ["6e6o"]
 ANSATZ_FUNCTIONS = {"UCCSD": Ansatz_UCCSD}
+DOUBLES_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_hamiltonian_select_doubles"
 MAX_WORKERS = 4
 
 
@@ -136,11 +137,11 @@ def generate_singles_and_ov_doubles(excitation_params: dict):
     return normalised_operators
 
 
-def run_molecule_expansion(molecule_name, active_space, excitation_generator):
+def run_molecule_expansion(molecule_name, active_space, excitation_generator, doubles_folder):
     # First get all the file paths within the molecule and active space
-    expansion = "select_ov_doubles"
+    expansion = "select_ov_doubles" if doubles_folder == "ov_doubles" else "select_doubles"
     output_paths = {
-        ansatz_name: SV_OUTPUT_DIR / active_space / expansion / f"{molecule_name}_{ansatz_name}.npz"
+        ansatz_name: DOUBLES_OUTPUT_DIR / doubles_folder / active_space / f"{molecule_name}_{ansatz_name}.npz"
         for ansatz_name in ANSATZ_FUNCTIONS
     }
     # Retain only the ones that do not yet exist 
@@ -198,12 +199,15 @@ def run_molecule_expansion(molecule_name, active_space, excitation_generator):
 
 
 def main():
+    doubles_folder, excitation_generator = "ov_doubles", generate_singles_and_ov_doubles
+    # Un comment below line to run QSE with only frontier doubles defined above 
+    # doubles_folder, excitation_generator = "frontier_doubles", generate_singlet_singles_and_select_paired_doubles
     for active_space in ACTIVE_SPACES:
         with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
             futures = [
                 executor.submit(
                     run_molecule_expansion, molecule_name, active_space,
-                    generate_singles_and_ov_doubles
+                    excitation_generator, doubles_folder,
                 )
                 for molecule_name in MOLECULE_NAMES
             ]
