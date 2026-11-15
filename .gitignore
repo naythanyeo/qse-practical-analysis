@@ -40,6 +40,7 @@ data/raw_matrices
 data/cache/
 data/processed_dataframes
 data/visualise/
+data/wavefunctions
 
 # Common large data/output formats
 *.h5

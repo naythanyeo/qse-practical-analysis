@@ -1,0 +1,29 @@
+Class,Molecule,Point Group,S1_Orb,T1_Orb,T2_Orb,S1_Irrep,T1_Irrep,T2_Irrep
+Unsaturated Aliphatic Hydrocarbons,Ethene,D2h,pi->pi*,pi->pi*,-,B1u,B1u,-
+Unsaturated Aliphatic Hydrocarbons,Butadiene,C2h,pi->pi*,pi->pi*,pi->pi*,Bu,Bu,Ag
+Unsaturated Aliphatic Hydrocarbons,Hexatriene,C2h,pi->pi*,pi->pi*,pi->pi*,Bu,Bu,Ag
+Unsaturated Aliphatic Hydrocarbons,Octatetraene,C2h,pi->pi*,pi->pi*,pi->pi*,Ag,Bu,Ag
+Unsaturated Aliphatic Hydrocarbons,Cyclopentadiene,C2v,pi->pi*,pi->pi*,pi->pi*,B2,B2,A1
+Unsaturated Aliphatic Hydrocarbons,Norbornadiene,C2v,pi->pi*,pi->pi*,pi->pi*,A2,A2,B2
+Unsaturated Aliphatic Hydrocarbons,Cyclopropene,C2v,sigma->pi*,pi->pi*,sigma->pi*,B1,B2,B1
+Aromatic Hydrocarbons and Heterocycles,Benzene,D6h,pi->pi*,pi->pi*,pi->pi*,B2u,B1u,E1u
+Aromatic Hydrocarbons and Heterocycles,Triazine,D3h,n->pi*,-,-,"A""1",-,-
+Aromatic Hydrocarbons and Heterocycles,Naphthalene,D2h,pi->pi*,pi->pi*,pi->pi*,B3u,B2u,B3u
+Aromatic Hydrocarbons and Heterocycles,Tetrazine,D2h,n->pi*,n->pi*,n->pi*,B3u,B3u,Au
+Aromatic Hydrocarbons and Heterocycles,Pyrazine,D2h,n->pi*,-,-,B3u,-,-
+Aromatic Hydrocarbons and Heterocycles,Furan,C2v,pi->pi*,pi->pi*,pi->pi*,B2,B2,A1
+Aromatic Hydrocarbons and Heterocycles,Pyrrole,C2v,pi->pi*,pi->pi*,pi->pi*,A1,B2,A1
+Aromatic Hydrocarbons and Heterocycles,Pyridine,C2v,pi->pi*,pi->pi*,n->pi*,B2,A1,B1
+Aromatic Hydrocarbons and Heterocycles,Pyrimidine,C2v,n->pi*,-,-,B1,-,-
+Aromatic Hydrocarbons and Heterocycles,Pyridazine,C2v,n->pi*,-,-,B1,-,-
+Aromatic Hydrocarbons and Heterocycles,Imidazole,Cs,n->pi*,pi->pi*,pi->pi*,"A""",A',A'
+"Aldehydes, Ketones and Amides",Benzoquinone,D2h,n->pi*,n->pi*,n->pi*,Au,B1g,Au
+"Aldehydes, Ketones and Amides",Formaldehyde,C2v,n->pi*,pi->pi*,pi->pi*,A2,A2,A1
+"Aldehydes, Ketones and Amides",Acetone,C2v,n->pi*,n->pi*,pi->pi*,A2,A2,A1
+"Aldehydes, Ketones and Amides",Formamide,Cs,n->pi*,n->pi*,pi->pi*,"A""","A""",A'
+"Aldehydes, Ketones and Amides",Acetamide,Cs,n->pi*,n->pi*,n->pi*,"A""","A""",A'
+"Aldehydes, Ketones and Amides",Propanamide,Cs,n->pi*,n->pi*,pi->pi*,"A""","A""",A'
+Nucleobases,Adenine,Cs,pi->pi*,-,-,A',-,-
+Nucleobases,Cytosine,Cs,pi->pi*,-,-,A',-,-
+Nucleobases,Thymine,Cs,n->pi*,-,-,"A""",-,-
+Nucleobases,Uracil,Cs,n->pi*,-,-,"A""",-,-
