@@ -24,6 +24,7 @@ from qibochem.selected_ci.qse import generate_singlet_singles, generate_triplet_
 # PROJECT ROOTS
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data"
+WAVEFUNCTIONS_DIR = DATA_DIR / "wavefunctions"
 MOLECULE_DIR = DATA_DIR / "28_mols"
 HF_DATA_DIR = DATA_DIR / "parameters" / "hf_data"
 VQE_PARAMS_DIR = DATA_DIR / "parameters" / "vqe_params"
@@ -31,10 +32,10 @@ SV_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_hamiltonian"
 SV_CACHE_DIR = DATA_DIR / "cache" / "qse_hamiltonian"
 SPIN_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_spin"
 SPIN_CACHE_DIR = DATA_DIR / "cache" / "qse_spin"
-PYSCF_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "pyscf_casci"
+PYSCF_OUTPUT_DIR = WAVEFUNCTIONS_DIR / "pyscf_casci"
 SHOTS_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "shots_hamiltonian"
 SHOTS_CACHE_DIR = DATA_DIR / "cache" / "qse_hamiltonian"
-QSE_STATE_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "qse_state_matrices"
+QSE_STATE_OUTPUT_DIR = WAVEFUNCTIONS_DIR / "qse_state_matrices"
 
 # VARIABLES & SETTINGS
 ANSATZ_FUNCTIONS = {

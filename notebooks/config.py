@@ -10,6 +10,8 @@ DATA_DIR = PROJECT_ROOT / "data"
 MOLECULE_DIR = DATA_DIR / "28_mols"
 PARAMETERS_DIR = DATA_DIR / "parameters"
 RAW_MATRICES_DIR = DATA_DIR / "raw_matrices"
+WAVEFUNCTIONS_DIR = DATA_DIR / "wavefunctions"
+TABLE_DATA_DIR = DATA_DIR / "table_data"
 
 PROCESSED_DATAFRAMES_DIR = DATA_DIR / "processed_dataframes"
 
