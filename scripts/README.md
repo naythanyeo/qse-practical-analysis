@@ -8,12 +8,12 @@ Output paths below are relative to `data/`.
 
 | Script | Calculation | Output |
 | --- | --- | --- |
-| `generate_pyscf_casci_energies.py` | Exact active-space singlet/triplet energies and determinant vectors | `raw_matrices/pyscf_casci/` |
+| `generate_pyscf_casci_energies.py` | Exact active-space singlet/triplet energies and determinant vectors | `wavefunctions/pyscf_casci/` |
 | `run_qse_SV.py` | Statevector projected Hamiltonian and overlap matrices | `raw_matrices/SV_hamiltonian/` |
 | `run_qse_spin_SV.py` | Projected spin matrices | `raw_matrices/SV_spin/` |
-| `generate_qse_state_matrices.py` | QSE basis states in the determinant basis | `raw_matrices/qse_state_matrices/` |
+| `generate_qse_state_matrices.py` | QSE basis states in the determinant basis | `wavefunctions/qse_state_matrices/` |
 | `run_qse_shots.py` | Repeated finite-shot Hamiltonian/overlap estimates | `raw_matrices/shots_hamiltonian/` |
-| `run_qse_doubles.py` | Singles plus occupied-to-virtual doubles QSE | `raw_matrices/SV_hamiltonian/<active_space>/select_ov_doubles/` |
+| `run_qse_doubles.py` | Singles plus occupied-to-virtual doubles QSE | `raw_matrices/SV_hamiltonian_select_doubles/ov_doubles/<active_space>/` |
 | `generate_molecular_orbitals.py` | Frontier canonical orbital cube files | `visualise/<molecule>/` |
 
 `script_utils.py` supplies shared paths, molecule loading, cached VQE circuit reconstruction, and determinant-basis conversion.
@@ -31,6 +31,8 @@ Settings are defined inside the Python files rather than exposed as command-line
 For finite-shot calculations, review `SHOT_LADDER` and `N_REPEATS`. Shot counts are per commuting measurement group, per repeat. Fresh sampling need not reproduce the archived realisation exactly.
 
 Current defaults include partial sweeps, not a single configuration that regenerates the complete paper dataset. Large active spaces and parallel workers can require substantial memory and runtime.
+
+The commented alternative in `run_qse_doubles.py` selects the historical frontier-doubles generator and writes to `raw_matrices/SV_hamiltonian_select_doubles/frontier_doubles/<active_space>/`. The runner currently selects UCCSD only for either pool; the archive also preserves historical UCCGSD frontier-doubles data.
 
 ## Caches and Existing Files
 
