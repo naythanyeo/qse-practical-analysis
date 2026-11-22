@@ -105,12 +105,12 @@ def save_npz(path, **arrays):
 """
 
 
-def _run_pyscf(xyz_path, num_active_e, num_active_o):
+def _run_pyscf(xyz_path, num_active_e, num_active_o, basis):
     """
     Run PYSCF helper function
     Returns a qibo molecule object
     """
-    molecule = Molecule(xyz_file=str(xyz_path), basis="sto-3g")
+    molecule = Molecule(xyz_file=str(xyz_path), basis=basis)
     molecule.run_pyscf()
 
     active_start = molecule.nelec // 2 - num_active_e // 2
@@ -120,17 +120,17 @@ def _run_pyscf(xyz_path, num_active_e, num_active_o):
     return molecule
 
 
-def load_qibo_mol(molecule_name, active_space):
+def load_qibo_mol(molecule_name, active_space, basis):
     """
     Function used by scripts to get canonical MOs
     """
     num_active_e, num_active_o = parse_active_space(active_space)
     xyz_path = MOLECULE_DIR / f"{molecule_name}.xyz"
-    hf_data_path = HF_DATA_DIR / active_space / f"{molecule_name}.npz"
+    hf_data_path = HF_DATA_DIR / basis / active_space / f"{molecule_name}.npz"
 
     # If inside, then run own pyscf and save it
     if not hf_data_path.exists():
-        molecule = _run_pyscf(xyz_path, num_active_e, num_active_o)
+        molecule = _run_pyscf(xyz_path, num_active_e, num_active_o, basis)
         save_npz(
             hf_data_path,
             mo_coeff=molecule.ca,
@@ -150,7 +150,7 @@ def load_qibo_mol(molecule_name, active_space):
 
     # If not load in a canonical qibo molecule object from the cached parameters
     hf_data = load_npz(hf_data_path)
-    molecule = Molecule(xyz_file=str(xyz_path), basis="sto-3g")
+    molecule = Molecule(xyz_file=str(xyz_path), basis=basis)
     molecule.nelec = int(hf_data["num_electrons"])
     molecule.nalpha = int(hf_data["num_alpha"])
     molecule.nbeta = int(hf_data["num_beta"])
@@ -170,12 +170,12 @@ def load_qibo_mol(molecule_name, active_space):
     return molecule
 
 
-def load_pyscf_mol(molecule_name, active_space):
+def load_pyscf_mol(molecule_name, active_space, basis):
     """
     Load a PySCF RHF reference from the cached data
     Loads qibo mol object first so the caches are consistent 
     """
-    molecule = load_qibo_mol(molecule_name, active_space)
+    molecule = load_qibo_mol(molecule_name, active_space, basis)
     pyscf_molecule = gto.M(
         atom=molecule.geometry, basis=molecule.basis, unit="Angstrom",
         charge=molecule.charge, spin=molecule.multiplicity - 1, # Qibo uses 2S+1
@@ -198,9 +198,9 @@ def load_pyscf_mol(molecule_name, active_space):
 """
 
 
-def get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name):
+def get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name, basis):
     ansatz_function = ANSATZ_FUNCTIONS[ansatz_name]
-    vqe_params_path = VQE_PARAMS_DIR / active_space / molecule_name / f"{ansatz_name}.npz"
+    vqe_params_path = VQE_PARAMS_DIR / basis / active_space / molecule_name / f"{ansatz_name}.npz"
 
     if vqe_params_path.exists():
         vqe_data = load_npz(vqe_params_path)
@@ -213,7 +213,7 @@ def get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name):
 
     if ansatz_index > 0:
         previous_name = ansatz_names[ansatz_index - 1]
-        previous_path = VQE_PARAMS_DIR / active_space / molecule_name / f"{previous_name}.npz"
+        previous_path = VQE_PARAMS_DIR / basis / active_space / molecule_name / f"{previous_name}.npz"
 
         if previous_path.exists():
             previous_data = load_npz(previous_path)

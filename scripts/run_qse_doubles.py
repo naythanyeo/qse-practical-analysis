@@ -19,6 +19,7 @@ ACTIVE_SPACES = ["6e6o"]
 ANSATZ_FUNCTIONS = {"UCCSD": Ansatz_UCCSD}
 DOUBLES_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_hamiltonian_select_doubles"
 MAX_WORKERS = 4
+BASIS = "sto-3g"
 
 
 def generate_singlet_singles_and_select_paired_doubles(excitation_params: dict):
@@ -141,7 +142,7 @@ def run_molecule_expansion(molecule_name, active_space, excitation_generator, do
     # First get all the file paths within the molecule and active space
     expansion = "select_ov_doubles" if doubles_folder == "ov_doubles" else "select_doubles"
     output_paths = {
-        ansatz_name: DOUBLES_OUTPUT_DIR / doubles_folder / active_space / f"{molecule_name}_{ansatz_name}.npz"
+        ansatz_name: DOUBLES_OUTPUT_DIR / doubles_folder / BASIS / active_space / f"{molecule_name}_{ansatz_name}.npz"
         for ansatz_name in ANSATZ_FUNCTIONS
     }
     # Retain only the ones that do not yet exist 
@@ -151,14 +152,14 @@ def run_molecule_expansion(molecule_name, active_space, excitation_generator, do
     ]
     # If all ran already, print line
     if not pending_ansatzes:
-        print(f"{molecule_name} {active_space} {expansion}: complete, skipping")
+        print(f"{molecule_name} {BASIS} {active_space} {expansion}: complete, skipping")
         return
 
     # Running sequence 
-    print(f"\n{active_space} {expansion} {molecule_name}")
+    print(f"\n{active_space} {BASIS} {expansion} {molecule_name}")
 
-    molecule = load_qibo_mol(molecule_name, active_space)
-    cache_dir = SV_CACHE_DIR / active_space / expansion / molecule_name
+    molecule = load_qibo_mol(molecule_name, active_space, BASIS)
+    cache_dir = SV_CACHE_DIR / BASIS / active_space / expansion / molecule_name
     protocol = StateVectorProtocol()
 
     # Build QSE computable
@@ -176,7 +177,7 @@ def run_molecule_expansion(molecule_name, active_space, excitation_generator, do
     for ansatz_name in pending_ansatzes:
         print(ansatz_name)
 
-        final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name)
+        final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name, BASIS)
         H, S = qse.run_qse(final_circuit, protocol)
 
         # Save the results, path and then metadata

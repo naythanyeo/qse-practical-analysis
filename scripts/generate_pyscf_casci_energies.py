@@ -15,6 +15,7 @@ ACTIVE_SPACES = [
     "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
 ]
 N_ROOTS = 10
+BASIS = "cc-pVDZ"
 
 
 def sector_dimension(num_orbitals, n_alpha, n_beta):
@@ -73,7 +74,7 @@ def run_casci(molecule_name, active_space, max_roots):
     num_electrons, num_orbitals = parse_active_space(active_space)
     active_space_tuple = (num_electrons, num_orbitals)
     n_pairs = num_electrons // 2
-    mf = load_pyscf_mol(molecule_name, active_space)
+    mf = load_pyscf_mol(molecule_name, active_space, BASIS)
 
     # Singlets first 
     singlet_roots = get_casci_roots(
@@ -162,7 +163,7 @@ def main():
         for active_space in ACTIVE_SPACES:
             # Check all possible paths 
             output_paths = {
-                spin_type: PYSCF_OUTPUT_DIR / active_space / spin_type / f"{molecule_name}.npz"
+                spin_type: PYSCF_OUTPUT_DIR / BASIS / active_space / spin_type / f"{molecule_name}.npz"
                 for spin_type in ["singlet", "triplet"]
             }
             # Check done paths

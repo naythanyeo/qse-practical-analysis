@@ -8,6 +8,7 @@ from script_utils import DATA_DIR, MOLECULE_NAMES, load_pyscf_mol
 ACTIVE_SPACE = "8e8o"
 GRID_POINTS = 80
 VISUALISE_DIR = DATA_DIR / "visualise"
+BASIS = "sto-3g"
 
 
 def get_frontier_orbitals(mf):
@@ -25,8 +26,8 @@ def get_frontier_orbitals(mf):
 
 
 def generate_molecule_orbitals(molecule_name):
-    mf = load_pyscf_mol(molecule_name, ACTIVE_SPACE)
-    output_dir = VISUALISE_DIR / molecule_name
+    mf = load_pyscf_mol(molecule_name, ACTIVE_SPACE, BASIS)
+    output_dir = VISUALISE_DIR / BASIS / molecule_name
     output_dir.mkdir(parents=True, exist_ok=True)
 
     for orbital_label, mo_index in get_frontier_orbitals(mf).items():

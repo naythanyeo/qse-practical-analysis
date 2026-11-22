@@ -16,6 +16,7 @@ ACTIVE_SPACES = [
     "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
 ]
 MAX_WORKERS = 4
+BASIS = "sto-3g"
 
 
 def run_molecule_expansion(
@@ -24,7 +25,7 @@ def run_molecule_expansion(
 ):
     # First get all the file paths within the molecule and active space
     output_paths = {
-        ansatz_name: SV_OUTPUT_DIR / active_space / expansion / f"{molecule_name}_{ansatz_name}.npz"
+        ansatz_name: SV_OUTPUT_DIR / BASIS / active_space / expansion / f"{molecule_name}_{ansatz_name}.npz"
         for ansatz_name in ansatz_names
     }
     # Retain only the ones that do not yet exist 
@@ -34,14 +35,14 @@ def run_molecule_expansion(
     ]
     # If all ran already, print line
     if not pending_ansatzes:
-        print(f"{molecule_name} {active_space} {expansion}: complete, skipping")
+        print(f"{molecule_name} {BASIS} {active_space} {expansion}: complete, skipping")
         return
 
     # Running sequence 
-    print(f"\n{active_space} {expansion} {molecule_name}")
+    print(f"\n{active_space} {BASIS} {expansion} {molecule_name}")
 
-    molecule = load_qibo_mol(molecule_name, active_space)
-    cache_dir = SV_CACHE_DIR / active_space / expansion / molecule_name
+    molecule = load_qibo_mol(molecule_name, active_space, BASIS)
+    cache_dir = SV_CACHE_DIR / BASIS / active_space / expansion / molecule_name
     protocol = StateVectorProtocol()
 
     # Build QSE computable
@@ -59,7 +60,7 @@ def run_molecule_expansion(
     for ansatz_name in pending_ansatzes:
         print(ansatz_name)
 
-        final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name)
+        final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name, BASIS)
         H, S = qse.run_qse_light(final_circuit, protocol)
 
         # Save the results, path and then metadata

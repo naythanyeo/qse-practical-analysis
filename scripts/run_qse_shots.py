@@ -18,21 +18,21 @@ SHOT_LADDER = (
 )
 N_REPEATS = 10
 MAX_WORKERS = 4
-
+BASIS = "sto-3g"
 
 def run_molecule_expansion(molecule_name, active_space, expansion, excitation_generator, spin_projection):
-    output_path = SHOTS_OUTPUT_DIR / active_space / expansion / f"{molecule_name}.npz"
+    output_path = SHOTS_OUTPUT_DIR / BASIS / active_space / expansion / f"{molecule_name}.npz"
     # Check for done paths 
     if output_path.exists():
-        print(f"{molecule_name} {active_space} {expansion}: complete, skipping")
+        print(f"{molecule_name} {BASIS} {active_space} {expansion}: complete, skipping")
         return
 
-    print(f"\n{active_space} {expansion} {molecule_name}")
+    print(f"\n{active_space} {BASIS} {expansion} {molecule_name}")
 
     # Load in qibo molecule and VQE circuit from cached / regenerate
-    molecule = load_qibo_mol(molecule_name, active_space)
-    final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, "UCCSD")
-    cache_dir = SHOTS_CACHE_DIR / active_space / expansion / molecule_name
+    molecule = load_qibo_mol(molecule_name, active_space, BASIS)
+    final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, "UCCSD", BASIS)
+    cache_dir = SHOTS_CACHE_DIR / BASIS / active_space / expansion / molecule_name
 
     # Load in QSE computable (from cache if available)
     qse = QSE_Computable(

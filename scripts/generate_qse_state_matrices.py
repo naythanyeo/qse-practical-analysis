@@ -12,7 +12,7 @@ ACTIVE_SPACES = [
     "2e2o", "2e3o", "4e3o", "4e4o", "4e5o",
     "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
 ]
-
+BASIS = "sto-3g"
 
 def get_fixed_electron_basis(active_space):
     """
@@ -121,7 +121,7 @@ def operator2partial_permu_mat(fermionic_operator, determinant_bitstrings):
 
 def generate_qse_state_matrices(molecule_name, active_space, ansatz_name, determinant_indices, projection_matrices):
     output_paths = {
-        expansion: QSE_STATE_OUTPUT_DIR / active_space / expansion / f"{molecule_name}_{ansatz_name}.npz"
+        expansion: QSE_STATE_OUTPUT_DIR / BASIS / active_space / expansion / f"{molecule_name}_{ansatz_name}.npz"
         for expansion in QSE_EXPANSIONS
     }
     # Check for done entries
@@ -135,8 +135,8 @@ def generate_qse_state_matrices(molecule_name, active_space, ansatz_name, determ
         return
 
     # Load in cached canonical molecule and circuit objects
-    molecule = load_qibo_mol(molecule_name, active_space)
-    final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name)
+    molecule = load_qibo_mol(molecule_name, active_space, BASIS)
+    final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name, BASIS)
     # Execute circuit once to get final state
     final_circuit()
     final_state = final_circuit.final_state.state()
@@ -156,7 +156,7 @@ def generate_qse_state_matrices(molecule_name, active_space, ansatz_name, determ
             qse_state_matrix=qse_state_matrix,
         )
 
-    print(f"Saved {molecule_name} {active_space} {ansatz_name}")
+    print(f"Saved {molecule_name} {BASIS} {active_space} {ansatz_name}")
 
 
 def main():
