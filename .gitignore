@@ -62,3 +62,5 @@ data/wavefunctions
 notebooks/98_scratch2.ipynb
 notebooks/99_scratch.ipynb
 manuscript/build
+scripts/label_npz_basis.py
+scripts/merge_shot_repeats.py

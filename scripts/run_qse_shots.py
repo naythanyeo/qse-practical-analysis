@@ -56,6 +56,7 @@ def run_molecule_expansion(molecule_name, active_space, expansion, excitation_ge
     save_npz(
         output_path,
         molecule=molecule_name,
+        basis=BASIS,
         active_space=active_space,
         ansatz="UCCSD",
         expansion=expansion,

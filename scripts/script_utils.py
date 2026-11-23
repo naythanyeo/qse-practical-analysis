@@ -133,6 +133,7 @@ def load_qibo_mol(molecule_name, active_space, basis):
         molecule = _run_pyscf(xyz_path, num_active_e, num_active_o, basis)
         save_npz(
             hf_data_path,
+            basis=basis,
             mo_coeff=molecule.ca,
             mo_energy=molecule.eps,
             active_oei=molecule.embed_oei,
@@ -225,6 +226,7 @@ def get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name, basis):
     vqe_energy, vqe_params, final_circuit = ansatz.run_vqe(StateVectorProtocol(), method="L-BFGS-B", fast=True)
     save_npz(
         vqe_params_path,
+        basis=basis,
         param_names=np.asarray(list(vqe_params)),
         vqe_params=np.asarray(list(vqe_params.values()), dtype=float),
         vqe_energy=float(vqe_energy),

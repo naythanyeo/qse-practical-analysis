@@ -14,6 +14,7 @@ ACTIVE_SPACES = [
     "2e2o", "2e3o", "4e3o", "4e4o", "4e5o",
     "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
 ]
+ACTIVE_SPACES = ["6e6o"]
 N_ROOTS = 10
 BASIS = "cc-pVDZ"
 
@@ -182,6 +183,7 @@ def main():
                 save_npz(
                     output_paths[spin_type],
                     molecule=molecule_name,
+                    basis=BASIS,
                     active_space=active_space,
                     spin_type=spin_type,
                     **casci_data[spin_type],

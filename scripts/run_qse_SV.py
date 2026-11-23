@@ -15,8 +15,9 @@ ACTIVE_SPACES = [
     "2e2o", "2e3o", "4e3o", "4e4o", "4e5o",
     "6e5o", "6e6o", "6e7o", "8e7o", "8e8o",
 ]
-MAX_WORKERS = 4
-BASIS = "sto-3g"
+ACTIVE_SPACES = ["6e6o"]
+MAX_WORKERS = 2
+BASIS = "cc-pVDZ"
 
 
 def run_molecule_expansion(
@@ -67,6 +68,7 @@ def run_molecule_expansion(
         save_npz(
             output_paths[ansatz_name], 
             molecule=molecule_name, 
+            basis=BASIS,
             active_space=active_space,
             ansatz=ansatz_name,
             expansion=expansion,
@@ -86,7 +88,8 @@ def main():
     for active_space in ACTIVE_SPACES:
         _, num_orbitals = parse_active_space(active_space)
         # Match benchmark coverage, not a restriction of the implementation.
-        ansatz_names = list(ANSATZ_FUNCTIONS) if num_orbitals <= 6 else ["UCCSD"]
+        # ansatz_names = list(ANSATZ_FUNCTIONS) if num_orbitals <= 6 else ["UCCSD"]
+        ansatz_names = ["UCCSD"]
 
         for expansion, (excitation_generator, spin_projection) in QSE_EXPANSIONS.items():
             with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:

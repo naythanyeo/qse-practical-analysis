@@ -69,6 +69,7 @@ def run_molecule_expansion(
         save_npz(
             output_paths[ansatz_name], 
             molecule=molecule_name, 
+            basis=BASIS,
             active_space=active_space,
             ansatz=ansatz_name,
             expansion=expansion,

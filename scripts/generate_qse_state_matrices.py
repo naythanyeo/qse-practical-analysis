@@ -150,6 +150,7 @@ def generate_qse_state_matrices(molecule_name, active_space, ansatz_name, determ
         save_npz(
             output_paths[expansion],
             molecule=molecule_name,
+            basis=BASIS,
             active_space=active_space,
             ansatz=ansatz_name,
             expansion=expansion,
