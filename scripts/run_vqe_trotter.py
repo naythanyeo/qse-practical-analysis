@@ -21,7 +21,7 @@ TROTTER_STEPS = (1, 2, 4, 8, 16, 32)
 OUTPUT_PATH = DATA_DIR / "table_data" / "vqe_trotter_results.csv"
 COLUMNS = (
     "molecule", "basis_set", "active_space", "ansatz", "trotter_steps",
-    "num_parameters", "circuit_depth", "vqe_energy_Ha", "spin_contamination",
+    "num_parameters", "circuit_depth", "cnot_count", "vqe_energy_Ha", "spin_contamination",
 )
 
 
@@ -106,9 +106,10 @@ def main():
             energy, _, circuit = ansatz.run_vqe(StateVectorProtocol(), method="L-BFGS-B", fast=True)
             spin = get_vqe_spin_contamination(circuit().state(), ACTIVE_SPACE)
             key = (name, BASIS, ACTIVE_SPACE, ansatz_name, steps)
-            results[key] = dict(zip(COLUMNS, (*key, len(ansatz.param_names), circuit.depth, float(energy), spin), strict=True))
+            cnot_count = circuit.gate_names["cx"]
+            results[key] = dict(zip(COLUMNS, (*key, len(ansatz.param_names), circuit.depth, cnot_count, float(energy), spin), strict=True))
             save_results(OUTPUT_PATH, results)
-            print(f"{name} {ansatz_name}, {steps} steps: saved ({perf_counter() - start:.1f} s)", flush=True)
+            print(f"{name} {ansatz_name}, {steps} steps: {cnot_count} CNOTs, saved ({perf_counter() - start:.1f} s)", flush=True)
 
 
 if __name__ == "__main__":
