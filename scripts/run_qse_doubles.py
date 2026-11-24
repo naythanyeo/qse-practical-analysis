@@ -18,8 +18,8 @@ from script_utils import (
 ACTIVE_SPACES = ["6e6o"]
 ANSATZ_FUNCTIONS = {"UCCSD": Ansatz_UCCSD}
 DOUBLES_OUTPUT_DIR = DATA_DIR / "raw_matrices" / "SV_hamiltonian_select_doubles"
-MAX_WORKERS = 4
-BASIS = "sto-3g"
+MAX_WORKERS = 2
+BASIS = "cc-pVDZ"
 
 
 def generate_singlet_singles_and_select_paired_doubles(excitation_params: dict):
@@ -178,7 +178,7 @@ def run_molecule_expansion(molecule_name, active_space, excitation_generator, do
         print(ansatz_name)
 
         final_circuit = get_vqe_circuit(molecule, molecule_name, active_space, ansatz_name, BASIS)
-        H, S = qse.run_qse(final_circuit, protocol)
+        H, S = qse.run_qse_light(final_circuit, protocol, progress=True, desc=molecule_name)
 
         # Save the results, path and then metadata
         save_npz(

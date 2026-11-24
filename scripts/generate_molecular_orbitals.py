@@ -5,10 +5,10 @@ from pyscf.tools import cubegen
 
 from script_utils import DATA_DIR, MOLECULE_NAMES, load_pyscf_mol
 
-ACTIVE_SPACE = "8e8o"
+ACTIVE_SPACE = "6e6o"
 GRID_POINTS = 80
 VISUALISE_DIR = DATA_DIR / "visualise"
-BASIS = "sto-3g"
+BASIS = "cc-pVDZ"
 
 
 def get_frontier_orbitals(mf):
