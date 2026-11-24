@@ -30,7 +30,7 @@ def read_npz(path):
 def save_figure(fig, subfolder, title):
     output_path = output_figures_dir / subfolder / f"{title}.pdf"
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_path, bbox_inches="tight")
+    fig.savefig(output_path, bbox_inches="tight", metadata={"CreationDate": None})
     return output_path
 
 
